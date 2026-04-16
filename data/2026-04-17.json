@@ -1,0 +1,73 @@
+{
+  "date": "2026-04-17",
+  "syncedAt": "2026-04-17T09:58:28.267349+00:00",
+  "buildings": [
+    {
+      "id": "mo1c0cj65iqyg",
+      "name": "test",
+      "breed": "gg",
+      "ageWeeks": 44,
+      "ageDays": 2,
+      "startingHeads": 44,
+      "flockman": "ggee",
+      "startDate": "2026-04-14",
+      "culledAt": null
+    },
+    {
+      "id": "mo27crpd6sryq",
+      "name": "kenneth",
+      "breed": "black",
+      "ageWeeks": 55,
+      "ageDays": 3,
+      "startingHeads": 3333,
+      "flockman": "gg",
+      "startDate": "2026-04-16",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mo2pcna9ptl2q",
+      "buildingId": "mo1c0cj65iqyg",
+      "date": "2026-04-17",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 44,
+      "ageDays": 5,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 0.0,
+        "brand": "",
+        "gramsPerBirdDay": 0.0
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 44,
+      "notes": "test",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-17T09:24:59.003374",
+      "updatedAt": "2026-04-17T09:41:09.892874"
+    },
+    {
+      "id": "mo2qjmv3zchm9",
+      "buildingId": "mo1c0cj65iqyg",
+      "date": "2026-04-17",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 0,
+      "notes": "test\ntest\ntestq",
+      "createdAt": "2026-04-17T09:58:24.650630",
+      "updatedAt": "2026-04-17T09:58:24.650630"
+    }
+  ]
+}
