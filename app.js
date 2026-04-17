@@ -17,8 +17,10 @@ const els = {
     buildingList: document.getElementById('building-list'),
     tabDaily: document.getElementById('tab-dailyreport'),
     tabEgg: document.getElementById('tab-eggsummary'),
+    tabNecropsy: document.getElementById('tab-necropsy'),
     dailyDiv: document.getElementById('daily-report-summary'),
-    eggDiv: document.getElementById('egg-size-summary')
+    eggDiv: document.getElementById('egg-size-summary'),
+    necropsyDiv: document.getElementById('necropsy-report')
 };
 
 // Initialize application
@@ -30,6 +32,7 @@ async function init() {
 function setupEventListeners() {
     els.tabDaily.addEventListener('click', () => setTab('dailyreport'));
     els.tabEgg.addEventListener('click', () => setTab('eggsummary'));
+    els.tabNecropsy.addEventListener('click', () => setTab('necropsy'));
 
     if (els.yearSelect) {
         els.yearSelect.addEventListener('change', (e) => {
@@ -170,17 +173,13 @@ function setTab(tab) {
     state.activeTab = tab;
     
     // Update tab UI
-    if (tab === 'dailyreport') {
-        els.tabDaily.classList.add('active');
-        els.tabEgg.classList.remove('active');
-        els.dailyDiv.style.display = 'block';
-        els.eggDiv.style.display = 'none';
-    } else {
-        els.tabEgg.classList.add('active');
-        els.tabDaily.classList.remove('active');
-        els.dailyDiv.style.display = 'none';
-        els.eggDiv.style.display = 'block';
-    }
+    els.tabDaily.classList.toggle('active', tab === 'dailyreport');
+    els.tabEgg.classList.toggle('active', tab === 'eggsummary');
+    els.tabNecropsy.classList.toggle('active', tab === 'necropsy');
+    
+    els.dailyDiv.style.display = tab === 'dailyreport' ? 'block' : 'none';
+    els.eggDiv.style.display = tab === 'eggsummary' ? 'block' : 'none';
+    els.necropsyDiv.style.display = tab === 'necropsy' ? 'block' : 'none';
     
     renderContent();
 }
@@ -242,21 +241,23 @@ function renderBuildingList() {
 
 function renderContent() {
     if (!state.selectedDate || !state.selectedBuildingId) {
-        els.dailyDiv.innerHTML = '<div class="empty-state">Select a date and building to view data.</div>';
-        els.eggDiv.innerHTML = '<div class="empty-state">Select a date and building to view data.</div>';
+        renderEmptyState("Select a date and building to view data.");
         return;
     }
 
     if (state.activeTab === 'dailyreport') {
         renderDailyReport();
-    } else {
+    } else if (state.activeTab === 'eggsummary') {
         renderEggSizeSummary();
+    } else if (state.activeTab === 'necropsy') {
+        renderNecropsyReport();
     }
 }
 
 function renderEmptyState(msg) {
     els.dailyDiv.innerHTML = `<div class="empty-state">${msg}</div>`;
     els.eggDiv.innerHTML = `<div class="empty-state">${msg}</div>`;
+    els.necropsyDiv.innerHTML = `<div class="empty-state">${msg}</div>`;
 }
 
 function renderDailyReport() {
@@ -406,6 +407,46 @@ function renderEggSizeSummary() {
     </table>`;
 
     els.eggDiv.innerHTML = html;
+}
+
+function renderNecropsyReport() {
+    const data = state.buildingsData[state.selectedDate];
+    const building = data.buildings.find(b => b.id === state.selectedBuildingId);
+    
+    if (!building) return;
+
+    const prod = (data.entries || []).find(e => e.buildingId === building.id && e.type === "production");
+    const mort = (data.entries || []).find(e => e.buildingId === building.id && e.type === "mortality");
+    
+    // Format Date
+    const dateObj = new Date(state.selectedDate + "T00:00:00");
+    const yyyy = dateObj.getFullYear();
+    const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const dd = String(dateObj.getDate()).padStart(2, "0");
+    
+    let html = `NECROPSY & MORTALITY REPORT\n${yyyy}-${mm}-${dd}\n\nBLDG: ${building.name}\n\n`;
+    
+    let totalMort = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
+    html += `TOTAL MORTALITIES: ${totalMort}\n\n`;
+    
+    if (mort && mort.mortality && mort.mortality.length) {
+        html += `CAUSES:\n`;
+        for (const mr of mort.mortality) {
+            html += `- ${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
+        }
+        html += `\n`;
+    } else {
+        html += `CAUSES:\n(none specified)\n\n`;
+    }
+    
+    html += `NOTES / FINDINGS:\n`;
+    if (mort && mort.notes) {
+        html += mort.notes;
+    } else {
+        html += "(No specific necropsy notes for this date)";
+    }
+    
+    els.necropsyDiv.innerHTML = `<div class="report-container">${html}</div>`;
 }
 
 // Boot up
