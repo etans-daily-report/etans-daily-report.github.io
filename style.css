@@ -107,28 +107,50 @@ body {
 }
 
 .date-btn {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
     cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    white-space: nowrap;
     transition: all 0.2s ease;
+    min-width: 56px;
+}
+
+.date-btn.has-data {
+    color: white;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .date-btn:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
 }
 
 .date-btn.active {
     background: white;
     color: var(--primary-color);
     box-shadow: var(--shadow-sm);
-    font-weight: 600;
+    opacity: 1;
+}
+
+.date-btn.has-data::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    background-color: #a7f3d0;
+    border-radius: 50%;
+    margin-top: 6px;
+}
+
+.date-btn.active.has-data::after {
+    background-color: var(--primary-color);
 }
 
 /* Layout */

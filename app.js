@@ -118,10 +118,10 @@ function updateDateStripFromDropdown() {
     if (datesInMonth.length > 0 && !datesInMonth.includes(state.selectedDate)) {
         selectDate(datesInMonth[0]);
     } else if (datesInMonth.length === 0) {
-        state.selectedDate = null;
+        const firstDay = `${state.selectedYear}-${String(state.selectedMonth).padStart(2, '0')}-01`;
+        state.selectedDate = firstDay;
         renderDateStrip();
-        renderBuildingList();
-        renderContent();
+        loadDateData(firstDay);
     } else {
         renderDateStrip();
     }
@@ -189,22 +189,29 @@ function setTab(tab) {
 function renderDateStrip() {
     els.dateStrip.innerHTML = '';
     
-    const datesInMonth = state.dates.filter(dateStr => {
-        const d = new Date(dateStr + "T00:00:00");
-        return d.getFullYear() === state.selectedYear && (d.getMonth() + 1) === state.selectedMonth;
-    }).sort((a, b) => new Date(b) - new Date(a)); // Sort latest first
+    const daysInMonth = new Date(state.selectedYear, state.selectedMonth, 0).getDate();
     
-    datesInMonth.forEach(dateStr => {
+    for (let day = 1; day <= daysInMonth; day++) {
+        const mm = String(state.selectedMonth).padStart(2, '0');
+        const dd = String(day).padStart(2, '0');
+        const dateStr = `${state.selectedYear}-${mm}-${dd}`;
+        
         const btn = document.createElement('button');
-        btn.className = `date-btn ${state.selectedDate === dateStr ? 'active' : ''}`;
+        const hasData = state.dates.includes(dateStr);
         
-        const d = new Date(dateStr + "T00:00:00");
-        const formatted = d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric' });
+        let className = 'date-btn';
+        if (state.selectedDate === dateStr) className += ' active';
+        if (hasData) className += ' has-data';
         
-        btn.textContent = formatted;
+        btn.className = className;
+        
+        const d = new Date(state.selectedYear, state.selectedMonth - 1, day);
+        const weekday = d.toLocaleDateString(undefined, { weekday: 'short' });
+        
+        btn.innerHTML = `<div style="font-size: 0.75rem; line-height: 1; margin-bottom: 4px;">${weekday}</div><div style="font-size: 1.1rem; font-weight: 600; line-height: 1;">${day}</div>`;
         btn.onclick = () => selectDate(dateStr);
         els.dateStrip.appendChild(btn);
-    });
+    }
 }
 
 function renderBuildingList() {
