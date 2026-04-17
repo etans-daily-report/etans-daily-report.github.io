@@ -23,9 +23,9 @@
                 <div class="header-title-area">
                     <h1>Farm Dashboard</h1>
                     <div class="top-metrics" v-if="dashboardMetrics.activeBuildings > 0">
-                        <span class="metric"><b>Pop:</b> {{ dashboardMetrics.population }}</span>
-                        <span class="metric"><b>Prod:</b> {{ dashboardMetrics.productionPercent }}%</span>
-                        <span class="metric"><b>Bldgs:</b> {{ dashboardMetrics.activeBuildings }}</span>
+                        <span class="metric"><b>POPULATION</b> {{ dashboardMetrics.population.toLocaleString() }}</span>
+                        <span class="metric"><b>PRODUCTION</b> {{ dashboardMetrics.productionPercent }}%</span>
+                        <span class="metric"><b>BUILDINGS</b> {{ dashboardMetrics.activeBuildings }}</span>
                     </div>
                 </div>
                 <div class="date-controls">
@@ -54,7 +54,10 @@
         
         <div class="app-layout">
             <aside class="sidebar">
-                <h2 class="sidebar-title">Buildings</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
+                    <h2 class="sidebar-title" style="margin: 0; padding: 0; border: none;">Buildings</h2>
+                    <button class="view-all-btn" :class="{ active: selectedBuildingId === 'ALL' }" @click="selectedBuildingId = 'ALL'">View All</button>
+                </div>
                 <ul class="building-list">
                     <li v-if="!currentBuildings.length" class="empty-state" style="padding: 10px; color: rgba(255,255,255,0.5);">
                         No buildings for this date.
@@ -75,65 +78,260 @@
             </aside>
             
             <main class="main-content">
-                <div class="tabs">
-                    <button class="tab-btn" :class="{ active: activeTab === 'dailyreport' }" @click="activeTab = 'dailyreport'">Daily Report Summary</button>
-                    <button class="tab-btn" :class="{ active: activeTab === 'eggsummary' }" @click="activeTab = 'eggsummary'">Egg Size Summary</button>
-                    <button class="tab-btn" :class="{ active: activeTab === 'necropsy' }" @click="activeTab = 'necropsy'">Necropsy Report</button>
-                </div>
+                <template v-if="selectedBuildingId === 'ALL'">
+                    <div class="all-buildings-header">
+                        <h2>All Buildings Overview</h2>
+                        <div class="sort-controls">
+                            <label>Sort by:</label>
+                            <select v-model="allBuildingsSortBy">
+                                <option value="name">Alphabetical</option>
+                                <option value="age">Age</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="content-area">
+                        <div v-if="!sortedAllBuildings.length" class="empty-state">
+                            No buildings for this date.
+                        </div>
+                        <div v-else class="cards-grid">
+                            <div class="building-card" v-for="b in sortedAllBuildings" :key="b.id" @click="selectBuilding(b.id)">
+                                <h3>{{ b.name }}</h3>
+                                <p class="card-breed">{{ b.breed }}</p>
+                                <div class="card-stats">
+                                    <div class="stat-row"><span>Flockman:</span> <b>{{ b.flockman }}</b></div>
+                                    <div class="stat-row"><span>Age:</span> <b>{{ formatAge(b.ageWeeks, b.ageDays) }}</b></div>
+                                    <div class="stat-row"><span>Heads:</span> <b>{{ b.currentHeads.toLocaleString() }}</b></div>
+                                    <div class="stat-row"><span>Egg Prod:</span> <b class="highlight-percent">{{ b.eggPercent }}%</b></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
                 
-                <div class="content-area">
-                    <div v-if="!selectedDate || !selectedBuildingId" class="empty-state">
-                        Select a date and building to view data.
+                <template v-else>
+                    <div class="tabs">
+                        <button class="tab-btn" :class="{ active: activeTab === 'dailyreport' }" @click="activeTab = 'dailyreport'">Daily Report</button>
+                        <button class="tab-btn" :class="{ active: activeTab === 'eggsummary' }" @click="activeTab = 'eggsummary'">Egg Summary</button>
+                        <button class="tab-btn" :class="{ active: activeTab === 'necropsy' }" @click="activeTab = 'necropsy'">Necropsy Report</button>
                     </div>
                     
-                    <template v-else>
-                        <!-- Daily Report -->
-                        <div v-if="activeTab === 'dailyreport'" class="tab-content active">
-                            <div class="report-container">{{ dailyReportText }}</div>
+                    <div class="content-area">
+                        <div v-if="!selectedDate || !selectedBuildingId" class="empty-state">
+                            Select a date and building to view data.
                         </div>
-                        
-                        <!-- Egg Size Summary -->
-                        <div v-if="activeTab === 'eggsummary'" class="tab-content active">
-                            <table class="egg-table">
-                                <thead>
-                                    <tr>
-                                        <th>Egg Size</th>
-                                        <th>Total</th>
-                                        <th>%</th>
-                                        <th>Cases</th>
-                                        <th>Trays</th>
-                                        <th>Pieces</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="size in eggSummaryRows" :key="size.label">
-                                        <td>{{ size.label }}</td>
-                                        <td>{{ size.total }}</td>
-                                        <td>{{ size.percentage !== "-" ? size.percentage + "%" : "-" }}</td>
-                                        <td>{{ size.cases }}</td>
-                                        <td>{{ size.trays }}</td>
-                                        <td>{{ size.pieces }}</td>
-                                    </tr>
-                                    <tr class="total-row">
-                                        <td>TOTAL</td>
-                                        <td>{{ eggTotals.total || "-" }}</td>
-                                        <td>{{ eggTotals.percentage ? eggTotals.percentage.toFixed(1) + "%" : "-" }}</td>
-                                        <td>{{ eggTotals.cases || "-" }}</td>
-                                        <td>{{ eggTotals.trays || "-" }}</td>
-                                        <td>{{ eggTotals.pieces || "-" }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    
+                    <transition name="fade" mode="out-in">
+                        <div :key="activeTab" v-if="selectedDate && selectedBuildingId" class="tab-transition-wrapper">
+                            <!-- Daily Report -->
+                            <div v-if="activeTab === 'dailyreport'" class="tab-content active">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                    <button class="view-all-btn" @click="copyToClipboard(dailyReportText)">
+                                        Copy Text
+                                    </button>
+                                    <button class="view-all-btn" @click="isFullScreenReport = true">
+                                        View Full Report
+                                    </button>
+                                </div>
+                                <div class="report-container">{{ dailyReportText }}</div>
+                            </div>
+                            
+                            <!-- Egg Size Summary -->
+                            <div v-if="activeTab === 'eggsummary'" class="tab-content active">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                    <button class="view-all-btn" @click="copyToClipboard(eggSummaryText)">
+                                        Copy Table
+                                    </button>
+                                    <button class="view-all-btn" @click="isFullScreenTable = true">
+                                        View Full Table
+                                    </button>
+                                </div>
+                                <table class="egg-table defects-table" style="margin-bottom: 20px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Defects</th>
+                                            <th>Cases</th>
+                                            <th>Trays</th>
+                                            <th>Pieces</th>
+                                            <th>Total Pieces</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style="font-weight: 700; color: #b45309;">GOOD CRACKS</td>
+                                            <td>{{ eggDefects.goodCracks.cases }}</td>
+                                            <td>{{ eggDefects.goodCracks.trays }}</td>
+                                            <td>{{ eggDefects.goodCracks.pieces }}</td>
+                                            <td style="font-weight: 900;">{{ eggDefects.goodCracks.total.toLocaleString() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 700; color: #991b1b;">BAD CRACKS</td>
+                                            <td>{{ eggDefects.badCracks.cases }}</td>
+                                            <td>{{ eggDefects.badCracks.trays }}</td>
+                                            <td>{{ eggDefects.badCracks.pieces }}</td>
+                                            <td style="font-weight: 900;">{{ eggDefects.badCracks.total.toLocaleString() }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-weight: 700; color: #5b21b6;">MISSHAPEN EGGS</td>
+                                            <td>{{ eggDefects.mishapen.cases }}</td>
+                                            <td>{{ eggDefects.mishapen.trays }}</td>
+                                            <td>{{ eggDefects.mishapen.pieces }}</td>
+                                            <td style="font-weight: 900;">{{ eggDefects.mishapen.total.toLocaleString() }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table class="egg-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Egg Size</th>
+                                            <th>Total</th>
+                                            <th>%</th>
+                                            <th>Cases</th>
+                                            <th>Trays</th>
+                                            <th>Pieces</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="size in eggSummaryRows" :key="size.label">
+                                            <td>{{ size.label }}</td>
+                                            <td>{{ size.total }}</td>
+                                            <td>{{ size.percentage !== "-" ? size.percentage + "%" : "-" }}</td>
+                                            <td>{{ size.cases }}</td>
+                                            <td>{{ size.trays }}</td>
+                                            <td>{{ size.pieces }}</td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td>TOTAL</td>
+                                            <td>{{ eggTotals.total || "-" }}</td>
+                                            <td>{{ eggTotals.percentage ? eggTotals.percentage.toFixed(1) + "%" : "-" }}</td>
+                                            <td>{{ eggTotals.cases || "-" }}</td>
+                                            <td>{{ eggTotals.trays || "-" }}</td>
+                                            <td>{{ eggTotals.pieces || "-" }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Necropsy Report -->
+                            <div v-if="activeTab === 'necropsy'" class="tab-content active">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                    <button class="view-all-btn" @click="copyToClipboard(necropsyReportText)">
+                                        Copy Text
+                                    </button>
+                                    <button class="view-all-btn" @click="isFullScreenNecropsy = true">
+                                        View Full Report
+                                    </button>
+                                </div>
+                                <div class="report-container">{{ necropsyReportText }}</div>
+                            </div>
                         </div>
-                        
-                        <!-- Necropsy Report -->
-                        <div v-if="activeTab === 'necropsy'" class="tab-content active">
-                            <div class="report-container">{{ necropsyReportText }}</div>
-                        </div>
-                    </template>
+                    </transition>
                 </div>
+                </template>
             </main>
         </div>
+
+        <!-- Full Screen Table Modal -->
+        <transition name="fade">
+            <div v-if="isFullScreenTable" class="full-screen-modal">
+                <div class="modal-header">
+                    <h2>Egg Summary - Full View</h2>
+                    <button class="close-btn" @click="isFullScreenTable = false">Close</button>
+                </div>
+                <div class="modal-content-area">
+                    <table class="egg-table defects-table" style="margin-bottom: 30px;">
+                        <thead>
+                            <tr>
+                                <th>Defects</th>
+                                <th>Cases</th>
+                                <th>Trays</th>
+                                <th>Pieces</th>
+                                <th>Total Pieces</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 700; color: #b45309;">GOOD CRACKS</td>
+                                <td>{{ eggDefects.goodCracks.cases }}</td>
+                                <td>{{ eggDefects.goodCracks.trays }}</td>
+                                <td>{{ eggDefects.goodCracks.pieces }}</td>
+                                <td style="font-weight: 900;">{{ eggDefects.goodCracks.total.toLocaleString() }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #991b1b;">BAD CRACKS</td>
+                                <td>{{ eggDefects.badCracks.cases }}</td>
+                                <td>{{ eggDefects.badCracks.trays }}</td>
+                                <td>{{ eggDefects.badCracks.pieces }}</td>
+                                <td style="font-weight: 900;">{{ eggDefects.badCracks.total.toLocaleString() }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 700; color: #5b21b6;">MISSHAPEN EGGS</td>
+                                <td>{{ eggDefects.mishapen.cases }}</td>
+                                <td>{{ eggDefects.mishapen.trays }}</td>
+                                <td>{{ eggDefects.mishapen.pieces }}</td>
+                                <td style="font-weight: 900;">{{ eggDefects.mishapen.total.toLocaleString() }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="egg-table">
+                        <thead>
+                            <tr>
+                                <th>Egg Size</th>
+                                <th>Total</th>
+                                <th>%</th>
+                                <th>Cases</th>
+                                <th>Trays</th>
+                                <th>Pieces</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="size in eggSummaryRows" :key="size.label">
+                                <td>{{ size.label }}</td>
+                                <td>{{ size.total }}</td>
+                                <td>{{ size.percentage !== "-" ? size.percentage + "%" : "-" }}</td>
+                                <td>{{ size.cases }}</td>
+                                <td>{{ size.trays }}</td>
+                                <td>{{ size.pieces }}</td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>TOTAL</td>
+                                <td>{{ eggTotals.total || "-" }}</td>
+                                <td>{{ eggTotals.percentage ? eggTotals.percentage.toFixed(1) + "%" : "-" }}</td>
+                                <td>{{ eggTotals.cases || "-" }}</td>
+                                <td>{{ eggTotals.trays || "-" }}</td>
+                                <td>{{ eggTotals.pieces || "-" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </transition>
+
+        <!-- Full Screen Report Modal -->
+        <transition name="fade">
+            <div v-if="isFullScreenReport" class="full-screen-modal">
+                <div class="modal-header">
+                    <h2>Daily Report - Full View</h2>
+                    <button class="close-btn" @click="isFullScreenReport = false">Close</button>
+                </div>
+                <div class="modal-content-area">
+                    <div class="report-container full-report-container">{{ dailyReportText }}</div>
+                </div>
+            </div>
+        </transition>
+
+        <!-- Full Screen Necropsy Modal -->
+        <transition name="fade">
+            <div v-if="isFullScreenNecropsy" class="full-screen-modal">
+                <div class="modal-header">
+                    <h2>Necropsy Report - Full View</h2>
+                    <button class="close-btn" @click="isFullScreenNecropsy = false">Close</button>
+                </div>
+                <div class="modal-content-area">
+                    <div class="report-container full-report-container">{{ necropsyReportText }}</div>
+                </div>
+            </div>
+        </transition>
     </div>
 
     <!-- Application logic -->

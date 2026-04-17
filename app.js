@@ -8,8 +8,16 @@ const app = createApp({
         const selectedYear = ref(null);
         const selectedMonth = ref(null);
         const buildingsData = ref({});
-        const selectedBuildingId = ref(null);
-        const activeTab = ref('dailyreport');
+        const selectedBuildingId = ref(localStorage.getItem('layerhub_bldg') || 'ALL');
+        const activeTab = ref(localStorage.getItem('layerhub_tab') || 'dailyreport');
+        const allBuildingsSortBy = ref('name'); // name or age
+        const isFullScreenTable = ref(false);
+        const isFullScreenReport = ref(false);
+        const isFullScreenNecropsy = ref(false);
+        
+        // Persist preferences
+        watch(selectedBuildingId, (val) => { if (val) localStorage.setItem('layerhub_bldg', val); });
+        watch(activeTab, (val) => { if (val) localStorage.setItem('layerhub_tab', val); });
         
         // DOM Refs for scrolling
         const activeDateBtn = ref(null);
@@ -131,9 +139,11 @@ const app = createApp({
             
             // Auto-select building
             const dateData = buildingsData.value[dateStr];
-            const buildingExists = dateData.buildings.some(b => b.id === selectedBuildingId.value);
-            if (!selectedBuildingId.value || !buildingExists) {
-                selectedBuildingId.value = dateData.buildings.length > 0 ? dateData.buildings[0].id : null;
+            if (selectedBuildingId.value !== 'ALL') {
+                const buildingExists = dateData.buildings.some(b => b.id === selectedBuildingId.value);
+                if (!selectedBuildingId.value || !buildingExists) {
+                    selectedBuildingId.value = 'ALL';
+                }
             }
         }
 
@@ -188,6 +198,36 @@ const app = createApp({
             return buildingsData.value[selectedDate.value].entries || [];
         });
 
+        // View All Buildings Data
+        const sortedAllBuildings = computed(() => {
+            const buildings = currentBuildings.value;
+            const entries = currentEntries.value;
+            
+            const mapped = buildings.map(b => {
+                const prod = entries.find(e => e.buildingId === b.id && e.type === 'production');
+                const heads = prod?.currentHeads ?? b.startingHeads ?? 0;
+                const pieces = prod?.production?.totalPieces ?? 0;
+                const percent = heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+                
+                return {
+                    ...b,
+                    currentHeads: heads,
+                    eggPercent: percent,
+                    flockman: b.flockman || 'None',
+                    totalDays: (b.ageWeeks * 7) + b.ageDays
+                };
+            });
+            
+            return mapped.sort((a, b) => {
+                if (allBuildingsSortBy.value === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (allBuildingsSortBy.value === 'age') {
+                    return b.totalDays - a.totalDays; // Older first
+                }
+                return 0;
+            });
+        });
+
         const currentProd = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "production"));
         const currentEgg = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "egg-summary"));
         const currentMort = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "mortality"));
@@ -225,6 +265,40 @@ const app = createApp({
                 acc.pieces += (row.pieces !== "-") ? row.pieces : 0;
                 return acc;
             }, { total: 0, percentage: 0, cases: 0, trays: 0, pieces: 0 });
+        });
+
+        function formatDefect(defectData) {
+            if (typeof defectData === 'number') {
+                const total = defectData;
+                const cases = Math.floor(total / 360);
+                const rem = total % 360;
+                const trays = Math.floor(rem / 30);
+                const pieces = rem % 30;
+                return { cases, trays, pieces, total };
+            } else if (defectData && typeof defectData === 'object') {
+                return {
+                    cases: defectData.cases || 0,
+                    trays: defectData.trays || 0,
+                    pieces: defectData.pieces || 0,
+                    total: defectData.total ?? defectData.totalPieces ?? defectData.total_pieces ?? 0
+                };
+            }
+            return { cases: 0, trays: 0, pieces: 0, total: 0 };
+        }
+
+        const eggDefects = computed(() => {
+            const egg = currentEgg.value || {};
+            return {
+                goodCracks: formatDefect(egg.goodCracks ?? egg.good_cracks),
+                badCracks: formatDefect(egg.badCracks ?? egg.bad_cracks),
+                mishapen: formatDefect(egg.mishapen ?? egg.misshapen),
+                totalPieces: {
+                    cases: egg.cases ?? eggTotals.value.cases,
+                    trays: egg.trays ?? eggTotals.value.trays,
+                    pieces: egg.pieces ?? eggTotals.value.pieces,
+                    total: egg.totalPieces ?? eggTotals.value.total
+                }
+            };
         });
 
         // Daily Report Formatting
@@ -326,10 +400,38 @@ const app = createApp({
                 txt += `CAUSES:\n(none specified)\n\n`;
             }
             
-            txt += `NOTES / FINDINGS:\n`;
-            txt += mort?.notes || "(No specific necropsy notes for this date)";
-            
             return txt;
+        });
+
+        const copyToClipboard = async (text) => {
+            try {
+                await navigator.clipboard.writeText(text);
+                alert("Successfully copied to clipboard!");
+            } catch (err) {
+                alert("Failed to copy. Your browser might not support this feature.");
+            }
+        };
+
+        const eggSummaryText = computed(() => {
+            if (!currentBuilding.value) return "";
+            let t = `EGG SUMMARY - ${currentBuilding.value.name.toUpperCase()} (${selectedDate.value})\n`;
+            t += `----------------------------------------\n`;
+            t += `DEFECTS:\n`;
+            t += `GOOD CRACKS: ${eggDefects.value.goodCracks.total} (${eggDefects.value.goodCracks.cases}C ${eggDefects.value.goodCracks.trays}T ${eggDefects.value.goodCracks.pieces}P)\n`;
+            t += `BAD CRACKS:  ${eggDefects.value.badCracks.total} (${eggDefects.value.badCracks.cases}C ${eggDefects.value.badCracks.trays}T ${eggDefects.value.badCracks.pieces}P)\n`;
+            t += `MISSHAPEN:   ${eggDefects.value.mishapen.total} (${eggDefects.value.mishapen.cases}C ${eggDefects.value.mishapen.trays}T ${eggDefects.value.mishapen.pieces}P)\n`;
+            t += `TOTAL PIECES:${eggDefects.value.totalPieces.total} (${eggDefects.value.totalPieces.cases}C ${eggDefects.value.totalPieces.trays}T ${eggDefects.value.totalPieces.pieces}P)\n`;
+            t += `----------------------------------------\n`;
+            t += `SIZE         TOTAL    %      C   T   P\n`;
+            t += `----------------------------------------\n`;
+            eggSummaryRows.value.forEach(r => {
+                const perc = r.percentage !== "-" ? r.percentage + "%" : "-";
+                t += `${r.label.padEnd(12)} ${String(r.total).padEnd(8)} ${perc.padEnd(6)} ${String(r.cases).padEnd(3)} ${String(r.trays).padEnd(3)} ${r.pieces}\n`;
+            });
+            t += `----------------------------------------\n`;
+            const totPerc = eggTotals.value.percentage ? eggTotals.value.percentage.toFixed(1) + "%" : "-";
+            t += `TOTAL        ${String(eggTotals.value.total || "-").padEnd(8)} ${totPerc.padEnd(6)} ${String(eggTotals.value.cases || "-").padEnd(3)} ${String(eggTotals.value.trays || "-").padEnd(3)} ${eggTotals.value.pieces || "-"}\n`;
+            return t;
         });
 
         return {
@@ -339,8 +441,14 @@ const app = createApp({
             selectDate, selectBuilding, formatAge,
             activeDateBtn,
             dailyReportText,
-            eggSummaryRows, eggTotals,
-            necropsyReportText
+            eggSummaryRows, eggTotals, eggDefects, eggSummaryText,
+            necropsyReportText,
+            allBuildingsSortBy,
+            sortedAllBuildings,
+            isFullScreenTable,
+            isFullScreenReport,
+            isFullScreenNecropsy,
+            copyToClipboard
         };
     }
 });
