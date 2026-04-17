@@ -20,7 +20,14 @@
     <div id="app" v-cloak>
         <header class="app-header">
             <div class="header-top">
-                <h1>Farm Dashboard</h1>
+                <div class="header-title-area">
+                    <h1>Farm Dashboard</h1>
+                    <div class="top-metrics" v-if="dashboardMetrics.activeBuildings > 0">
+                        <span class="metric"><b>Pop:</b> {{ dashboardMetrics.population }}</span>
+                        <span class="metric"><b>Prod:</b> {{ dashboardMetrics.productionPercent }}%</span>
+                        <span class="metric"><b>Bldgs:</b> {{ dashboardMetrics.activeBuildings }}</span>
+                    </div>
+                </div>
                 <div class="date-controls">
                     <select class="date-dropdown" v-model.number="selectedYear">
                         <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>

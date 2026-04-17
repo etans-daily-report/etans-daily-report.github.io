@@ -147,6 +147,33 @@ const app = createApp({
         }
 
         // Computed data for UI
+        const dashboardMetrics = computed(() => {
+            if (!selectedDate.value || !buildingsData.value[selectedDate.value]) {
+                return { population: 0, productionPercent: 0, activeBuildings: 0 };
+            }
+            
+            const data = buildingsData.value[selectedDate.value];
+            const buildings = data.buildings || [];
+            const entries = data.entries || [];
+            
+            let totalPop = 0;
+            let totalEggs = 0;
+            
+            buildings.forEach(bldg => {
+                const prod = entries.find(e => e.buildingId === bldg.id && e.type === 'production');
+                totalPop += prod?.currentHeads ?? bldg.startingHeads ?? 0;
+                totalEggs += prod?.production?.totalPieces ?? 0;
+            });
+            
+            const prodPercent = totalPop > 0 ? ((totalEggs / totalPop) * 100).toFixed(1) : 0;
+            
+            return {
+                population: totalPop.toLocaleString(),
+                productionPercent: prodPercent,
+                activeBuildings: buildings.length
+            };
+        });
+
         const currentBuildings = computed(() => {
             if (!selectedDate.value || !buildingsData.value[selectedDate.value]) return [];
             return buildingsData.value[selectedDate.value].buildings || [];
@@ -254,7 +281,7 @@ const app = createApp({
         return {
             selectedYear, selectedMonth, selectedDate, selectedBuildingId, activeTab,
             availableYears, availableMonths, daysInMonthList,
-            currentBuildings, currentBuilding,
+            currentBuildings, currentBuilding, dashboardMetrics,
             selectDate, selectBuilding, formatAge,
             activeDateBtn,
             dailyReportText,

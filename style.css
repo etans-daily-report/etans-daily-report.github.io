@@ -44,6 +44,29 @@ body {
     padding: 16px 24px;
 }
 
+.header-title-area {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.top-metrics {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.metric b {
+    color: white;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
 .app-header h1 {
     margin: 0;
     font-size: 1.5rem;
@@ -341,5 +364,14 @@ body {
         width: 100%;
         position: static;
         box-sizing: border-box;
+    }
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .top-metrics {
+        width: 100%;
+        justify-content: space-between;
     }
 }
