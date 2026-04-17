@@ -98,6 +98,8 @@
                                 <thead>
                                     <tr>
                                         <th>Egg Size</th>
+                                        <th>Total</th>
+                                        <th>%</th>
                                         <th>Cases</th>
                                         <th>Trays</th>
                                         <th>Pieces</th>
@@ -106,15 +108,19 @@
                                 <tbody>
                                     <tr v-for="size in eggSummaryRows" :key="size.label">
                                         <td>{{ size.label }}</td>
-                                        <td>{{ size.cases || "-" }}</td>
-                                        <td>{{ size.trays || "-" }}</td>
-                                        <td>{{ size.pieces || "-" }}</td>
+                                        <td>{{ size.total }}</td>
+                                        <td>{{ size.percentage !== "-" ? size.percentage + "%" : "-" }}</td>
+                                        <td>{{ size.cases }}</td>
+                                        <td>{{ size.trays }}</td>
+                                        <td>{{ size.pieces }}</td>
                                     </tr>
                                     <tr class="total-row">
                                         <td>TOTAL</td>
-                                        <td>{{ eggTotals.cases }}</td>
-                                        <td>{{ eggTotals.trays }}</td>
-                                        <td>{{ eggTotals.pieces }}</td>
+                                        <td>{{ eggTotals.total || "-" }}</td>
+                                        <td>{{ eggTotals.percentage ? eggTotals.percentage.toFixed(1) + "%" : "-" }}</td>
+                                        <td>{{ eggTotals.cases || "-" }}</td>
+                                        <td>{{ eggTotals.trays || "-" }}</td>
+                                        <td>{{ eggTotals.pieces || "-" }}</td>
                                     </tr>
                                 </tbody>
                             </table>

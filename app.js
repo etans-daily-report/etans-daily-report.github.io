@@ -234,20 +234,24 @@ const app = createApp({
                 return {
                     key,
                     label,
-                    cases: dist.cases || 0,
-                    trays: dist.trays || 0,
-                    pieces: dist.pieces || 0
+                    total: dist.total ?? dist.totalPieces ?? dist.total_pieces ?? "-",
+                    percentage: dist.percentage ?? dist.percent ?? dist['%'] ?? "-",
+                    cases: dist.cases || "-",
+                    trays: dist.trays || "-",
+                    pieces: dist.pieces || "-"
                 };
             });
         });
 
         const eggTotals = computed(() => {
             return eggSummaryRows.value.reduce((acc, row) => {
-                acc.cases += row.cases;
-                acc.trays += row.trays;
-                acc.pieces += row.pieces;
+                acc.total += (typeof row.total === 'number') ? row.total : 0;
+                acc.percentage += (typeof row.percentage === 'number') ? row.percentage : 0;
+                acc.cases += (row.cases !== "-") ? row.cases : 0;
+                acc.trays += (row.trays !== "-") ? row.trays : 0;
+                acc.pieces += (row.pieces !== "-") ? row.pieces : 0;
                 return acc;
-            }, { cases: 0, trays: 0, pieces: 0 });
+            }, { total: 0, percentage: 0, cases: 0, trays: 0, pieces: 0 });
         });
 
         // Necropsy Report Formatting
