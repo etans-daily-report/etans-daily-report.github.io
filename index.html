@@ -1,0 +1,2962 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LayerHub Dashboard</title>
+    <style>
+      :root {
+        --clr: #16a34a;
+        --clr-dark: #15803d;
+        --clr-light: #dcfce7;
+        --clr-bg: #f0fdf4;
+        --bg: #f8fafc;
+        --card: #fff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 12px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --sidebar-w: 240px;
+        --topbar-h: 94px;
+        font-size: 15px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      /* Top bar */
+      .topbar {
+        background: linear-gradient(
+          135deg,
+          #15803d 0%,
+          #16a34a 50%,
+          #22c55e 100%
+        );
+        color: #fff;
+        height: var(--topbar-h);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+      }
+      .topbar-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 0 20px;
+        height: 52px;
+        flex-shrink: 0;
+      }
+      .topbar-logo {
+        font-size: 1.3rem;
+        width: 34px;
+        height: 34px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .topbar h1 {
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .topbar h1 span {
+        font-weight: 400;
+        opacity: 0.8;
+      }
+      .topbar-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sync-badge {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.73rem;
+        backdrop-filter: blur(4px);
+      }
+
+      /* Layout */
+      .layout {
+        display: flex;
+        height: calc(100vh - var(--topbar-h));
+        margin-top: var(--topbar-h);
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-width: var(--sidebar-w);
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .sidebar-header {
+        padding: 14px 14px 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .sidebar-header h2 {
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .sidebar-date-filter {
+        display: flex;
+        gap: 6px;
+        padding: 0 0 6px;
+      }
+      .sidebar-date-filter select {
+        flex: 1;
+        padding: 5px 6px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-family: inherit;
+        background: var(--card);
+        cursor: pointer;
+      }
+      .sidebar-date-filter select:focus {
+        outline: none;
+        border-color: var(--clr);
+        box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
+      }
+      .sidebar-filter-toggle {
+        display: flex;
+        gap: 0;
+        padding: 6px 14px 0;
+      }
+      .sidebar-filter-btn {
+        flex: 1;
+        padding: 5px 0;
+        border: 1px solid var(--border);
+        background: var(--card);
+        font-size: 0.75rem;
+        font-family: inherit;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.15s;
+      }
+      .sidebar-filter-btn:first-child {
+        border-radius: 6px 0 0 6px;
+      }
+      .sidebar-filter-btn:last-child {
+        border-radius: 0 6px 6px 0;
+        border-left: none;
+      }
+      .sidebar-filter-btn.active {
+        background: var(--clr);
+        color: #fff;
+        border-color: var(--clr);
+      }
+      .building-list {
+        list-style: none;
+        flex: 1;
+        overflow-y: auto;
+        padding: 6px 8px;
+        scrollbar-width: thin;
+      }
+      .building-list::-webkit-scrollbar {
+        width: 5px;
+      }
+      .building-list::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+      .building-item {
+        padding: 9px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.84rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.12s;
+        margin-bottom: 2px;
+        border: 1px solid transparent;
+      }
+      .building-item:hover {
+        background: var(--clr-light);
+        border-color: var(--clr);
+      }
+      .building-item.active {
+        background: var(--clr);
+        color: #fff;
+        border-color: var(--clr);
+        box-shadow: 0 2px 6px rgba(22, 163, 74, 0.25);
+      }
+      .building-item .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #94a3b8;
+        flex-shrink: 0;
+      }
+      .building-item.active .dot {
+        background: #86efac;
+      }
+      .building-item.culled .dot {
+        background: #fca5a5;
+      }
+      .building-item .bi-name {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .building-item .bi-badge {
+        font-size: 0.65rem;
+        padding: 1px 6px;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.06);
+        color: var(--muted);
+      }
+      .building-item.active .bi-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+      .sidebar-empty {
+        padding: 30px 14px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.84rem;
+        list-style: none;
+      }
+
+      /* Main area */
+      .main-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* Date strip (inside topbar) */
+      .date-strip {
+        background: rgba(0, 0, 0, 0.12);
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 42px;
+        flex-shrink: 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .date-strip::-webkit-scrollbar {
+        display: none;
+      }
+      .date-chip {
+        padding: 4px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.78rem;
+        font-family: inherit;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.12s;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .date-chip:hover {
+        border-color: rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+      }
+      .date-chip.active {
+        background: #fff;
+        color: var(--clr-dark);
+        border-color: #fff;
+        font-weight: 600;
+      }
+      .date-chip.today {
+        box-shadow: inset 0 -2px 0 #fff;
+      }
+
+      /* Content scroll */
+      .content-scroll {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px 24px 40px;
+      }
+
+      /* Summary strip */
+      .summary-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .summary-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        box-shadow: var(--shadow);
+      }
+      .summary-card .label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin-bottom: 3px;
+      }
+      .summary-card .value {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--clr-dark);
+      }
+      .summary-card .sub {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 1px;
+      }
+
+      /* Building header */
+      .building-header {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: var(--shadow);
+      }
+      .building-header .bh-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: var(--clr-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+      }
+      .building-header .bh-info {
+        flex: 1;
+      }
+      .building-header .bh-name {
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+      .building-header .bh-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+        display: flex;
+        gap: 14px;
+        margin-top: 3px;
+        flex-wrap: wrap;
+      }
+      .building-header .bh-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .badge {
+        font-size: 0.68rem;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      .badge-active {
+        background: var(--clr-light);
+        color: var(--clr-dark);
+      }
+      .badge-culled {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      /* Section tabs */
+      .section-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 16px;
+      }
+      .section-tab {
+        padding: 8px 16px;
+        background: none;
+        border: none;
+        font-size: 0.83rem;
+        font-family: inherit;
+        cursor: pointer;
+        color: var(--muted);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .section-tab:hover {
+        color: var(--text);
+      }
+      .section-tab.active {
+        color: var(--clr-dark);
+        border-bottom-color: var(--clr);
+        font-weight: 600;
+      }
+      .section-tab .icon {
+        font-size: 1rem;
+      }
+      .section-pane {
+        display: none;
+        animation: fadeIn 0.2s;
+      }
+      .section-pane.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* Data cards */
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .data-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px;
+        box-shadow: var(--shadow);
+        transition: box-shadow 0.15s;
+      }
+      .data-card:hover {
+        box-shadow: var(--shadow-lg);
+      }
+      .data-card .dc-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .data-card .dc-value {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .data-card .dc-sub {
+        font-size: 0.75rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .data-card.highlight {
+        border-left: 3px solid var(--clr);
+      }
+      .data-card.warning {
+        border-left: 3px solid #f59e0b;
+      }
+
+      /* Tables */
+      .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 14px;
+      }
+      .data-table th {
+        background: var(--clr-bg);
+        color: var(--clr-dark);
+        font-size: 0.73rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table td {
+        padding: 8px 12px;
+        font-size: 0.83rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr:hover {
+        background: #fafffe;
+      }
+      .data-table .total-row {
+        background: var(--clr-bg);
+        font-weight: 700;
+      }
+      .data-table .total-row td {
+        border-top: 2px solid var(--clr);
+        color: var(--clr-dark);
+      }
+      .data-table .notes-cell {
+        max-width: 200px;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* Notes card */
+      .notes-card {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: var(--radius);
+        padding: 12px 16px;
+        margin-bottom: 14px;
+        font-size: 0.83rem;
+        line-height: 1.5;
+      }
+      .notes-card .notes-label {
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 3px;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      /* Report sheet */
+      .report-sheet {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        padding: 20px 24px;
+        font-family: "Consolas", "Courier New", "Liberation Mono", monospace;
+        font-size: 0.86rem;
+        line-height: 1.4;
+        color: var(--text);
+        max-width: 700px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .report-sheet .report-title {
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--clr-dark);
+        margin-bottom: 0;
+      }
+      .report-sheet .report-date {
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0;
+        color: var(--text);
+      }
+      .report-sheet .report-meta {
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+      .report-sheet .report-divider {
+        border: none;
+        margin: 2px 0;
+        height: 0;
+      }
+      .report-sheet .report-section-label {
+        font-weight: 700;
+        color: var(--clr-dark);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      .report-sheet .report-bldg-header {
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: var(--clr-dark);
+        display: inline-block;
+      }
+      .report-sheet .report-row {
+        display: flex;
+        gap: 4px;
+      }
+      .report-sheet .report-row .rl {
+        min-width: 110px;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      .report-sheet .report-row .rv {
+        font-weight: 600;
+      }
+      .report-sheet .egg-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 2px 0 4px;
+        font-family: inherit;
+        font-size: 0.82rem;
+      }
+      .report-sheet .egg-table th {
+        text-align: left;
+        font-weight: 700;
+        color: var(--clr-dark);
+        border-bottom: none;
+        padding: 2px 8px 2px 0;
+      }
+      .report-sheet .egg-table td {
+        padding: 1px 8px 1px 0;
+        border-bottom: none;
+      }
+      .report-sheet .egg-table .egg-total td {
+        font-weight: 700;
+        color: var(--clr-dark);
+      }
+      .report-sheet .report-none {
+        color: #94a3b8;
+        font-style: italic;
+      }
+
+      /* Empty / Loading */
+      .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+      }
+      .empty-state .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        opacity: 0.4;
+      }
+      .empty-state .empty-text {
+        color: var(--muted);
+        font-size: 0.9rem;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .loading-state {
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--border);
+        border-top-color: var(--clr);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 0 auto 10px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Print */
+      @media print {
+        .topbar,
+        .sidebar,
+        .date-strip,
+        .section-tabs {
+          display: none !important;
+        }
+        .layout {
+          display: block;
+          height: auto;
+          margin-top: 0;
+        }
+        .main-area {
+          overflow: visible;
+        }
+        .content-scroll {
+          overflow: visible;
+          padding: 0;
+        }
+        .report-sheet {
+          box-shadow: none !important;
+          border: none !important;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          display: none;
+        }
+        .layout {
+          margin-top: var(--topbar-h);
+        }
+        .summary-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .data-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .building-header .bh-meta {
+          gap: 8px;
+        }
+        .data-table th,
+        .data-table td {
+          padding: 6px 8px;
+        }
+      }
+      @media (max-width: 480px) {
+        .summary-strip {
+          grid-template-columns: 1fr;
+        }
+        .data-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="topbar-logo">&#129361;</div>
+        <h1>LayerHub <span>Dashboard</span></h1>
+        <div class="topbar-right">
+          <span class="sync-badge" id="sync-time">&mdash;</span>
+        </div>
+      </div>
+      <div class="date-strip" id="date-strip"></div>
+    </header>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Buildings</h2>
+          <div class="sidebar-date-filter">
+            <select id="sel-year"></select>
+            <select id="sel-month"></select>
+          </div>
+        </div>
+        <div class="sidebar-filter-toggle">
+          <button class="sidebar-filter-btn active" data-filter="active">
+            Active
+          </button>
+          <button class="sidebar-filter-btn" data-filter="culled">
+            Culled
+          </button>
+        </div>
+        <ul class="building-list" id="building-list"></ul>
+      </aside>
+
+      <!-- Main area -->
+      <div class="main-area">
+        <!-- Scrollable content -->
+        <div class="content-scroll" id="content-scroll">
+          <div class="summary-strip" id="summary-strip"></div>
+          <div id="building-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var dataDir = "data";
+      var EGG_SIZES = [
+        ["nnv", "NNV"],
+        ["nv", "NV"],
+        ["no_weight", "No Weight"],
+        ["pullet", "Pullet"],
+        ["pewee", "Pewee"],
+        ["small", "Small"],
+        ["medium", "Medium"],
+        ["large", "Large"],
+        ["larger", "Larger"],
+        ["xlarge", "X-Large"],
+        ["jumbo", "Jumbo"],
+        ["s_jumbo", "S-Jumbo"],
+        ["broken", "Broken"],
+        ["bold", "Bold"],
+        ["loss", "Loss"],
+        ["reject", "Reject"],
+        ["good_cracks", "Good Cracks"],
+        ["bad_cracks", "Bad Cracks"],
+        ["misshapen", "Misshapen"],
+      ];
+
+      var _manifest = { dates: [] };
+      var _data = null;
+      var _activeBuilding = null;
+      var _activeSection = "report";
+      var _activeDateIdx = 0;
+      var _buildingFilter = "active";
+
+      function esc(s) {
+        var d = document.createElement("div");
+        d.textContent = s;
+        return d.innerHTML;
+      }
+      function num(n) {
+        return (n == null ? 0 : n).toLocaleString();
+      }
+
+      async function loadManifest() {
+        try {
+          var r = await fetch(dataDir + "/manifest.json");
+          if (!r.ok) throw 0;
+          return await r.json();
+        } catch (e) {
+          return { dates: [] };
+        }
+      }
+      async function loadDay(d) {
+        var r = await fetch(dataDir + "/" + d + ".json");
+        if (!r.ok) throw 0;
+        return await r.json();
+      }
+
+      function groupByBuilding(data) {
+        var g = {};
+        for (var i = 0; i < data.entries.length; i++) {
+          var e = data.entries[i];
+          if (!g[e.buildingId]) g[e.buildingId] = [];
+          g[e.buildingId].push(e);
+        }
+        return g;
+      }
+      function buildingMap(data) {
+        var m = {};
+        var bl = data.buildings || [];
+        for (var i = 0; i < bl.length; i++) m[bl[i].id] = bl[i];
+        return m;
+      }
+
+      /* Date strip */
+      function renderDateStrip() {
+        var el = document.getElementById("date-strip");
+        if (!_manifest.dates.length) {
+          el.innerHTML = "";
+          return;
+        }
+        var today = new Date().toISOString().slice(0, 10);
+        var html = "";
+        for (var i = 0; i < _manifest.dates.length; i++) {
+          var d = _manifest.dates[i];
+          var cls = "date-chip";
+          if (i === _activeDateIdx) cls += " active";
+          if (d === today) cls += " today";
+          html +=
+            '<button class="' +
+            cls +
+            '" data-idx="' +
+            i +
+            '">' +
+            d +
+            "</button>";
+        }
+        el.innerHTML = html;
+        el.querySelectorAll(".date-chip").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            _activeDateIdx = parseInt(btn.dataset.idx);
+            loadAndRender();
+          });
+        });
+        var active = el.querySelector(".date-chip.active");
+        if (active)
+          active.scrollIntoView({ block: "nearest", inline: "center" });
+      }
+
+      /* Year/Month filter */
+      function monthName(m) {
+        var names = [
+          "",
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        return names[parseInt(m)] || m;
+      }
+
+      function populateYearMonth() {
+        var selY = document.getElementById("sel-year");
+        var selM = document.getElementById("sel-month");
+        if (!_manifest.dates.length) {
+          selY.innerHTML = "<option>\u2014</option>";
+          selM.innerHTML = "<option>\u2014</option>";
+          return;
+        }
+        var years = [],
+          i;
+        for (i = 0; i < _manifest.dates.length; i++) {
+          var y = _manifest.dates[i].slice(0, 4);
+          if (years.indexOf(y) < 0) years.push(y);
+        }
+        var activeDate = _manifest.dates[_activeDateIdx] || _manifest.dates[0];
+        var activeYear = activeDate.slice(0, 4);
+        var activeMonth = activeDate.slice(5, 7);
+        var yhtml = "";
+        for (i = 0; i < years.length; i++)
+          yhtml +=
+            '<option value="' +
+            years[i] +
+            '"' +
+            (years[i] === activeYear ? " selected" : "") +
+            ">" +
+            years[i] +
+            "</option>";
+        selY.innerHTML = yhtml;
+        var months = [];
+        for (i = 0; i < _manifest.dates.length; i++) {
+          if (_manifest.dates[i].indexOf(activeYear) === 0) {
+            var mo = _manifest.dates[i].slice(5, 7);
+            if (months.indexOf(mo) < 0) months.push(mo);
+          }
+        }
+        var mhtml = "";
+        for (i = 0; i < months.length; i++)
+          mhtml +=
+            '<option value="' +
+            months[i] +
+            '"' +
+            (months[i] === activeMonth ? " selected" : "") +
+            ">" +
+            monthName(months[i]) +
+            "</option>";
+        selM.innerHTML = mhtml;
+      }
+
+      function onYearMonthChange() {
+        var y = document.getElementById("sel-year").value;
+        var m = document.getElementById("sel-month").value;
+        var prefix = y + "-" + m;
+        var idx = -1;
+        for (var i = 0; i < _manifest.dates.length; i++) {
+          if (_manifest.dates[i].indexOf(prefix) === 0) {
+            idx = i;
+            break;
+          }
+        }
+        if (idx >= 0) {
+          _activeDateIdx = idx;
+          loadAndRender();
+        } else {
+          populateYearMonth();
+        }
+      }
+
+      /* Building list */
+      function renderBuildingList() {
+        var el = document.getElementById("building-list");
+        if (!_data || !_data.entries || !_data.entries.length) {
+          el.innerHTML =
+            '<li class="sidebar-empty">No data for this date.</li>';
+          return;
+        }
+        var byBuilding = groupByBuilding(_data);
+        var bMap = buildingMap(_data);
+        var ids = Object.keys(byBuilding);
+        if (!ids.length) {
+          el.innerHTML = '<li class="sidebar-empty">No buildings.</li>';
+          return;
+        }
+        var filtered = [];
+        for (var i = 0; i < ids.length; i++) {
+          var bb = bMap[ids[i]] || {};
+          if (_buildingFilter === "culled") {
+            if (bb.culledAt) filtered.push(ids[i]);
+          } else {
+            if (!bb.culledAt) filtered.push(ids[i]);
+          }
+        }
+        if (!filtered.length) {
+          el.innerHTML =
+            '<li class="sidebar-empty">No ' +
+            esc(_buildingFilter) +
+            " buildings.</li>";
+          if (ids.indexOf(_activeBuilding) < 0) _activeBuilding = ids[0];
+          return;
+        }
+        if (!_activeBuilding || filtered.indexOf(_activeBuilding) < 0)
+          _activeBuilding = filtered[0];
+        var html = "";
+        for (var j = 0; j < filtered.length; j++) {
+          var id = filtered[j];
+          var b = bMap[id] || {};
+          var active = id === _activeBuilding ? " active" : "";
+          var culled = b.culledAt ? " culled" : "";
+          var prod = null;
+          var bEntries = byBuilding[id] || [];
+          for (var k = 0; k < bEntries.length; k++) {
+            if (bEntries[k].type === "production") {
+              prod = bEntries[k];
+              break;
+            }
+          }
+          var heads = prod ? prod.currentHeads || "" : b.startingHeads || "";
+          html +=
+            '<li class="building-item' +
+            active +
+            culled +
+            '" data-id="' +
+            id +
+            '"><span class="dot"></span><span class="bi-name">' +
+            esc(b.name || id) +
+            "</span>" +
+            (heads ? '<span class="bi-badge">' + num(heads) + "</span>" : "") +
+            "</li>";
+        }
+        el.innerHTML = html;
+        el.querySelectorAll(".building-item").forEach(function (li) {
+          li.addEventListener("click", function () {
+            _activeBuilding = li.dataset.id;
+            _activeSection = "report";
+            renderBuildingList();
+            renderBuildingContent();
+          });
+        });
+      }
+
+      /* Summary strip */
+      function renderSummary(data) {
+        var el = document.getElementById("summary-strip");
+        var prods = [],
+          eggs = [];
+        for (var i = 0; i < data.entries.length; i++) {
+          if (data.entries[i].type === "production")
+            prods.push(data.entries[i]);
+          if (data.entries[i].type === "egg-summary")
+            eggs.push(data.entries[i]);
+        }
+        var totalPieces = 0,
+          totalHeads = 0,
+          totalMort = 0,
+          totalFeed = 0,
+          totalEggPcs = 0;
+        var bldgSet = {};
+        for (var j = 0; j < prods.length; j++) {
+          var p = prods[j];
+          totalPieces +=
+            p.production && p.production.totalPieces
+              ? p.production.totalPieces
+              : 0;
+          totalHeads += p.currentHeads || 0;
+          totalMort += p.mortalityCount || 0;
+          totalFeed += p.feed && p.feed.bags ? p.feed.bags : 0;
+          bldgSet[p.buildingId] = 1;
+        }
+        for (var k = 0; k < eggs.length; k++)
+          totalEggPcs += eggs[k].totalPieces || 0;
+        var pct =
+          totalHeads > 0
+            ? ((totalPieces / totalHeads) * 100).toFixed(1)
+            : "\u2014";
+        var buildings = Object.keys(bldgSet).length;
+        el.innerHTML =
+          '<div class="summary-card"><div class="label">Total Production</div><div class="value">' +
+          num(totalPieces) +
+          '</div><div class="sub">' +
+          buildings +
+          " bldg" +
+          (buildings !== 1 ? "s" : "") +
+          "</div></div>" +
+          '<div class="summary-card"><div class="label">Prod Rate</div><div class="value">' +
+          pct +
+          '%</div><div class="sub">hen-day</div></div>' +
+          '<div class="summary-card"><div class="label">Heads</div><div class="value">' +
+          num(totalHeads) +
+          '</div><div class="sub">current</div></div>' +
+          '<div class="summary-card"><div class="label">Mortality</div><div class="value">' +
+          num(totalMort) +
+          '</div><div class="sub">today</div></div>' +
+          '<div class="summary-card"><div class="label">Feed</div><div class="value">' +
+          num(totalFeed) +
+          '</div><div class="sub">bags</div></div>' +
+          '<div class="summary-card"><div class="label">Eggs Sorted</div><div class="value">' +
+          num(totalEggPcs) +
+          '</div><div class="sub">pcs</div></div>';
+      }
+
+      /* Building content */
+      function renderBuildingContent() {
+        var data = _data;
+        var el = document.getElementById("building-content");
+        if (
+          !data ||
+          !data.entries ||
+          !data.entries.length ||
+          !_activeBuilding
+        ) {
+          el.innerHTML =
+            '<div class="empty-state"><div class="empty-icon">&#128466;</div><div class="empty-text">No entries for this date.</div></div>';
+          return;
+        }
+        var byBuilding = groupByBuilding(data);
+        var bMap = buildingMap(data);
+        var entries = byBuilding[_activeBuilding] || [];
+        var b = bMap[_activeBuilding] || {};
+
+        var prod = null,
+          mort = null,
+          egg = null,
+          med = null;
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].type === "production") prod = entries[i];
+          if (entries[i].type === "mortality") mort = entries[i];
+          if (entries[i].type === "egg-summary") egg = entries[i];
+          if (entries[i].type === "medication") med = entries[i];
+        }
+
+        var hasProd = !!prod;
+        var hasMort = !!(
+          mort &&
+          ((mort.mortality && mort.mortality.length) || mort.notes)
+        );
+        var hasEgg = !!egg;
+        var hasMed = !!(
+          med &&
+          ((med.medication && med.medication.length) || med.notes)
+        );
+        var hasAny = hasProd || hasMort || hasEgg || hasMed;
+
+        if (_activeSection !== "report") {
+          var sm = {
+            production: hasProd,
+            mortality: hasMort,
+            egg: hasEgg,
+            medication: hasMed,
+          };
+          if (!sm[_activeSection]) _activeSection = "report";
+        }
+
+        var html = "";
+        var badgeClass = b.culledAt ? "badge-culled" : "badge-active";
+        var badgeText = b.culledAt ? "Culled" : "Active";
+        var age = prod
+          ? (prod.ageWeeks != null ? prod.ageWeeks : "?") +
+            "w" +
+            (prod.ageDays || 0) +
+            "d"
+          : b.ageWeeks != null
+            ? b.ageWeeks + "w" + (b.ageDays || 0) + "d"
+            : "\u2014";
+
+        // Building header
+        html +=
+          '<div class="building-header"><div class="bh-icon">&#127969;</div><div class="bh-info">' +
+          '<div class="bh-name">' +
+          esc(b.name || _activeBuilding) +
+          ' <span class="badge ' +
+          badgeClass +
+          '">' +
+          badgeText +
+          "</span></div>" +
+          '<div class="bh-meta"><span>&#129415; ' +
+          esc(b.breed || "\u2014") +
+          "</span><span>&#128197; " +
+          age +
+          "</span><span>&#128101; " +
+          num(b.startingHeads) +
+          "</span><span>&#128100; " +
+          esc(b.flockman || "\u2014") +
+          "</span></div>" +
+          "</div></div>";
+
+        // Section tabs
+        html += '<div class="section-tabs">';
+        if (hasAny)
+          html +=
+            '<button class="section-tab' +
+            (_activeSection === "report" ? " active" : "") +
+            '" data-s="report"><span class="icon">&#128221;</span>Daily Report</button>';
+        if (hasProd)
+          html +=
+            '<button class="section-tab' +
+            (_activeSection === "production" ? " active" : "") +
+            '" data-s="production"><span class="icon">&#128202;</span>Production</button>';
+        if (hasEgg)
+          html +=
+            '<button class="section-tab' +
+            (_activeSection === "egg" ? " active" : "") +
+            '" data-s="egg"><span class="icon">&#129370;</span>Egg Summary</button>';
+        if (hasMort)
+          html +=
+            '<button class="section-tab' +
+            (_activeSection === "mortality" ? " active" : "") +
+            '" data-s="mortality"><span class="icon">&#128203;</span>Mortality</button>';
+        if (hasMed)
+          html +=
+            '<button class="section-tab' +
+            (_activeSection === "medication" ? " active" : "") +
+            '" data-s="medication"><span class="icon">&#128138;</span>Medication</button>';
+        html += "</div>";
+
+        /* ── REPORT PANE ── */
+        if (hasAny) {
+          var dateObj = data.date
+            ? new Date(data.date + "T00:00:00")
+            : new Date();
+          var dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+          var yyyy = dateObj.getFullYear();
+          var mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+          var dd = String(dateObj.getDate()).padStart(2, "0");
+          var dayName = dayNames[dateObj.getDay()];
+          var reporter =
+            (prod && prod.reporter) ||
+            (mort && mort.reporter) ||
+            (med && med.reporter) ||
+            "\u2014";
+          var sorter = (prod && prod.eggSorter) || (egg && egg.eggSorter) || "";
+          var heads = prod ? prod.currentHeads || 0 : 0;
+          var mortCount = prod ? prod.mortalityCount || 0 : 0;
+          var culls = prod ? prod.culls || 0 : 0;
+          var cases = prod && prod.production ? prod.production.cases || 0 : 0;
+          var trays = prod && prod.production ? prod.production.trays || 0 : 0;
+          var pieces =
+            prod && prod.production ? prod.production.totalPieces || 0 : 0;
+          var prodPct =
+            heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+          var bags = prod && prod.feed ? prod.feed.bags || 0 : 0;
+          var feedBrand =
+            prod && prod.feed && prod.feed.brand
+              ? prod.feed.brand
+              : "(not specified)";
+          var gpb =
+            prod && prod.feed ? prod.feed.gramsPerBirdDay || "0.00" : "0.00";
+
+          html +=
+            '<div class="section-pane' +
+            (_activeSection === "report" ? " active" : "") +
+            '" data-s="report">';
+          html += '<div class="report-sheet">';
+          html += '<div class="report-title">FARM DAILY REPORT</div>';
+          html +=
+            '<div class="report-date">' +
+            yyyy +
+            " " +
+            mm +
+            " " +
+            dd +
+            " " +
+            dayName +
+            "</div>";
+          html +=
+            '<div class="report-meta">REPORT BY: ' +
+            esc(reporter) +
+            "\nEGG SORTER: " +
+            esc(sorter) +
+            "</div>";
+          html += '<hr class="report-divider">';
+          html +=
+            '<span class="report-bldg-header">BLDG: ' +
+            esc(b.name || _activeBuilding) +
+            "</span>";
+          html +=
+            '<div class="report-row"><span class="rl">BREED:</span><span class="rv">' +
+            esc(b.breed || "\u2014") +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">FLOCKMAN:</span><span class="rv">' +
+            esc(b.flockman || "\u2014") +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">AGE:</span><span class="rv">' +
+            age +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">HD:</span><span class="rv">' +
+            num(heads) +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">M:</span><span class="rv">' +
+            num(mortCount) +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">C:</span><span class="rv">' +
+            num(culls) +
+            "</span></div>";
+          html += '\n<hr class="report-divider">';
+          html +=
+            '<div class="report-row"><span class="rl">PROD:</span><span class="rv">' +
+            cases +
+            "C " +
+            trays +
+            "T</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">PCS:</span><span class="rv">' +
+            num(pieces) +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">%:</span><span class="rv">' +
+            prodPct +
+            "%</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">BGS:</span><span class="rv">' +
+            bags +
+            "  |  FEED: " +
+            esc(feedBrand) +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">G:</span><span class="rv">' +
+            gpb +
+            "g</span></div>";
+          html += '\n<hr class="report-divider">';
+          html += '<div class="report-section-label">MEDICATIONS:</div>';
+          if (med && med.medication && med.medication.length) {
+            for (var mi = 0; mi < med.medication.length; mi++) {
+              var rx = med.medication[mi];
+              html +=
+                '<div class="report-row"><span class="rl">' +
+                esc(rx.drug || "\u2014") +
+                '</span><span class="rv">' +
+                esc(rx.dosage || "") +
+                " " +
+                esc(rx.route || "") +
+                " x" +
+                (rx.qty != null ? rx.qty : "") +
+                "</span></div>";
+              if (rx.notes)
+                html +=
+                  '  <span class="report-none">\u21B3 ' +
+                  esc(rx.notes) +
+                  "</span>\n";
+            }
+          } else {
+            html += '<span class="report-none">(none)</span>\n';
+          }
+
+          html += '\n<hr class="report-divider">';
+          html += '<div class="report-section-label">EGG SIZE SUMMARY</div>';
+          html +=
+            '<table class="egg-table"><thead><tr><th style="min-width:110px">SIZE</th><th style="min-width:60px">PCS</th><th>%</th></tr></thead><tbody>';
+          var dist = egg && egg.distribution ? egg.distribution : {};
+          var eggTotalPcs = 0;
+          for (var ei = 0; ei < EGG_SIZES.length; ei++) {
+            var dk = dist[EGG_SIZES[ei][0]];
+            eggTotalPcs += dk && dk.pieces ? dk.pieces : 0;
+          }
+          for (var ej = 0; ej < EGG_SIZES.length; ej++) {
+            var ekey = EGG_SIZES[ej][0],
+              elabel = EGG_SIZES[ej][1];
+            var dp = dist[ekey] && dist[ekey].pieces ? dist[ekey].pieces : 0;
+            var pctEgg =
+              eggTotalPcs > 0 && dp > 0
+                ? ((dp / eggTotalPcs) * 100).toFixed(1) + "%"
+                : "";
+            html +=
+              "<tr><td>" +
+              elabel.toUpperCase().padEnd(10) +
+              "</td><td>" +
+              (dp > 0 ? num(dp) : "") +
+              "</td><td>" +
+              pctEgg +
+              "</td></tr>";
+          }
+          html +=
+            '<tr class="egg-total"><td>TOTAL</td><td>' +
+            (eggTotalPcs > 0 ? num(eggTotalPcs) : "") +
+            "</td><td>" +
+            (eggTotalPcs > 0 ? "100%" : "") +
+            "</td></tr></tbody></table>";
+
+          html += '<hr class="report-divider">';
+          var totalMortVal =
+            mort && mort.totalMortality != null
+              ? mort.totalMortality
+              : mortCount;
+          html +=
+            '<div class="report-section-label">TOTAL MORTALITIES: ' +
+            num(totalMortVal) +
+            "</div>";
+          if (mort && mort.mortality && mort.mortality.length) {
+            for (var mi2 = 0; mi2 < mort.mortality.length; mi2++) {
+              var mr = mort.mortality[mi2];
+              html +=
+                '<div class="report-row"><span class="rl">' +
+                esc(mr.cause || "Unknown") +
+                '</span><span class="rv">' +
+                (mr.count != null ? mr.count : 0) +
+                "</span></div>";
+              if (mr.notes)
+                html +=
+                  '  <span class="report-none">\u21B3 ' +
+                  esc(mr.notes) +
+                  "</span>\n";
+            }
+          } else {
+            html += '<span class="report-none">(none)</span>\n';
+          }
+
+          var allNotes = [];
+          if (prod && prod.notes) allNotes.push(prod.notes);
+          if (mort && mort.notes) allNotes.push(mort.notes);
+          if (med && med.notes) allNotes.push(med.notes);
+          html += '\n<hr class="report-divider">';
+          html += '<div class="report-section-label">HAPPENINGS / NOTES:</div>';
+          if (allNotes.length) {
+            for (var ni = 0; ni < allNotes.length; ni++)
+              html += esc(allNotes[ni]) + "\n";
+          } else {
+            html += '<span class="report-none">(none)</span>\n';
+          }
+
+          html += '\n<hr class="report-divider">';
+          html += '<div class="report-section-label">WEATHER:</div>';
+          html +=
+            '<div class="report-row"><span class="rl">AM:</span><span class="rv">' +
+            esc(prod && prod.weatherAm ? prod.weatherAm : "") +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">PM:</span><span class="rv">' +
+            esc(prod && prod.weatherPm ? prod.weatherPm : "") +
+            "</span></div>";
+          html +=
+            '<div class="report-row"><span class="rl">TEMP:</span><span class="rv">' +
+            esc(prod && prod.temperature ? prod.temperature : "") +
+            "</span></div>";
+          html += "</div></div>";
+        }
+
+        /* ── PRODUCTION PANE ── */
+        if (hasProd) {
+          var pp = prod;
+          var pPieces = pp.production ? pp.production.totalPieces || 0 : 0;
+          var pHeads = pp.currentHeads || 0;
+          var pProdPct =
+            pHeads > 0 ? ((pPieces / pHeads) * 100).toFixed(1) + "%" : "\u2014";
+          html +=
+            '<div class="section-pane' +
+            (_activeSection === "production" ? " active" : "") +
+            '" data-s="production">';
+          html += '<div class="data-grid">';
+          html +=
+            '<div class="data-card highlight"><div class="dc-label">Total Pieces</div><div class="dc-value">' +
+            num(pPieces) +
+            '</div><div class="dc-sub">' +
+            (pp.production ? pp.production.cases || 0 : 0) +
+            " cases, " +
+            (pp.production ? pp.production.trays || 0 : 0) +
+            " trays</div></div>";
+          html +=
+            '<div class="data-card highlight"><div class="dc-label">Production %</div><div class="dc-value">' +
+            pProdPct +
+            '</div><div class="dc-sub">hen-day</div></div>';
+          html +=
+            '<div class="data-card"><div class="dc-label">Current Heads</div><div class="dc-value">' +
+            num(pHeads) +
+            "</div></div>";
+          html +=
+            '<div class="data-card' +
+            ((pp.mortalityCount || 0) > 0 ? " warning" : "") +
+            '"><div class="dc-label">Mortality</div><div class="dc-value">' +
+            num(pp.mortalityCount) +
+            "</div>" +
+            ((pp.culls || 0) > 0
+              ? '<div class="dc-sub">' + pp.culls + " culls</div>"
+              : "") +
+            "</div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Feed</div><div class="dc-value">' +
+            (pp.feed ? pp.feed.bags || 0 : 0) +
+            ' bags</div><div class="dc-sub">' +
+            (pp.feed ? pp.feed.gramsPerBirdDay || "\u2014" : "\u2014") +
+            " g/bird/day</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Feed Brand</div><div class="dc-value" style="font-size:.95rem">' +
+            esc(pp.feed && pp.feed.brand ? pp.feed.brand : "\u2014") +
+            "</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Weather</div><div class="dc-value" style="font-size:.9rem">AM: ' +
+            esc(pp.weatherAm || "\u2014") +
+            '</div><div class="dc-sub">PM: ' +
+            esc(pp.weatherPm || "\u2014") +
+            " \u00B7 " +
+            esc(pp.temperature || "\u2014") +
+            "</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:.95rem">' +
+            esc(pp.reporter || "\u2014") +
+            "</div></div>";
+          html += "</div>";
+          if (pp.notes)
+            html +=
+              '<div class="notes-card"><div class="notes-label">Production Notes</div>' +
+              esc(pp.notes) +
+              "</div>";
+          html += "</div>";
+        }
+
+        /* ── EGG SUMMARY PANE ── */
+        if (hasEgg) {
+          var eg = egg;
+          var edist = eg.distribution || {};
+          html +=
+            '<div class="section-pane' +
+            (_activeSection === "egg" ? " active" : "") +
+            '" data-s="egg">';
+          html += '<div class="data-grid" style="margin-bottom:14px">';
+          html +=
+            '<div class="data-card highlight"><div class="dc-label">Total Egg Pieces</div><div class="dc-value">' +
+            num(eg.totalPieces) +
+            "</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Total Trays</div><div class="dc-value">' +
+            num(eg.totalTrays) +
+            "</div></div>";
+          if (eg.eggSorter)
+            html +=
+              '<div class="data-card"><div class="dc-label">Egg Sorter</div><div class="dc-value" style="font-size:.95rem">' +
+              esc(eg.eggSorter) +
+              "</div></div>";
+          html += "</div>";
+          html +=
+            '<table class="data-table"><thead><tr><th>Egg Size</th><th>Cases</th><th>Trays</th><th>Pieces</th></tr></thead><tbody>';
+          var etC = 0,
+            etT = 0,
+            etP = 0;
+          for (var ei2 = 0; ei2 < EGG_SIZES.length; ei2++) {
+            var ek2 = EGG_SIZES[ei2][0],
+              el2 = EGG_SIZES[ei2][1];
+            var ed2 = edist[ek2] || {};
+            var ec = ed2.cases || 0,
+              et2 = ed2.trays || 0,
+              ep = ed2.pieces || 0;
+            if (ec || et2 || ep) {
+              html +=
+                "<tr><td>" +
+                el2 +
+                "</td><td>" +
+                num(ec) +
+                "</td><td>" +
+                num(et2) +
+                "</td><td>" +
+                num(ep) +
+                "</td></tr>";
+              etC += ec;
+              etT += et2;
+              etP += ep;
+            }
+          }
+          html +=
+            '<tr class="total-row"><td>TOTAL</td><td>' +
+            num(etC) +
+            "</td><td>" +
+            num(etT) +
+            "</td><td>" +
+            num(etP) +
+            "</td></tr>";
+          html += "</tbody></table></div>";
+        }
+
+        /* ── MORTALITY PANE ── */
+        if (hasMort) {
+          var mt = mort;
+          var mrows = mt.mortality || [];
+          html +=
+            '<div class="section-pane' +
+            (_activeSection === "mortality" ? " active" : "") +
+            '" data-s="mortality">';
+          html += '<div class="data-grid" style="margin-bottom:14px">';
+          html +=
+            '<div class="data-card warning"><div class="dc-label">Total Mortality</div><div class="dc-value">' +
+            num(mt.totalMortality) +
+            "</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:.95rem">' +
+            esc(mt.reporter || "\u2014") +
+            "</div></div>";
+          html += "</div>";
+          if (mrows.length) {
+            html +=
+              '<table class="data-table"><thead><tr><th>Cause</th><th>Count</th><th>Notes</th></tr></thead><tbody>';
+            for (var mi3 = 0; mi3 < mrows.length; mi3++)
+              html +=
+                "<tr><td>" +
+                esc(mrows[mi3].cause || "") +
+                "</td><td>" +
+                (mrows[mi3].count != null ? mrows[mi3].count : 0) +
+                '</td><td class="notes-cell">' +
+                esc(mrows[mi3].notes || "") +
+                "</td></tr>";
+            html += "</tbody></table>";
+          }
+          if (mt.notes)
+            html +=
+              '<div class="notes-card"><div class="notes-label">Mortality Notes</div>' +
+              esc(mt.notes) +
+              "</div>";
+          html += "</div>";
+        }
+
+        /* ── MEDICATION PANE ── */
+        if (hasMed) {
+          var mdd = med;
+          var mdrows = mdd.medication || [];
+          html +=
+            '<div class="section-pane' +
+            (_activeSection === "medication" ? " active" : "") +
+            '" data-s="medication">';
+          html += '<div class="data-grid" style="margin-bottom:14px">';
+          html +=
+            '<div class="data-card"><div class="dc-label">Medications Given</div><div class="dc-value">' +
+            mdrows.length +
+            "</div></div>";
+          html +=
+            '<div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:.95rem">' +
+            esc(mdd.reporter || "\u2014") +
+            "</div></div>";
+          html += "</div>";
+          if (mdrows.length) {
+            html +=
+              '<table class="data-table"><thead><tr><th>Drug</th><th>Dosage</th><th>Route</th><th>Qty</th><th>Notes</th></tr></thead><tbody>';
+            for (var mi4 = 0; mi4 < mdrows.length; mi4++)
+              html +=
+                "<tr><td><strong>" +
+                esc(mdrows[mi4].drug || "") +
+                "</strong></td><td>" +
+                esc(mdrows[mi4].dosage || "") +
+                "</td><td>" +
+                esc(mdrows[mi4].route || "") +
+                "</td><td>" +
+                (mdrows[mi4].qty != null ? mdrows[mi4].qty : "") +
+                '</td><td class="notes-cell">' +
+                esc(mdrows[mi4].notes || "") +
+                "</td></tr>";
+            html += "</tbody></table>";
+          }
+          if (mdd.notes)
+            html +=
+              '<div class="notes-card"><div class="notes-label">Medication Notes</div>' +
+              esc(mdd.notes) +
+              "</div>";
+          html += "</div>";
+        }
+
+        if (!hasAny) {
+          html +=
+            '<div class="empty-state"><div class="empty-icon">&#128196;</div><div class="empty-text">No entries recorded for this building on this date.</div></div>';
+        }
+
+        el.innerHTML = html;
+
+        // Wire section tabs
+        el.querySelectorAll(".section-tab").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            _activeSection = btn.dataset.s;
+            el.querySelectorAll(".section-tab").forEach(function (t) {
+              t.classList.toggle("active", t.dataset.s === _activeSection);
+            });
+            el.querySelectorAll(".section-pane").forEach(function (p) {
+              p.classList.toggle("active", p.dataset.s === _activeSection);
+            });
+          });
+        });
+      }
+
+      /* Load + render */
+      async function loadAndRender() {
+        var date = _manifest.dates[_activeDateIdx];
+        if (!date) return;
+        renderDateStrip();
+        populateYearMonth();
+        document.getElementById("building-content").innerHTML =
+          '<div class="loading-state"><div class="spinner"></div>Loading\u2026</div>';
+        try {
+          _data = await loadDay(date);
+          var syncEl = document.getElementById("sync-time");
+          if (_data.syncedAt)
+            syncEl.textContent =
+              "Synced " + new Date(_data.syncedAt).toLocaleString();
+          renderSummary(_data);
+          renderBuildingList();
+          renderBuildingContent();
+        } catch (e) {
+          document.getElementById("summary-strip").innerHTML = "";
+          document.getElementById("building-list").innerHTML =
+            '<li class="sidebar-empty">Load failed.</li>';
+          document.getElementById("building-content").innerHTML =
+            '<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-text">Failed to load data for ' +
+            esc(date) +
+            ".</div></div>";
+        }
+      }
+
+      /* Init */
+      async function init() {
+        _manifest = await loadManifest();
+        if (!_manifest.dates.length) {
+          document.getElementById("date-strip").innerHTML =
+            '<span style="color:var(--muted);font-size:.84rem;padding:8px 0">No data synced yet.</span>';
+          document.getElementById("building-list").innerHTML =
+            '<li class="sidebar-empty">No data yet.</li>';
+          document.getElementById("building-content").innerHTML =
+            '<div class="empty-state"><div class="empty-icon">&#128466;</div><div class="empty-text">No data has been synced yet.<br>Use <strong>Sync Data</strong> in LayerHub to push data here.</div></div>';
+          return;
+        }
+        _activeDateIdx = 0;
+        populateYearMonth();
+        document
+          .getElementById("sel-year")
+          .addEventListener("change", function () {
+            var y = document.getElementById("sel-year").value;
+            var selM = document.getElementById("sel-month");
+            var months = [];
+            for (var i = 0; i < _manifest.dates.length; i++) {
+              if (_manifest.dates[i].indexOf(y) === 0) {
+                var m = _manifest.dates[i].slice(5, 7);
+                if (months.indexOf(m) < 0) months.push(m);
+              }
+            }
+            var mhtml = "";
+            for (var j = 0; j < months.length; j++)
+              mhtml +=
+                '<option value="' +
+                months[j] +
+                '">' +
+                monthName(months[j]) +
+                "</option>";
+            selM.innerHTML = mhtml;
+            onYearMonthChange();
+          });
+        document
+          .getElementById("sel-month")
+          .addEventListener("change", onYearMonthChange);
+        document
+          .querySelectorAll(".sidebar-filter-btn")
+          .forEach(function (btn) {
+            btn.addEventListener("click", function () {
+              document
+                .querySelectorAll(".sidebar-filter-btn")
+                .forEach(function (b) {
+                  b.classList.remove("active");
+                });
+              btn.classList.add("active");
+              _buildingFilter = btn.dataset.filter;
+              renderBuildingList();
+              renderBuildingContent();
+            });
+          });
+        await loadAndRender();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LayerHub Dashboard</title>
+    <style>
+      :root {
+        --clr: #16a34a;
+        --clr-dark: #15803d;
+        --clr-light: #dcfce7;
+        --clr-bg: #f0fdf4;
+        --bg: #f8fafc;
+        --card: #fff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 12px;
+        --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+        --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.08);
+        font-size: 15px;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      /* ── Header ── */
+      .header {
+        background: linear-gradient(
+          135deg,
+          #15803d 0%,
+          #16a34a 50%,
+          #22c55e 100%
+        );
+        color: #fff;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+      }
+      .header-logo {
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+      }
+      .header h1 {
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+      .header h1 span {
+        font-weight: 400;
+        opacity: 0.8;
+      }
+      .header-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sync-badge {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        backdrop-filter: blur(4px);
+      }
+
+      /* ── Toolbar ── */
+      .toolbar {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+      .date-nav {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .date-nav button {
+        width: 32px;
+        height: 32px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+      .date-nav button:hover {
+        background: var(--clr-light);
+        border-color: var(--clr);
+      }
+      .date-select {
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        background: var(--card);
+        cursor: pointer;
+        min-width: 150px;
+      }
+      .date-select:focus {
+        outline: none;
+        border-color: var(--clr);
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+      }
+      .building-count {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-left: auto;
+      }
+
+      /* ── Container ── */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 24px 40px;
+      }
+
+      /* ── Summary strip ── */
+      .summary-strip {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .summary-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+      }
+      .summary-card .label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .summary-card .value {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: var(--clr-dark);
+      }
+      .summary-card .sub {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      /* ── Building tabs ── */
+      .building-tabs {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        margin-bottom: 20px;
+        scrollbar-width: none;
+      }
+      .building-tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .building-tab {
+        padding: 8px 18px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        border-radius: 10px;
+        font-size: 0.85rem;
+        font-family: inherit;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: var(--shadow);
+      }
+      .building-tab:hover {
+        border-color: var(--clr);
+        background: var(--clr-light);
+      }
+      .building-tab.active {
+        background: var(--clr);
+        color: #fff;
+        border-color: var(--clr);
+        box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3);
+      }
+      .building-tab .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #94a3b8;
+      }
+      .building-tab.active .dot {
+        background: #86efac;
+      }
+      .building-tab.culled .dot {
+        background: #fca5a5;
+      }
+
+      /* ── Section tabs ── */
+      .section-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 20px;
+      }
+      .section-tab {
+        padding: 10px 20px;
+        background: none;
+        border: none;
+        font-size: 0.85rem;
+        font-family: inherit;
+        cursor: pointer;
+        color: var(--muted);
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .section-tab:hover {
+        color: var(--text);
+      }
+      .section-tab.active {
+        color: var(--clr-dark);
+        border-bottom-color: var(--clr);
+        font-weight: 600;
+      }
+      .section-tab .icon {
+        font-size: 1.1rem;
+      }
+      .section-pane {
+        display: none;
+        animation: fadeIn 0.2s;
+      }
+      .section-pane.active {
+        display: block;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+
+      /* ── Building header card ── */
+      .building-header {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: var(--shadow);
+      }
+      .building-header .bh-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: var(--clr-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+      .building-header .bh-info {
+        flex: 1;
+      }
+      .building-header .bh-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+      .building-header .bh-meta {
+        font-size: 0.82rem;
+        color: var(--muted);
+        display: flex;
+        gap: 16px;
+        margin-top: 4px;
+        flex-wrap: wrap;
+      }
+      .building-header .bh-meta span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .badge {
+        font-size: 0.7rem;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      .badge-active {
+        background: var(--clr-light);
+        color: var(--clr-dark);
+      }
+      .badge-culled {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      /* ── Data cards grid ── */
+      .data-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .data-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        box-shadow: var(--shadow);
+        transition: box-shadow 0.15s;
+      }
+      .data-card:hover {
+        box-shadow: var(--shadow-lg);
+      }
+      .data-card .dc-label {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .data-card .dc-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .data-card .dc-sub {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .data-card.highlight {
+        border-left: 3px solid var(--clr);
+      }
+      .data-card.warning {
+        border-left: 3px solid #f59e0b;
+      }
+
+      /* ── Tables ── */
+      .data-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 16px;
+      }
+      .data-table th {
+        background: var(--clr-bg);
+        color: var(--clr-dark);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        padding: 10px 14px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 1px solid var(--border);
+      }
+      .data-table td {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: top;
+      }
+      .data-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .data-table tbody tr:hover {
+        background: #fafffe;
+      }
+      .data-table .total-row {
+        background: var(--clr-bg);
+        font-weight: 700;
+      }
+      .data-table .total-row td {
+        border-top: 2px solid var(--clr);
+        color: var(--clr-dark);
+      }
+      .data-table .notes-cell {
+        max-width: 200px;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      /* ── Notes card ── */
+      .notes-card {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+      }
+      .notes-card .notes-label {
+        font-weight: 600;
+        color: #92400e;
+        margin-bottom: 4px;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+      }
+
+      /* ── Empty / Loading ── */
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .empty-state .empty-icon {
+        font-size: 3rem;
+        margin-bottom: 12px;
+        opacity: 0.4;
+      }
+      .empty-state .empty-text {
+        color: var(--muted);
+        font-size: 0.95rem;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      .loading-state {
+        text-align: center;
+        padding: 80px 20px;
+      }
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--border);
+        border-top-color: var(--clr);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 0 auto 12px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── Print ── */
+      @media print {
+        .header,
+        .toolbar,
+        .building-tabs,
+        .section-tabs {
+          display: none !important;
+        }
+        .container {
+          padding: 0;
+        }
+        .report-sheet {
+          box-shadow: none !important;
+          border: none !important;
+        }
+      }
+
+      /* ── Report sheet ── */
+      .report-sheet {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        padding: 20px 24px;
+        font-family: "Consolas", "Courier New", "Liberation Mono", monospace;
+        font-size: 0.88rem;
+        line-height: 1.4;
+        color: var(--text);
+        max-width: 720px;
+        margin: 0 auto;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+      .report-sheet .report-title {
+        text-align: center;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--clr-dark);
+        margin-bottom: 0;
+      }
+      .report-sheet .report-date {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0;
+        color: var(--text);
+      }
+      .report-sheet .report-meta {
+        margin-bottom: 0;
+        color: var(--muted);
+      }
+      .report-sheet .report-divider {
+        border: none;
+        margin: 2px 0;
+        height: 0;
+      }
+      .report-sheet .report-section-label {
+        font-weight: 700;
+        color: var(--clr-dark);
+        margin-top: 0;
+        margin-bottom: 0;
+        text-decoration: none;
+      }
+      .report-sheet .report-bldg-header {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--clr-dark);
+        background: none;
+        padding: 0;
+        border-radius: 0;
+        margin-bottom: 0;
+        display: inline-block;
+      }
+      .report-sheet .report-row {
+        display: flex;
+        gap: 4px;
+      }
+      .report-sheet .report-row .rl {
+        min-width: 110px;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      .report-sheet .report-row .rv {
+        font-weight: 600;
+      }
+      .report-sheet .egg-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 2px 0 4px;
+        font-family: inherit;
+        font-size: 0.84rem;
+      }
+      .report-sheet .egg-table th {
+        text-align: left;
+        font-weight: 700;
+        color: var(--clr-dark);
+        border-bottom: none;
+        padding: 2px 8px 2px 0;
+      }
+      .report-sheet .egg-table td {
+        padding: 1px 8px 1px 0;
+        border-bottom: none;
+      }
+      .report-sheet .egg-table tr:last-child td {
+        border-bottom: none;
+      }
+      .report-sheet .egg-table .egg-total td {
+        font-weight: 700;
+        border-top: none;
+        color: var(--clr-dark);
+      }
+      .report-sheet .report-none {
+        color: #94a3b8;
+        font-style: italic;
+      }
+
+      /* ── Responsive ── */
+      @media (max-width: 768px) {
+        .container {
+          padding: 14px;
+        }
+        .summary-strip {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .data-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .building-header .bh-meta {
+          gap: 8px;
+        }
+        .data-table {
+          font-size: 0.8rem;
+        }
+        .data-table th,
+        .data-table td {
+          padding: 8px 10px;
+        }
+      }
+      @media (max-width: 480px) {
+        .summary-strip {
+          grid-template-columns: 1fr;
+        }
+        .data-grid {
+          grid-template-columns: 1fr;
+        }
+        .toolbar {
+          padding: 10px 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-logo">&#129361;</div>
+      <h1>LayerHub <span>Dashboard</span></h1>
+      <div class="header-right">
+        <span class="sync-badge" id="sync-time">—</span>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div class="date-nav">
+        <button id="btn-prev" title="Previous date">&#9664;</button>
+        <select class="date-select" id="date-select">
+          <option>Loading…</option>
+        </select>
+        <button id="btn-next" title="Next date">&#9654;</button>
+      </div>
+      <span class="building-count" id="building-count"></span>
+    </div>
+
+    <div class="container">
+      <!-- Summary KPIs -->
+      <div class="summary-strip" id="summary-strip"></div>
+
+      <!-- Building tabs -->
+      <div class="building-tabs" id="building-tabs"></div>
+
+      <!-- Building content -->
+      <div id="building-content"></div>
+    </div>
+
+    <script>
+      const dataDir = "data";
+
+      const EGG_SIZES = [
+        ["nnv", "NNV"],
+        ["nv", "NV"],
+        ["no_weight", "No Weight"],
+        ["pullet", "Pullet"],
+        ["pewee", "Pewee"],
+        ["small", "Small"],
+        ["medium", "Medium"],
+        ["large", "Large"],
+        ["larger", "Larger"],
+        ["xlarge", "X-Large"],
+        ["jumbo", "Jumbo"],
+        ["s_jumbo", "S-Jumbo"],
+        ["broken", "Broken"],
+        ["bold", "Bold"],
+        ["loss", "Loss"],
+        ["reject", "Reject"],
+        ["good_cracks", "Good Cracks"],
+        ["bad_cracks", "Bad Cracks"],
+        ["misshapen", "Misshapen"],
+      ];
+
+      let _data = null;
+      let _activeBuilding = null;
+      let _activeSection = "report";
+
+      /* ── Data loading ── */
+      async function loadManifest() {
+        try {
+          const r = await fetch(`${dataDir}/manifest.json`);
+          if (!r.ok) throw 0;
+          return await r.json();
+        } catch {
+          return { dates: [] };
+        }
+      }
+      async function loadDay(d) {
+        const r = await fetch(`${dataDir}/${d}.json`);
+        if (!r.ok) throw 0;
+        return await r.json();
+      }
+
+      function esc(s) {
+        const d = document.createElement("div");
+        d.textContent = s;
+        return d.innerHTML;
+      }
+      function num(n) {
+        return (n ?? 0).toLocaleString();
+      }
+
+      /* ── Summary strip ── */
+      function renderSummary(data) {
+        const el = document.getElementById("summary-strip");
+        const prods = data.entries.filter((e) => e.type === "production");
+        const totalPieces = prods.reduce(
+          (s, p) => s + (p.production?.totalPieces ?? 0),
+          0,
+        );
+        const totalHeads = prods.reduce((s, p) => s + (p.currentHeads ?? 0), 0);
+        const totalMort = prods.reduce(
+          (s, p) => s + (p.mortalityCount ?? 0),
+          0,
+        );
+        const totalFeed = prods.reduce((s, p) => s + (p.feed?.bags ?? 0), 0);
+        const eggs = data.entries.filter((e) => e.type === "egg-summary");
+        const totalEggPcs = eggs.reduce((s, e) => s + (e.totalPieces ?? 0), 0);
+        const pct =
+          totalHeads > 0 ? ((totalPieces / totalHeads) * 100).toFixed(1) : "—";
+        const buildings = new Set(prods.map((p) => p.buildingId)).size;
+
+        el.innerHTML = `
+    <div class="summary-card"><div class="label">Total Production</div><div class="value">${num(totalPieces)}</div><div class="sub">pieces across ${buildings} building${buildings !== 1 ? "s" : ""}</div></div>
+    <div class="summary-card"><div class="label">Production Rate</div><div class="value">${pct}%</div><div class="sub">eggs per bird</div></div>
+    <div class="summary-card"><div class="label">Total Heads</div><div class="value">${num(totalHeads)}</div><div class="sub">current flock size</div></div>
+    <div class="summary-card"><div class="label">Mortality</div><div class="value">${num(totalMort)}</div><div class="sub">total deaths today</div></div>
+    <div class="summary-card"><div class="label">Feed Consumed</div><div class="value">${num(totalFeed)}</div><div class="sub">bags</div></div>
+    <div class="summary-card"><div class="label">Egg Sorted</div><div class="value">${num(totalEggPcs)}</div><div class="sub">pieces sorted</div></div>
+  `;
+      }
+
+      /* ── Building tabs ── */
+      function renderBuildingTabs(data) {
+        const el = document.getElementById("building-tabs");
+        const byBuilding = groupByBuilding(data);
+        const bMap = buildingMap(data);
+        const ids = Object.keys(byBuilding);
+        document.getElementById("building-count").textContent =
+          `${ids.length} building${ids.length !== 1 ? "s" : ""} with data`;
+
+        if (!ids.length) {
+          el.innerHTML = "";
+          return;
+        }
+        if (!_activeBuilding || !ids.includes(_activeBuilding))
+          _activeBuilding = ids[0];
+
+        el.innerHTML = ids
+          .map((id) => {
+            const b = bMap[id] || {};
+            const culled = b.culledAt ? " culled" : "";
+            const active = id === _activeBuilding ? " active" : "";
+            return `<button class="building-tab${active}${culled}" data-id="${id}"><span class="dot"></span>${esc(b.name || id)}</button>`;
+          })
+          .join("");
+
+        el.querySelectorAll(".building-tab").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            _activeBuilding = btn.dataset.id;
+            renderBuildingTabs(data);
+            renderBuildingContent(data);
+          });
+        });
+      }
+
+      function groupByBuilding(data) {
+        const g = {};
+        for (const e of data.entries) {
+          if (!g[e.buildingId]) g[e.buildingId] = [];
+          g[e.buildingId].push(e);
+        }
+        return g;
+      }
+      function buildingMap(data) {
+        const m = {};
+        for (const b of data.buildings || []) m[b.id] = b;
+        return m;
+      }
+
+      /* ── Building content ── */
+      function renderBuildingContent(data) {
+        const el = document.getElementById("building-content");
+        const byBuilding = groupByBuilding(data);
+        const bMap = buildingMap(data);
+        const entries = byBuilding[_activeBuilding] || [];
+        const b = bMap[_activeBuilding] || {};
+
+        const prod = entries.find((e) => e.type === "production");
+        const mort = entries.find((e) => e.type === "mortality");
+        const egg = entries.find((e) => e.type === "egg-summary");
+        const med = entries.find((e) => e.type === "medication");
+
+        const hasProd = !!prod,
+          hasMort = !!(mort && (mort.mortality?.length || mort.notes)),
+          hasEgg = !!egg,
+          hasMed = !!(med && (med.medication?.length || med.notes));
+        const hasAny = hasProd || hasMort || hasEgg || hasMed;
+
+        let html = "";
+
+        // Building header
+        const badgeClass = b.culledAt ? "badge-culled" : "badge-active";
+        const badgeText = b.culledAt ? "Culled" : "Active";
+        const age = prod
+          ? `${prod.ageWeeks ?? "?"}w ${prod.ageDays ?? 0}d`
+          : b.ageWeeks != null
+            ? `${b.ageWeeks}w ${b.ageDays ?? 0}d`
+            : "—";
+        html += `<div class="building-header">
+    <div class="bh-icon">&#127969;</div>
+    <div class="bh-info">
+      <div class="bh-name">${esc(b.name || _activeBuilding)} <span class="badge ${badgeClass}">${badgeText}</span></div>
+      <div class="bh-meta">
+        <span>&#129415; ${esc(b.breed || "—")}</span>
+        <span>&#128197; Age: ${age}</span>
+        <span>&#128101; Starting: ${num(b.startingHeads)}</span>
+        <span>&#128100; Flockman: ${esc(b.flockman || "—")}</span>
+      </div>
+    </div>
+  </div>`;
+
+        // Section tabs — Report is always first
+        html += `<div class="section-tabs">
+    ${hasAny ? `<button class="section-tab${_activeSection === "report" ? " active" : ""}" data-s="report"><span class="icon">&#128221;</span>Daily Report</button>` : ""}
+    ${hasProd ? `<button class="section-tab${_activeSection === "production" ? " active" : ""}" data-s="production"><span class="icon">&#128202;</span>Production</button>` : ""}
+    ${hasMort ? `<button class="section-tab${_activeSection === "mortality" ? " active" : ""}" data-s="mortality"><span class="icon">&#128203;</span>Mortality</button>` : ""}
+    ${hasEgg ? `<button class="section-tab${_activeSection === "egg" ? " active" : ""}" data-s="egg"><span class="icon">&#129370;</span>Egg Summary</button>` : ""}
+    ${hasMed ? `<button class="section-tab${_activeSection === "medication" ? " active" : ""}" data-s="medication"><span class="icon">&#128138;</span>Medication</button>` : ""}
+  </div>`;
+
+        // ─── Report pane (Daily Report) ───
+        if (hasAny) {
+          const dateObj = data.date
+            ? new Date(data.date + "T00:00:00")
+            : new Date();
+          const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+          const yyyy = dateObj.getFullYear();
+          const mm = String(dateObj.getMonth() + 1).padStart(2, "0");
+          const dd = String(dateObj.getDate()).padStart(2, "0");
+          const dayName = days[dateObj.getDay()];
+          const reporter =
+            prod?.reporter || mort?.reporter || med?.reporter || "—";
+          const sorter = prod?.eggSorter || egg?.eggSorter || "";
+
+          html += `<div class="section-pane${_activeSection === "report" ? " active" : ""}" data-s="report">
+<div class="report-sheet">
+<div class="report-title">FARM DAILY REPORT</div>
+<div class="report-date">${yyyy} ${mm} ${dd} ${dayName}</div>
+<div class="report-meta">REPORT BY: ${esc(reporter)}
+EGG SORTER: ${esc(sorter || "(none)")}</div>
+<hr class="report-divider">`;
+
+          // Building info block
+          const heads = prod?.currentHeads ?? 0;
+          const mortCount = prod?.mortalityCount ?? 0;
+          const culls = prod?.culls ?? 0;
+          const cases = prod?.production?.cases ?? 0;
+          const trays = prod?.production?.trays ?? 0;
+          const pieces = prod?.production?.totalPieces ?? 0;
+          const prodPct =
+            heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+          const bags = prod?.feed?.bags ?? 0;
+          const feedBrand = prod?.feed?.brand || "(not specified)";
+          const gpb = prod?.feed?.gramsPerBirdDay ?? "0.00";
+
+          html += `<span class="report-bldg-header">BLDG: ${esc(b.name || _activeBuilding)}</span>
+<div class="report-row"><span class="rl">BREED:</span><span class="rv">${esc(b.breed || "—")}</span></div>
+<div class="report-row"><span class="rl">FLOCKMAN:</span><span class="rv">${esc(b.flockman || "—")}</span></div>
+<div class="report-row"><span class="rl">AGE:</span><span class="rv">${age}</span></div>
+<div class="report-row"><span class="rl">HD:</span><span class="rv">${num(heads)}</span></div>
+<div class="report-row"><span class="rl">M:</span><span class="rv">${num(mortCount)}</span></div>
+<div class="report-row"><span class="rl">C:</span><span class="rv">${num(culls)}</span></div>
+
+<hr class="report-divider">
+<div class="report-row"><span class="rl">PROD:</span><span class="rv">${cases}C ${trays}T</span></div>
+<div class="report-row"><span class="rl">PCS:</span><span class="rv">${num(pieces)}</span></div>
+<div class="report-row"><span class="rl">%:</span><span class="rv">${prodPct}%</span></div>
+<div class="report-row"><span class="rl">BGS:</span><span class="rv">${bags}  |  FEED: ${esc(feedBrand)}</span></div>
+<div class="report-row"><span class="rl">G:</span><span class="rv">${gpb}g</span></div>
+
+<hr class="report-divider">
+<div class="report-section-label">MEDICATIONS:</div>`;
+
+          if (med && med.medication?.length) {
+            for (const r of med.medication) {
+              html += `<div class="report-row"><span class="rl">${esc(r.drug || "—")}</span><span class="rv">${esc(r.dosage || "")} ${esc(r.route || "")} x${r.qty ?? ""}</span></div>`;
+              if (r.notes)
+                html += `  <span class="report-none">↳ ${esc(r.notes)}</span>\n`;
+            }
+          } else {
+            html += `<span class="report-none">(none)</span>\n`;
+          }
+
+          html += `\n<hr class="report-divider">
+<div class="report-section-label">EGG SIZE SUMMARY</div>
+<table class="egg-table"><thead><tr><th style="min-width:110px">SIZE</th><th style="min-width:60px">PCS</th><th>%</th></tr></thead><tbody>`;
+
+          const dist = egg?.distribution || {};
+          let eggTotalPcs = 0;
+          for (const [key] of EGG_SIZES) {
+            const d = dist[key] || {};
+            eggTotalPcs += d.pieces ?? 0;
+          }
+          for (const [key, label] of EGG_SIZES) {
+            const d = dist[key] || {};
+            const p = d.pieces ?? 0;
+            const pctEgg =
+              eggTotalPcs > 0 && p > 0
+                ? ((p / eggTotalPcs) * 100).toFixed(1) + "%"
+                : "";
+            const pVal = p > 0 ? num(p) : "";
+            html += `<tr><td>${label.toUpperCase().padEnd(10)}</td><td>${pVal}</td><td>${pctEgg}</td></tr>`;
+          }
+          html += `<tr class="egg-total"><td>TOTAL</td><td>${eggTotalPcs > 0 ? num(eggTotalPcs) : ""}</td><td>${eggTotalPcs > 0 ? "100%" : ""}</td></tr>`;
+          html += `</tbody></table>`;
+
+          // Mortalities
+          html += `<hr class="report-divider">
+<div class="report-section-label">TOTAL MORTALITIES: ${num(mort?.totalMortality ?? mortCount)}</div>`;
+          if (mort && mort.mortality?.length) {
+            for (const r of mort.mortality) {
+              html += `<div class="report-row"><span class="rl">${esc(r.cause || "Unknown")}</span><span class="rv">${r.count ?? 0}</span></div>`;
+              if (r.notes)
+                html += `  <span class="report-none">↳ ${esc(r.notes)}</span>\n`;
+            }
+          } else {
+            html += `<span class="report-none">(none)</span>\n`;
+          }
+
+          // Notes
+          const allNotes = [prod?.notes, mort?.notes, med?.notes].filter(
+            Boolean,
+          );
+          html += `\n<hr class="report-divider">
+<div class="report-section-label">HAPPENINGS / NOTES:</div>`;
+          if (allNotes.length) {
+            for (const n of allNotes) html += `${esc(n)}\n`;
+          } else {
+            html += `<span class="report-none">(none)</span>\n`;
+          }
+
+          // Weather
+          html += `\n<hr class="report-divider">
+<div class="report-section-label">WEATHER:</div>
+<div class="report-row"><span class="rl">AM:</span><span class="rv">${esc(prod?.weatherAm || "")}</span></div>
+<div class="report-row"><span class="rl">PM:</span><span class="rv">${esc(prod?.weatherPm || "")}</span></div>
+<div class="report-row"><span class="rl">TEMP:</span><span class="rv">${esc(prod?.temperature || "")}</span></div>
+</div><!-- /report-sheet -->
+</div><!-- /section-pane report -->`;
+        }
+
+        // Production pane
+        if (hasProd) {
+          const p = prod;
+          const pieces = p.production?.totalPieces ?? 0;
+          const heads = p.currentHeads ?? 0;
+          const prodPct =
+            heads > 0 ? ((pieces / heads) * 100).toFixed(1) + "%" : "—";
+          html += `<div class="section-pane${_activeSection === "production" ? " active" : ""}" data-s="production">
+      <div class="data-grid">
+        <div class="data-card highlight"><div class="dc-label">Total Pieces</div><div class="dc-value">${num(pieces)}</div><div class="dc-sub">${p.production?.cases ?? 0} cases, ${p.production?.trays ?? 0} trays</div></div>
+        <div class="data-card highlight"><div class="dc-label">Production %</div><div class="dc-value">${prodPct}</div><div class="dc-sub">eggs per bird</div></div>
+        <div class="data-card"><div class="dc-label">Current Heads</div><div class="dc-value">${num(heads)}</div></div>
+        <div class="data-card${(p.mortalityCount ?? 0) > 0 ? " warning" : ""}"><div class="dc-label">Mortality</div><div class="dc-value">${num(p.mortalityCount)}</div>${(p.culls ?? 0) > 0 ? `<div class="dc-sub">${p.culls} culls</div>` : ""}</div>
+        <div class="data-card"><div class="dc-label">Feed</div><div class="dc-value">${p.feed?.bags ?? 0} bags</div><div class="dc-sub">${p.feed?.gramsPerBirdDay ?? "—"} g/bird/day</div></div>
+        <div class="data-card"><div class="dc-label">Feed Brand</div><div class="dc-value" style="font-size:1rem">${esc(p.feed?.brand || "—")}</div></div>
+        <div class="data-card"><div class="dc-label">Weather</div><div class="dc-value" style="font-size:.95rem">AM: ${esc(p.weatherAm || "—")}</div><div class="dc-sub">PM: ${esc(p.weatherPm || "—")} &middot; ${esc(p.temperature || "—")}</div></div>
+        <div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:1rem">${esc(p.reporter || "—")}</div></div>
+      </div>
+      ${p.notes ? `<div class="notes-card"><div class="notes-label">Production Notes</div>${esc(p.notes)}</div>` : ""}
+    </div>`;
+        }
+
+        // Mortality pane
+        if (hasMort) {
+          const m = mort;
+          const rows = m.mortality || [];
+          html += `<div class="section-pane${_activeSection === "mortality" ? " active" : ""}" data-s="mortality">`;
+          html += `<div class="data-grid" style="margin-bottom:16px">
+      <div class="data-card warning"><div class="dc-label">Total Mortality</div><div class="dc-value">${num(m.totalMortality)}</div></div>
+      <div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:1rem">${esc(m.reporter || "—")}</div></div>
+    </div>`;
+          if (rows.length) {
+            html += `<table class="data-table"><thead><tr><th>Cause</th><th>Count</th><th>Notes</th></tr></thead><tbody>`;
+            for (const r of rows)
+              html += `<tr><td>${esc(r.cause || "")}</td><td>${r.count ?? 0}</td><td class="notes-cell">${esc(r.notes || "")}</td></tr>`;
+            html += `</tbody></table>`;
+          }
+          if (m.notes)
+            html += `<div class="notes-card"><div class="notes-label">Mortality Notes</div>${esc(m.notes)}</div>`;
+          html += `</div>`;
+        }
+
+        // Egg Summary pane
+        if (hasEgg) {
+          const eg = egg;
+          const dist = eg.distribution || {};
+          html += `<div class="section-pane${_activeSection === "egg" ? " active" : ""}" data-s="egg">`;
+          html += `<div class="data-grid" style="margin-bottom:16px">
+      <div class="data-card highlight"><div class="dc-label">Total Egg Pieces</div><div class="dc-value">${num(eg.totalPieces)}</div></div>
+      <div class="data-card"><div class="dc-label">Total Trays</div><div class="dc-value">${num(eg.totalTrays)}</div></div>
+      ${eg.eggSorter ? `<div class="data-card"><div class="dc-label">Egg Sorter</div><div class="dc-value" style="font-size:1rem">${esc(eg.eggSorter)}</div></div>` : ""}
+    </div>`;
+          html += `<table class="data-table"><thead><tr><th>Egg Size</th><th>Cases</th><th>Trays</th><th>Pieces</th></tr></thead><tbody>`;
+          let tC = 0,
+            tT = 0,
+            tP = 0;
+          for (const [key, label] of EGG_SIZES) {
+            const d = dist[key] || {};
+            const c = d.cases ?? 0,
+              t = d.trays ?? 0,
+              p = d.pieces ?? 0;
+            if (c || t || p) {
+              html += `<tr><td>${label}</td><td>${num(c)}</td><td>${num(t)}</td><td>${num(p)}</td></tr>`;
+              tC += c;
+              tT += t;
+              tP += p;
+            }
+          }
+          html += `<tr class="total-row"><td>TOTAL</td><td>${num(tC)}</td><td>${num(tT)}</td><td>${num(tP)}</td></tr>`;
+          html += `</tbody></table></div>`;
+        }
+
+        // Medication pane
+        if (hasMed) {
+          const md = med;
+          const rows = md.medication || [];
+          html += `<div class="section-pane${_activeSection === "medication" ? " active" : ""}" data-s="medication">`;
+          html += `<div class="data-grid" style="margin-bottom:16px">
+      <div class="data-card"><div class="dc-label">Medications Given</div><div class="dc-value">${rows.length}</div></div>
+      <div class="data-card"><div class="dc-label">Reporter</div><div class="dc-value" style="font-size:1rem">${esc(md.reporter || "—")}</div></div>
+    </div>`;
+          if (rows.length) {
+            html += `<table class="data-table"><thead><tr><th>Drug</th><th>Dosage</th><th>Route</th><th>Qty</th><th>Notes</th></tr></thead><tbody>`;
+            for (const r of rows)
+              html += `<tr><td><strong>${esc(r.drug || "")}</strong></td><td>${esc(r.dosage || "")}</td><td>${esc(r.route || "")}</td><td>${r.qty ?? ""}</td><td class="notes-cell">${esc(r.notes || "")}</td></tr>`;
+            html += `</tbody></table>`;
+          }
+          if (md.notes)
+            html += `<div class="notes-card"><div class="notes-label">Medication Notes</div>${esc(md.notes)}</div>`;
+          html += `</div>`;
+        }
+
+        if (!hasProd && !hasMort && !hasEgg && !hasMed) {
+          html += `<div class="empty-state"><div class="empty-icon">&#128196;</div><div class="empty-text">No entries recorded for this building on this date.</div></div>`;
+        }
+
+        el.innerHTML = html;
+
+        // Wire section tabs
+        el.querySelectorAll(".section-tab").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            _activeSection = btn.dataset.s;
+            el.querySelectorAll(".section-tab").forEach((t) =>
+              t.classList.toggle("active", t.dataset.s === _activeSection),
+            );
+            el.querySelectorAll(".section-pane").forEach((p) =>
+              p.classList.toggle("active", p.dataset.s === _activeSection),
+            );
+          });
+        });
+      }
+
+      /* ── Master render ── */
+      function render(data) {
+        _data = data;
+        const syncEl = document.getElementById("sync-time");
+        if (data.syncedAt)
+          syncEl.textContent =
+            "Synced " + new Date(data.syncedAt).toLocaleString();
+
+        if (!data.entries?.length) {
+          document.getElementById("summary-strip").innerHTML = "";
+          document.getElementById("building-tabs").innerHTML = "";
+          document.getElementById("building-content").innerHTML =
+            `<div class="empty-state"><div class="empty-icon">&#128466;</div><div class="empty-text">No entries for this date yet.</div></div>`;
+          document.getElementById("building-count").textContent = "";
+          return;
+        }
+
+        // Auto-select first available section for active building
+        const byBuilding = groupByBuilding(data);
+        if (_activeBuilding && byBuilding[_activeBuilding]) {
+          const entries = byBuilding[_activeBuilding];
+          const hasAnyEntry = entries.length > 0;
+          // Default to report tab if there's any data
+          if (_activeSection === "report" && hasAnyEntry) {
+            // keep report
+          } else {
+            const has = (s) =>
+              entries.some(
+                (e) =>
+                  e.type === s || (s === "egg" && e.type === "egg-summary"),
+              );
+            if (
+              !has(_activeSection === "egg" ? "egg-summary" : _activeSection)
+            ) {
+              _activeSection = "report";
+            }
+          }
+        }
+
+        renderSummary(data);
+        renderBuildingTabs(data);
+        renderBuildingContent(data);
+      }
+
+      /* ── Init ── */
+      async function init() {
+        const manifest = await loadManifest();
+        const sel = document.getElementById("date-select");
+        sel.innerHTML = "";
+
+        if (!manifest.dates.length) {
+          sel.innerHTML = "<option>No data yet</option>";
+          document.getElementById("summary-strip").innerHTML = "";
+          document.getElementById("building-tabs").innerHTML = "";
+          document.getElementById("building-content").innerHTML =
+            `<div class="empty-state"><div class="empty-icon">&#128466;</div><div class="empty-text">No data has been synced yet.<br>Use the <strong>Sync Data</strong> button in LayerHub to push data here.</div></div>`;
+          return;
+        }
+
+        for (const d of manifest.dates) {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.textContent = d;
+          sel.appendChild(opt);
+        }
+
+        async function loadSelected() {
+          document.getElementById("building-content").innerHTML =
+            `<div class="loading-state"><div class="spinner"></div>Loading data…</div>`;
+          try {
+            render(await loadDay(sel.value));
+          } catch {
+            document.getElementById("building-content").innerHTML =
+              `<div class="empty-state"><div class="empty-icon">&#9888;</div><div class="empty-text">Failed to load data.</div></div>`;
+          }
+        }
+
+        sel.addEventListener("change", loadSelected);
+
+        // Prev / Next buttons
+        document.getElementById("btn-prev").addEventListener("click", () => {
+          if (sel.selectedIndex < sel.options.length - 1) {
+            sel.selectedIndex++;
+            loadSelected();
+          }
+        });
+        document.getElementById("btn-next").addEventListener("click", () => {
+          if (sel.selectedIndex > 0) {
+            sel.selectedIndex--;
+            loadSelected();
+          }
+        });
+
+        await loadSelected();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
