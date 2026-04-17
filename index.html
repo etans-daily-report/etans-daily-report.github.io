@@ -4,48 +4,123 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farm JSON Dashboard</title>
-    <!-- Google Fonts for modern typography -->
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Custom stylesheet -->
     <link rel="stylesheet" href="style.css">
+    <!-- Vue 3 CDN -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        [v-cloak] { display: none; }
+    </style>
 </head>
 <body>
-    <header class="app-header">
-        <div class="header-top">
-            <h1>Farm Dashboard</h1>
-            <div class="date-controls">
-                <select id="year-select" class="date-dropdown"></select>
-                <select id="month-select" class="date-dropdown"></select>
+    <div id="app" v-cloak>
+        <header class="app-header">
+            <div class="header-top">
+                <h1>Farm Dashboard</h1>
+                <div class="date-controls">
+                    <select class="date-dropdown" v-model.number="selectedYear">
+                        <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
+                    </select>
+                    <select class="date-dropdown" v-model.number="selectedMonth">
+                        <option v-for="month in availableMonths" :key="month.val" :value="month.val">{{ month.name }}</option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <nav id="date-strip" class="date-strip">
-            <!-- Days will be injected here -->
-        </nav>
-    </header>
-    
-    <div class="app-layout">
-        <aside id="sidebar" class="sidebar">
-            <h2 class="sidebar-title">Buildings</h2>
-            <ul id="building-list" class="building-list">
-                <!-- Buildings will be injected here -->
-            </ul>
-        </aside>
+            <nav class="date-strip">
+                <button 
+                    v-for="day in daysInMonthList" 
+                    :key="day.dateStr"
+                    class="date-btn"
+                    :class="{ active: selectedDate === day.dateStr, 'has-data': day.hasData }"
+                    @click="selectDate(day.dateStr)"
+                    :ref="el => { if (selectedDate === day.dateStr) activeDateBtn = el }"
+                >
+                    <div style="font-size: 0.75rem; line-height: 1; margin-bottom: 4px;">{{ day.weekday }}</div>
+                    <div style="font-size: 1.1rem; font-weight: 600; line-height: 1;">{{ day.dayNum }}</div>
+                </button>
+            </nav>
+        </header>
         
-        <main class="main-content">
-            <div class="tabs">
-                <button id="tab-dailyreport" class="tab-btn active">Daily Report Summary</button>
-                <button id="tab-eggsummary" class="tab-btn">Egg Size Summary</button>
-                <button id="tab-necropsy" class="tab-btn">Necropsy Report</button>
-            </div>
+        <div class="app-layout">
+            <aside class="sidebar">
+                <h2 class="sidebar-title">Buildings</h2>
+                <ul class="building-list">
+                    <li v-if="!currentBuildings.length" class="empty-state" style="padding: 10px; color: rgba(255,255,255,0.5);">
+                        No buildings for this date.
+                    </li>
+                    <li 
+                        v-for="bldg in currentBuildings" 
+                        :key="bldg.id"
+                        class="building-item"
+                        :class="{ active: selectedBuildingId === bldg.id }"
+                        @click="selectBuilding(bldg.id)"
+                    >
+                        <div class="building-name">{{ bldg.name }}</div>
+                        <div class="building-details">
+                            {{ bldg.breed }} • {{ formatAge(bldg.ageWeeks, bldg.ageDays) }} • {{ bldg.startingHeads }} heads
+                        </div>
+                    </li>
+                </ul>
+            </aside>
             
-            <div id="content-area" class="content-area">
-                <div id="daily-report-summary" class="tab-content active"></div>
-                <div id="egg-size-summary" class="tab-content" style="display: none;"></div>
-                <div id="necropsy-report" class="tab-content" style="display: none;"></div>
-            </div>
-        </main>
+            <main class="main-content">
+                <div class="tabs">
+                    <button class="tab-btn" :class="{ active: activeTab === 'dailyreport' }" @click="activeTab = 'dailyreport'">Daily Report Summary</button>
+                    <button class="tab-btn" :class="{ active: activeTab === 'eggsummary' }" @click="activeTab = 'eggsummary'">Egg Size Summary</button>
+                    <button class="tab-btn" :class="{ active: activeTab === 'necropsy' }" @click="activeTab = 'necropsy'">Necropsy Report</button>
+                </div>
+                
+                <div class="content-area">
+                    <div v-if="!selectedDate || !selectedBuildingId" class="empty-state">
+                        Select a date and building to view data.
+                    </div>
+                    
+                    <template v-else>
+                        <!-- Daily Report -->
+                        <div v-if="activeTab === 'dailyreport'" class="tab-content active">
+                            <div class="report-container">{{ dailyReportText }}</div>
+                        </div>
+                        
+                        <!-- Egg Size Summary -->
+                        <div v-if="activeTab === 'eggsummary'" class="tab-content active">
+                            <table class="egg-table">
+                                <thead>
+                                    <tr>
+                                        <th>Egg Size</th>
+                                        <th>Cases</th>
+                                        <th>Trays</th>
+                                        <th>Pieces</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="size in eggSummaryRows" :key="size.label">
+                                        <td>{{ size.label }}</td>
+                                        <td>{{ size.cases || "-" }}</td>
+                                        <td>{{ size.trays || "-" }}</td>
+                                        <td>{{ size.pieces || "-" }}</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td>TOTAL</td>
+                                        <td>{{ eggTotals.cases }}</td>
+                                        <td>{{ eggTotals.trays }}</td>
+                                        <td>{{ eggTotals.pieces }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Necropsy Report -->
+                        <div v-if="activeTab === 'necropsy'" class="tab-content active">
+                            <div class="report-container">{{ necropsyReportText }}</div>
+                        </div>
+                    </template>
+                </div>
+            </main>
+        </div>
     </div>
 
     <!-- Application logic -->
