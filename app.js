@@ -193,33 +193,6 @@ const app = createApp({
         const currentMort = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "mortality"));
         const currentMed = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "water-medication"));
 
-        // Daily Report Formatting
-        const dailyReportText = computed(() => {
-            if (!currentBuilding.value) return "";
-            
-            const b = currentBuilding.value;
-            const prod = currentProd.value;
-            const mort = currentMort.value;
-            const med = currentMed.value;
-            
-            let txt = `DAILY REPORT SUMMARY\n${selectedDate.value}\n\n`;
-            txt += `BLDG: ${b.name}\n\n`;
-            txt += `BIRD AGE: ${formatAge(prod?.ageWeeks, prod?.ageDays)}\n`;
-            txt += `FLOCKMAN: ${b.flockman || "N/A"}\n`;
-            txt += `HEADS: ${prod?.currentHeads ?? b.startingHeads ?? 0}\n\n`;
-            txt += `PRODUCTION: ${prod?.production?.totalPieces ?? 0} pcs\n`;
-            txt += `FEED: ${prod?.feed?.bags ?? 0} bags\n`;
-            txt += `MORTALITY: ${mort?.totalMortality ?? prod?.mortalityCount ?? 0}\n`;
-            txt += `WATERMEDS: ${med?.medication || "(none)"}\n\n`;
-            
-            const notes = [prod?.notes, mort?.notes, med?.notes].filter(Boolean).join("\n");
-            txt += `HAPPENINGS / NOTES:\n${notes || "(none)"}\n\n`;
-            
-            txt += `WEATHER:\nAM:        ${prod?.weatherAm || ""}\nPM:        ${prod?.weatherPm || ""}\nTEMP:      ${prod?.temperature || ""}`;
-            
-            return txt;
-        });
-
         // Egg Summary Formatting
         const EGG_SIZES = [
             ["nnv", "NNV"], ["nv", "NV"], ["no_weight", "NO WEIGHT"], ["pullet", "PULLET"],
@@ -252,6 +225,83 @@ const app = createApp({
                 acc.pieces += (row.pieces !== "-") ? row.pieces : 0;
                 return acc;
             }, { total: 0, percentage: 0, cases: 0, trays: 0, pieces: 0 });
+        });
+
+        // Daily Report Formatting
+        const dailyReportText = computed(() => {
+            if (!currentBuilding.value) return "";
+            
+            const b = currentBuilding.value;
+            const prod = currentProd.value;
+            const mort = currentMort.value;
+            const med = currentMed.value;
+            
+            // Format Date
+            const d = new Date(selectedDate.value + "T00:00:00");
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            const weekday = d.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+            
+            const heads = prod?.currentHeads ?? b.startingHeads ?? 0;
+            const pieces = prod?.production?.totalPieces ?? 0;
+            const prodCases = prod?.production?.cases ?? 0;
+            const prodPercent = heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+            const mortalityCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
+            
+            let txt = `FARM DAILY REPORT\n${yyyy} ${mm} ${dd} ${weekday}\n`;
+            txt += `REPORT BY: ${prod?.reporter || "Admin"}\n`;
+            txt += `EGG SORTER: ${prod?.eggSorter || ""}\n\n`;
+            
+            txt += `BLDG: ${b.name}\n`;
+            txt += `BREED: ${b.breed || ""}\n`;
+            txt += `FLOCKMAN: ${b.flockman || ""}\n`;
+            txt += `AGE: ${formatAge(prod?.ageWeeks, prod?.ageDays)}\n`;
+            txt += `HD: ${heads.toLocaleString()}\n`;
+            txt += `M: ${mortalityCount}\n`;
+            txt += `C: ${prod?.culls ?? 0}\n\n`;
+            
+            txt += `PROD: ${prodCases}C\n`;
+            txt += `PCS: ${pieces}\n`;
+            txt += `%: ${prodPercent}%\n`;
+            txt += `BGS: ${prod?.feed?.bags ?? 0}  |  FEED: ${prod?.feed?.brand || ""}\n`;
+            txt += `G: ${(prod?.feed?.gramsPerBirdDay ?? 0).toFixed(2)}g\n\n`;
+            
+            txt += `MEDICATIONS:\n`;
+            txt += `${med?.medication || "(none)"}\n\n`;
+            
+            txt += `EGG SIZE SUMMARY\n`;
+            txt += `SIZE      \tPCS\t%\n`;
+            
+            eggSummaryRows.value.forEach(row => {
+                const pcsStr = (row.pieces !== "-") ? row.pieces : "";
+                const pctStr = (row.percentage !== "-") ? row.percentage : "";
+                txt += `${row.label.padEnd(10)}\t${pcsStr}\t${pctStr}\n`;
+            });
+            const totPcsStr = eggTotals.value.pieces || "";
+            const totPctStr = eggTotals.value.percentage ? eggTotals.value.percentage.toFixed(1) : "";
+            txt += `TOTAL     \t${totPcsStr}\t${totPctStr}\n\n`;
+            
+            txt += `TOTAL MORTALITIES: ${mortalityCount}\n`;
+            if (mort?.mortality?.length) {
+                mort.mortality.forEach(mr => {
+                    txt += `${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
+                });
+            } else {
+                txt += `(none)\n`;
+            }
+            txt += `\n`;
+            
+            const notes = [prod?.notes, mort?.notes, med?.notes].filter(Boolean).join("\n");
+            txt += `HAPPENINGS / NOTES:\n`;
+            txt += `${notes || "(none)"}\n\n`;
+            
+            txt += `WEATHER:\n`;
+            txt += `AM:        ${prod?.weatherAm || ""}\n`;
+            txt += `PM:        ${prod?.weatherPm || ""}\n`;
+            txt += `TEMP:      ${prod?.temperature || ""}`;
+            
+            return txt;
         });
 
         // Necropsy Report Formatting
