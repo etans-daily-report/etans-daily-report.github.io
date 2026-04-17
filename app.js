@@ -212,6 +212,14 @@ function renderDateStrip() {
         btn.onclick = () => selectDate(dateStr);
         els.dateStrip.appendChild(btn);
     }
+    
+    // Scroll the active date into the center
+    setTimeout(() => {
+        const activeBtn = els.dateStrip.querySelector('.date-btn.active');
+        if (activeBtn) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    }, 50);
 }
 
 function renderBuildingList() {
