@@ -37,6 +37,11 @@ const app = createApp({
                     
                     await selectDate(firstDate);
                 }
+                
+                // Hide the loading overlay when data is ready
+                const loader = document.getElementById('loading-overlay');
+                if (loader) loader.style.display = 'none';
+                
             } catch (err) {
                 console.error("Error fetching manifest:", err);
             }
