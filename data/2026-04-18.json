@@ -1,6 +1,6 @@
 {
   "date": "2026-04-18",
-  "syncedAt": "2026-04-18T23:00:42.865819+00:00",
+  "syncedAt": "2026-04-18T23:01:51.717385+00:00",
   "buildings": [
     {
       "id": "mo1c0cj65iqyg",
@@ -47,5 +47,192 @@
       "culledAt": null
     }
   ],
-  "entries": []
+  "entries": [
+    {
+      "id": "mo4xyd7qerl4h",
+      "buildingId": "mo1c0cj65iqyg",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 44,
+      "ageDays": 6,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 1,
+        "trays": 0,
+        "totalPieces": 360
+      },
+      "feed": {
+        "bags": 0.0,
+        "brand": "",
+        "gramsPerBirdDay": 0.0
+      },
+      "mortalityCount": 33,
+      "culls": 0,
+      "currentHeads": 44,
+      "notes": "test",
+      "weatherAm": "Foggy",
+      "weatherPm": "Hot",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:21.662385",
+      "updatedAt": "2026-04-18T23:01:21.662385"
+    },
+    {
+      "id": "mo4xyh9esh5ul",
+      "buildingId": "mo27crpd6sryq",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 55,
+      "ageDays": 5,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 6.0,
+        "brand": "",
+        "gramsPerBirdDay": 90.61
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 3311,
+      "notes": "333",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:26.888953",
+      "updatedAt": "2026-04-18T23:01:26.888953"
+    },
+    {
+      "id": "mo4xyjflgr4lk",
+      "buildingId": "mo3n9azq73ac3",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 16,
+      "ageDays": 6,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 2.0,
+        "brand": "2",
+        "gramsPerBirdDay": 10.0
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 10000,
+      "notes": "r3r3r",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:29.703868",
+      "updatedAt": "2026-04-18T23:01:29.703868"
+    },
+    {
+      "id": "mo4xync97f5tb",
+      "buildingId": "mo3nw7z78ts1g",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 16,
+      "ageDays": 2,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 1.0,
+        "brand": "",
+        "gramsPerBirdDay": 50.1
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 998,
+      "notes": "3r3r3",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:51.657008",
+      "updatedAt": "2026-04-18T23:01:51.657008"
+    },
+    {
+      "id": "mo4xyojte7hvv",
+      "buildingId": "mo3nw7z78ts1g",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 16,
+      "ageDays": 2,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 1.0,
+        "brand": "",
+        "gramsPerBirdDay": 50.1
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 998,
+      "notes": "3r3r3",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:51.664553",
+      "updatedAt": "2026-04-18T23:01:51.664553"
+    },
+    {
+      "id": "mo4xylopaclxu",
+      "buildingId": "mo3nw7z78ts1g",
+      "date": "2026-04-18",
+      "type": "production",
+      "reporter": "Admin",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 16,
+      "ageDays": 2,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 1.0,
+        "brand": "",
+        "gramsPerBirdDay": 50.1
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 998,
+      "notes": "3r3r3",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-18T23:01:51.661890",
+      "updatedAt": "2026-04-18T23:01:51.661890"
+    }
+  ]
 }
