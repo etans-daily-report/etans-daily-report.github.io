@@ -733,11 +733,11 @@ body {
     }
     .header-top {
         flex-direction: row;
-        flex-wrap: wrap; /* Let it wrap safely on tiny screens */
-        justify-content: space-between;
+        flex-wrap: wrap; 
+        justify-content: flex-start; /* Align everything to the left */
         align-items: center;
-        padding: 5px 10px;
-        gap: 5px;
+        padding: 2px 10px; /* Reduced vertical padding */
+        gap: 10px;
     }
     .header-title-area {
         flex-direction: row;
@@ -749,8 +749,8 @@ body {
         gap: 5px;
     }
     .date-dropdown {
-        padding: 4px 6px;
-        font-size: 0.75rem;
+        padding: 2px 4px;
+        font-size: 0.7rem;
     }
     .top-metrics {
         width: auto;
@@ -787,15 +787,15 @@ body {
         overflow: hidden;
     }
     .view-all-btn {
-        padding: 4px 8px;
-        font-size: 0.75rem;
+        padding: 2px 6px;
+        font-size: 0.65rem;
     }
     .sidebar-header {
-        margin-bottom: 5px;
-        padding-bottom: 5px;
+        margin-bottom: 2px;
+        padding-bottom: 2px;
     }
     .sidebar-title {
-        font-size: 0.95rem;
+        font-size: 0.8rem;
     }
     .building-list {
         flex-direction: row;
@@ -813,7 +813,7 @@ body {
         min-width: 40px; /* Uniform minimum size */
     }
     .building-name {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         margin-bottom: 0;
     }
     .building-details {
@@ -826,12 +826,12 @@ body {
     .tabs {
         overflow-x: auto;
         white-space: nowrap;
-        padding: 8px 10px;
-        gap: 5px;
+        padding: 4px 10px; /* Reduced padding */
+        gap: 4px;
     }
     .tab-btn {
-        padding: 6px 10px;
-        font-size: 0.8rem;
+        padding: 4px 8px;
+        font-size: 0.7rem;
     }
     .content-area {
         padding: 10px;
