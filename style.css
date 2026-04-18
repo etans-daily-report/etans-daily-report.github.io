@@ -718,7 +718,7 @@ body {
         height: auto;
         border-right: none;
         border-bottom: 1px solid var(--border-color);
-        padding: 8px;
+        padding: 4px 8px;
     }
     .main-content {
         order: 3;
@@ -800,19 +800,24 @@ body {
     .building-list {
         flex-direction: row;
         overflow-x: auto;
-        gap: 6px;
-        padding-bottom: 4px; /* for scrollbar */
+        gap: 4px;
+        padding-bottom: 4px;
+        justify-content: space-between; /* Try to spread them out */
     }
     .building-item {
+        flex: 1;
         flex-shrink: 0;
         white-space: nowrap;
-        padding: 4px 10px;
+        padding: 4px 8px;
+        text-align: center;
+        min-width: 40px; /* Uniform minimum size */
     }
     .building-name {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+        margin-bottom: 0;
     }
     .building-details {
-        font-size: 0.75rem;
+        display: none;
     }
     .main-content {
         flex: 1;
