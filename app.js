@@ -8,16 +8,13 @@ const app = createApp({
         const selectedYear = ref(null);
         const selectedMonth = ref(null);
         const buildingsData = ref({});
-        const selectedBuildingId = ref(localStorage.getItem('etans_report_bldg') || 'ALL');
-        const activeTab = ref(localStorage.getItem('etans_report_tab') || 'dailyreport');
+        const selectedBuildingId = ref('ALL');
+        const activeTab = ref('dailyreport');
         const allBuildingsSortBy = ref('name'); // name or age
         const isFullScreenTable = ref(false);
         const isFullScreenReport = ref(false);
         const isFullScreenNecropsy = ref(false);
         
-        // Persist preferences
-        watch(selectedBuildingId, (val) => { if (val) localStorage.setItem('etans_report_bldg', val); });
-        watch(activeTab, (val) => { if (val) localStorage.setItem('etans_report_tab', val); });
         
         // DOM Refs for scrolling
         const activeDateBtn = ref(null);
