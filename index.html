@@ -18,64 +18,64 @@
 </head>
 <body>
     <div id="app" v-cloak>
-        <header class="app-header">
-            <div class="header-top">
-                <div class="header-title-area">
-                    <h1>Farm Dashboard</h1>
-                    <div class="top-metrics" v-if="dashboardMetrics.activeBuildings > 0">
-                        <span class="metric"><b>POPULATION</b> {{ dashboardMetrics.population.toLocaleString() }}</span>
-                        <span class="metric"><b>PRODUCTION</b> {{ dashboardMetrics.productionPercent }}%</span>
-                        <span class="metric"><b>BUILDINGS</b> {{ dashboardMetrics.activeBuildings }}</span>
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title" style="margin: 0; padding: 0; border: none;">Buildings</h2>
+                <button class="view-all-btn" :class="{ active: selectedBuildingId === 'ALL' }" @click="selectedBuildingId = 'ALL'">View All</button>
+            </div>
+            <ul class="building-list">
+                <li v-if="!currentBuildings.length" class="empty-state" style="padding: 10px; color: rgba(255,255,255,0.5);">
+                    No buildings for this date.
+                </li>
+                <li 
+                    v-for="bldg in currentBuildings" 
+                    :key="bldg.id"
+                    class="building-item"
+                    :class="{ active: selectedBuildingId === bldg.id }"
+                    @click="selectBuilding(bldg.id)"
+                >
+                    <div class="building-name">{{ bldg.name }}</div>
+                    <div class="building-details">
+                        {{ bldg.breed }} • {{ formatAge(bldg.ageWeeks, bldg.ageDays) }} • {{ bldg.startingHeads }} heads
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <div class="main-area">
+            <header class="app-header">
+                <div class="header-top">
+                    <div class="header-title-area">
+                        <h1>Farm Dashboard</h1>
+                        <div class="top-metrics" v-if="dashboardMetrics.activeBuildings > 0">
+                            <span class="metric"><b>POPULATION</b> {{ dashboardMetrics.population.toLocaleString() }}</span>
+                            <span class="metric"><b>PRODUCTION</b> {{ dashboardMetrics.productionPercent }}%</span>
+                            <span class="metric"><b>BUILDINGS</b> {{ dashboardMetrics.activeBuildings }}</span>
+                        </div>
+                    </div>
+                    <div class="date-controls">
+                        <select class="date-dropdown" v-model.number="selectedYear">
+                            <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
+                        </select>
+                        <select class="date-dropdown" v-model.number="selectedMonth">
+                            <option v-for="month in availableMonths" :key="month.val" :value="month.val">{{ month.name }}</option>
+                        </select>
                     </div>
                 </div>
-                <div class="date-controls">
-                    <select class="date-dropdown" v-model.number="selectedYear">
-                        <option v-for="year in availableYears" :key="year" :value="year">{{ year }}</option>
-                    </select>
-                    <select class="date-dropdown" v-model.number="selectedMonth">
-                        <option v-for="month in availableMonths" :key="month.val" :value="month.val">{{ month.name }}</option>
-                    </select>
-                </div>
-            </div>
-            <nav class="date-strip">
-                <button 
-                    v-for="day in daysInMonthList" 
-                    :key="day.dateStr"
-                    class="date-btn"
-                    :class="{ active: selectedDate === day.dateStr, 'has-data': day.hasData }"
-                    @click="selectDate(day.dateStr)"
-                    :ref="el => { if (selectedDate === day.dateStr) activeDateBtn = el }"
-                >
-                    <div style="font-size: 0.75rem; line-height: 1; margin-bottom: 4px;">{{ day.weekday }}</div>
-                    <div style="font-size: 1.1rem; font-weight: 600; line-height: 1;">{{ day.dayNum }}</div>
-                </button>
-            </nav>
-        </header>
-        
-        <div class="app-layout">
-            <aside class="sidebar">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border-color);">
-                    <h2 class="sidebar-title" style="margin: 0; padding: 0; border: none;">Buildings</h2>
-                    <button class="view-all-btn" :class="{ active: selectedBuildingId === 'ALL' }" @click="selectedBuildingId = 'ALL'">View All</button>
-                </div>
-                <ul class="building-list">
-                    <li v-if="!currentBuildings.length" class="empty-state" style="padding: 10px; color: rgba(255,255,255,0.5);">
-                        No buildings for this date.
-                    </li>
-                    <li 
-                        v-for="bldg in currentBuildings" 
-                        :key="bldg.id"
-                        class="building-item"
-                        :class="{ active: selectedBuildingId === bldg.id }"
-                        @click="selectBuilding(bldg.id)"
+                <nav class="date-strip">
+                    <button 
+                        v-for="day in daysInMonthList" 
+                        :key="day.dateStr"
+                        class="date-btn"
+                        :class="{ active: selectedDate === day.dateStr, 'has-data': day.hasData }"
+                        @click="selectDate(day.dateStr)"
+                        :ref="el => { if (selectedDate === day.dateStr) activeDateBtn = el }"
                     >
-                        <div class="building-name">{{ bldg.name }}</div>
-                        <div class="building-details">
-                            {{ bldg.breed }} • {{ formatAge(bldg.ageWeeks, bldg.ageDays) }} • {{ bldg.startingHeads }} heads
-                        </div>
-                    </li>
-                </ul>
-            </aside>
+                        <div class="date-btn-weekday">{{ day.weekday }}</div>
+                        <div class="date-btn-num">{{ day.dayNum }}</div>
+                    </button>
+                </nav>
+            </header>
             
             <main class="main-content">
                 <template v-if="selectedBuildingId === 'ALL'">
@@ -124,7 +124,7 @@
                         <div :key="activeTab" v-if="selectedDate && selectedBuildingId" class="tab-transition-wrapper">
                             <!-- Daily Report -->
                             <div v-if="activeTab === 'dailyreport'" class="tab-content active">
-                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
                                     <button class="view-all-btn" @click="copyToClipboard(dailyReportText)">
                                         Copy Text
                                     </button>
@@ -137,7 +137,7 @@
                             
                             <!-- Egg Size Summary -->
                             <div v-if="activeTab === 'eggsummary'" class="tab-content active">
-                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
                                     <button class="view-all-btn" @click="copyToClipboard(eggSummaryText)">
                                         Copy Table
                                     </button>
@@ -213,7 +213,7 @@
                             
                             <!-- Necropsy Report -->
                             <div v-if="activeTab === 'necropsy'" class="tab-content active">
-                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 15px;">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
                                     <button class="view-all-btn" @click="copyToClipboard(necropsyReportText)">
                                         Copy Text
                                     </button>
@@ -228,8 +228,8 @@
                 </div>
                 </template>
             </main>
-        </div>
-
+            
+            <!-- Modals start here, outside of main content but inside #app -->
         <!-- Full Screen Table Modal -->
         <transition name="fade">
             <div v-if="isFullScreenTable" class="full-screen-modal">
@@ -332,8 +332,8 @@
                 </div>
             </div>
         </transition>
+        </div>
     </div>
-
     <!-- Application logic -->
     <script src="app.js"></script>
 </body>
