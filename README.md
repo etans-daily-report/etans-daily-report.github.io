@@ -1,0 +1,1 @@
+# etans-daily-report.github.io
