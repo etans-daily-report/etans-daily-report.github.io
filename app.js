@@ -10,7 +10,6 @@ const app = createApp({
         const buildingsData = ref({});
         const selectedBuildingId = ref('ALL');
         const activeTab = ref('dailyreport');
-        const allBuildingsSortBy = ref('name'); // name or age
         const isFullScreenTable = ref(false);
         const isFullScreenReport = ref(false);
         const isFullScreenNecropsy = ref(false);
@@ -220,14 +219,7 @@ const app = createApp({
                 };
             });
             
-            return mapped.sort((a, b) => {
-                if (allBuildingsSortBy.value === 'name') {
-                    return a.name.localeCompare(b.name);
-                } else if (allBuildingsSortBy.value === 'age') {
-                    return b.totalDays - a.totalDays; // Older first
-                }
-                return 0;
-            });
+            return mapped.sort((a, b) => a.name.localeCompare(b.name));
         });
 
         const currentProd = computed(() => currentEntries.value.find(e => e.buildingId === selectedBuildingId.value && e.type === "production"));
@@ -445,7 +437,6 @@ const app = createApp({
             dailyReportText,
             eggSummaryRows, eggTotals, eggDefects, eggSummaryText,
             necropsyReportText,
-            allBuildingsSortBy,
             sortedAllBuildings,
             isFullScreenTable,
             isFullScreenReport,

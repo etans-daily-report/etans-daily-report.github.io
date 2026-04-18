@@ -10,7 +10,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom stylesheet -->
     <link rel="stylesheet" href="style.css?v=1.0.1">
     <!-- Vue 3 CDN (Faster jsDelivr) -->
@@ -112,13 +112,7 @@
                 <template v-if="selectedBuildingId === 'ALL'">
                     <div class="all-buildings-header">
                         <h2>All Buildings Overview</h2>
-                        <div class="sort-controls">
-                            <label>Sort by:</label>
-                            <select v-model="allBuildingsSortBy">
-                                <option value="name">Alphabetical</option>
-                                <option value="age">Age</option>
-                            </select>
-                        </div>
+
                     </div>
                     <div class="content-area">
                         <div v-if="!sortedAllBuildings.length" class="empty-state">
