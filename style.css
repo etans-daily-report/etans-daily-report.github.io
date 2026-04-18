@@ -780,19 +780,21 @@ body {
     }
 
     .sidebar {
+        order: 2;
         width: 100%;
         height: auto;
-        padding: 8px;
-        flex-shrink: 0;
-        overflow: hidden;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        padding: 4px 0; /* No horizontal padding here to maximize width */
     }
     .view-all-btn {
         padding: 2px 6px;
         font-size: 0.65rem;
+        margin-right: 8px; /* Add some margin since sidebar padding is gone */
     }
     .sidebar-header {
         margin-bottom: 2px;
-        padding-bottom: 2px;
+        padding: 0 8px 2px 8px; /* Add horizontal padding back to header only */
     }
     .sidebar-title {
         font-size: 0.8rem;
@@ -801,16 +803,19 @@ body {
         flex-direction: row;
         overflow-x: auto;
         gap: 4px;
-        padding-bottom: 4px;
-        justify-content: space-between; /* Try to spread them out */
+        padding: 2px 8px 6px 8px; /* Balanced horizontal padding for the scrollable list */
+        justify-content: flex-start; 
     }
     .building-item {
         flex: 1;
         flex-shrink: 0;
         white-space: nowrap;
-        padding: 4px 8px;
+        padding: 6px 10px; /* Increased slightly for better tap targets but still compact */
         text-align: center;
-        min-width: 40px; /* Uniform minimum size */
+        min-width: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     .building-name {
         font-size: 0.75rem;
