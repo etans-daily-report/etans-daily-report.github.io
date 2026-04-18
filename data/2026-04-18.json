@@ -1,6 +1,6 @@
 {
   "date": "2026-04-18",
-  "syncedAt": "2026-04-18T23:26:14.088887+00:00",
+  "syncedAt": "2026-04-19T00:54:28.042090+00:00",
   "buildings": [
     {
       "id": "mo4yn3kam70v0",
@@ -10,6 +10,17 @@
       "ageDays": 1,
       "startingHeads": 100,
       "flockman": "kenneth",
+      "startDate": "2026-04-18",
+      "culledAt": null
+    },
+    {
+      "id": "mo4yxnrtf11be",
+      "name": "test2",
+      "breed": "gg",
+      "ageWeeks": 55,
+      "ageDays": 3,
+      "startingHeads": 1000,
+      "flockman": "ff",
       "startDate": "2026-04-18",
       "culledAt": null
     }
