@@ -1,0 +1,187 @@
+{
+  "date": "2026-04-15",
+  "syncedAt": "2026-04-29T07:25:49.807833+00:00",
+  "buildings": [
+    {
+      "id": "mnsypaebx7m0l",
+      "name": "A",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 66,
+      "ageDays": 3,
+      "startingHeads": 8070,
+      "flockman": "Vicente",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsyu72zhaebc",
+      "name": "C",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 37,
+      "ageDays": 4,
+      "startingHeads": 10051,
+      "flockman": "Jerry",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz17wahp9dg",
+      "name": "D",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 36,
+      "ageDays": 6,
+      "startingHeads": 9555,
+      "flockman": "Dindo",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz6qu0egoue",
+      "name": "G",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 88,
+      "ageDays": 1,
+      "startingHeads": 10912,
+      "flockman": "Reymund  and Wanie",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mob5dv7lht2po",
+      "name": "H",
+      "breed": "BOBCOCK WHITE",
+      "ageWeeks": 15,
+      "ageDays": 6,
+      "startingHeads": 8240,
+      "flockman": "NOEL",
+      "startDate": "2026-04-23",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mnzoddjtek8l9",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-15",
+      "type": "production",
+      "reporter": "kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 19,
+        "trays": 10,
+        "totalPieces": 7140
+      },
+      "feed": {
+        "bags": 19.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 117.94
+      },
+      "mortalityCount": 3,
+      "culls": 0,
+      "currentHeads": 8055,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.8",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnzuy31ucnih2",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-15",
+      "type": "production",
+      "reporter": "kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 24,
+        "trays": 7,
+        "totalPieces": 8850
+      },
+      "feed": {
+        "bags": 24.0,
+        "brand": "Layer 1 Nutrilay",
+        "gramsPerBirdDay": 119.51
+      },
+      "mortalityCount": 3,
+      "culls": 0,
+      "currentHeads": 10041,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.8",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnzv10fn81ujk",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-15",
+      "type": "production",
+      "reporter": "kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 23,
+        "trays": 10,
+        "totalPieces": 8580
+      },
+      "feed": {
+        "bags": 22.0,
+        "brand": "Layer 1- Nutrilay",
+        "gramsPerBirdDay": 115.5
+      },
+      "mortalityCount": 3,
+      "culls": 0,
+      "currentHeads": 9524,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.8",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mo2sgitelw1v7",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-15",
+      "type": "production",
+      "reporter": "kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 24,
+        "trays": 8,
+        "totalPieces": 8880
+      },
+      "feed": {
+        "bags": 26.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 119.63
+      },
+      "mortalityCount": 9,
+      "culls": 0,
+      "currentHeads": 10867,
+      "notes": "",
+      "weatherAm": "",
+      "weatherPm": "",
+      "temperature": "",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    }
+  ]
+}
