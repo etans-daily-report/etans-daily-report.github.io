@@ -1,0 +1,279 @@
+{
+  "date": "2026-04-11",
+  "syncedAt": "2026-04-29T07:26:31.603635+00:00",
+  "buildings": [
+    {
+      "id": "mnsypaebx7m0l",
+      "name": "A",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 66,
+      "ageDays": 3,
+      "startingHeads": 8070,
+      "flockman": "Vicente",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsyu72zhaebc",
+      "name": "C",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 37,
+      "ageDays": 4,
+      "startingHeads": 10051,
+      "flockman": "Jerry",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz17wahp9dg",
+      "name": "D",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 36,
+      "ageDays": 6,
+      "startingHeads": 9555,
+      "flockman": "Dindo",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz6qu0egoue",
+      "name": "G",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 88,
+      "ageDays": 1,
+      "startingHeads": 10912,
+      "flockman": "Reymund  and Wanie",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mob5dv7lht2po",
+      "name": "H",
+      "breed": "BOBCOCK WHITE",
+      "ageWeeks": 15,
+      "ageDays": 6,
+      "startingHeads": 8240,
+      "flockman": "NOEL",
+      "startDate": "2026-04-23",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mnwl3tmae95zb",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-11",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 20,
+        "trays": 3,
+        "totalPieces": 7290
+      },
+      "feed": {
+        "bags": 19.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 117.73
+      },
+      "mortalityCount": 1,
+      "culls": 2,
+      "currentHeads": 8069,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.9",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwl5rgt880w8",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-11",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 25,
+        "trays": 2,
+        "totalPieces": 9060
+      },
+      "feed": {
+        "bags": 24.0,
+        "brand": "Layer 1 Nutrilay",
+        "gramsPerBirdDay": 119.4
+      },
+      "mortalityCount": 2,
+      "culls": 0,
+      "currentHeads": 10050,
+      "notes": "DEWORM",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "34.9",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwl97v9tfdjv",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-11",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 24,
+        "trays": 4,
+        "totalPieces": 8760
+      },
+      "feed": {
+        "bags": 22.0,
+        "brand": "Layer 1- Nutrilay",
+        "gramsPerBirdDay": 115.18
+      },
+      "mortalityCount": 7,
+      "culls": 0,
+      "currentHeads": 9550,
+      "notes": "DEWORM",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.9",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwlec2tbkz0t",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-11",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 0,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 25,
+        "trays": 6,
+        "totalPieces": 9180
+      },
+      "feed": {
+        "bags": 26.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 119.26
+      },
+      "mortalityCount": 11,
+      "culls": 0,
+      "currentHeads": 10901,
+      "notes": "DEWORM",
+      "weatherAm": "Sunny",
+      "weatherPm": "Hot",
+      "temperature": "34.8",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwwj80wvijcc",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-11",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 1,
+      "notes": "1-broken wings/ prolapsed/ bigti/ broken leg/ dilated intestine",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwwjfjw73rr5",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-11",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 2,
+      "notes": "1-eaten by cat/ enlarged intestine\n1-days dead/ bigti",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwwjpbhju6zm",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-11",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 7,
+      "notes": "1-thin/ sternal devition/ unproductive\n1-vent pecking/ pale friable liver\n1-broken wings/ bigti/ prolapsed/ egg bound/ egg stuck/ ceacal worm\n1-pale liver/ egg stuck\n1-day dead/ nabasagan/ NE/ misshapen egg yolk\n1-prolapsed/ pale friable liver/ NE\n1-day dead/ NE",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwwk7ol6bfyr",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-11",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 11,
+      "notes": "2-days dead\n1-eaten by cat\n1-prolapsed/ egg binding\n1-nabasagan\n1-pale comb/ pale liver/ nabasagan\n1-day dead/ broken wings/ friable liver/ NE/ air in ceaca\n1-NE/ day dead\n1-friable liver/ nabasagan\n1-bigti/ broken wings/ friable liver/ splenomegaly\n1-day dead/ nabasagan",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwx5ja0c9cdy",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-11",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: levaxantel 1L/400L-D1\n1000H: Beta care (anti heat stress) 400ml/400L-D1\n1400H: liver plex 400mL/400L-D1",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwx6rsk0rpip",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-11",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: levaxantel 1.5L/500L-D1\n1000H: Beta care (anti heat stress) 500ml/500L-D3\n1400H: liver plex 500mL/500L-D1",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwx85kxvxx87",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-11",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: levaxantel 1L/400L-D1\n1000H: Beta care (anti heat stress) 400ml/400L-D3\n1400H: liver plex 400mL/400L-D1",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    },
+    {
+      "id": "mnwx9j7fb7dwf",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-11",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: levaxantel 1.5L/600L-D1\n1000H: Beta care (anti heat stress) 600ml/600L-D3\n1400H: liver plex 600mL/600L-D1",
+      "createdAt": "2026-04-20T08:36:38.282089",
+      "updatedAt": "2026-04-20T08:36:38.282089"
+    }
+  ]
+}
