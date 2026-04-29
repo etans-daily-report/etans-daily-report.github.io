@@ -1,0 +1,285 @@
+{
+  "date": "2026-04-29",
+  "syncedAt": "2026-04-29T07:22:13.013622+00:00",
+  "buildings": [
+    {
+      "id": "mnsypaebx7m0l",
+      "name": "A",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 66,
+      "ageDays": 3,
+      "startingHeads": 8070,
+      "flockman": "Vicente",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsyu72zhaebc",
+      "name": "C",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 37,
+      "ageDays": 4,
+      "startingHeads": 10051,
+      "flockman": "Jerry",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz17wahp9dg",
+      "name": "D",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 36,
+      "ageDays": 6,
+      "startingHeads": 9555,
+      "flockman": "Dindo",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz6qu0egoue",
+      "name": "G",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 88,
+      "ageDays": 1,
+      "startingHeads": 10912,
+      "flockman": "Reymund  and Wanie",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mob5dv7lht2po",
+      "name": "H",
+      "breed": "BOBCOCK WHITE",
+      "ageWeeks": 15,
+      "ageDays": 6,
+      "startingHeads": 8240,
+      "flockman": "NOEL",
+      "startDate": "2026-04-23",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mojq72j92ubjh",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-04-29",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 16,
+      "ageDays": 5,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 20.0,
+        "brand": "Pullet Developer- Nuevo",
+        "gramsPerBirdDay": 80.94
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 12355,
+      "notes": "",
+      "weatherAm": "Partly Cloudy",
+      "weatherPm": "Sunny",
+      "temperature": "31.4",
+      "createdAt": "2026-04-29T07:20:43.427243",
+      "updatedAt": "2026-04-29T07:20:43.427243"
+    },
+    {
+      "id": "mojq78s4b0r5l",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-29",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 69,
+      "ageDays": 1,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 19.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 118.81
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 7996,
+      "notes": "",
+      "weatherAm": "Partly Cloudy",
+      "weatherPm": "Sunny",
+      "temperature": "31.4",
+      "createdAt": "2026-04-29T07:20:51.519396",
+      "updatedAt": "2026-04-29T07:20:51.519396"
+    },
+    {
+      "id": "mojq7cdaw6yht",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-29",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 40,
+      "ageDays": 2,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 23.0,
+        "brand": "Layer 1 Nutrilay",
+        "gramsPerBirdDay": 114.99
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 10001,
+      "notes": "",
+      "weatherAm": "Partly Cloudy",
+      "weatherPm": "Sunny",
+      "temperature": "31.4",
+      "createdAt": "2026-04-29T07:20:56.167933",
+      "updatedAt": "2026-04-29T07:20:56.167933"
+    },
+    {
+      "id": "mojq7h0kvscjz",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-29",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 39,
+      "ageDays": 4,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 22.0,
+        "brand": "Layer 1- Nutrilay",
+        "gramsPerBirdDay": 116.56
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 9437,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "31.4",
+      "createdAt": "2026-04-29T07:21:02.190922",
+      "updatedAt": "2026-04-29T07:21:02.190922"
+    },
+    {
+      "id": "mojq7nh6grg3k",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-29",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 90,
+      "ageDays": 6,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 0,
+        "trays": 0,
+        "totalPieces": 0
+      },
+      "feed": {
+        "bags": 25.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 117.21
+      },
+      "mortalityCount": 0,
+      "culls": 0,
+      "currentHeads": 10665,
+      "notes": "",
+      "weatherAm": "Partly Cloudy",
+      "weatherPm": "Sunny",
+      "temperature": "31.4",
+      "createdAt": "2026-04-29T07:21:10.564946",
+      "updatedAt": "2026-04-29T07:21:10.564946"
+    },
+    {
+      "id": "mojq8nkk8w1v5",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-29",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 0,
+      "notes": "",
+      "createdAt": "2026-04-29T07:21:57.344574",
+      "updatedAt": "2026-04-29T07:21:57.344574"
+    },
+    {
+      "id": "mojq5grr3upf3",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-04-29",
+      "type": "medication",
+      "reporter": "Auto",
+      "medication": [],
+      "notes": "0600H: Amino acid 40ml/400L-D1\n0800H: Vit. C+ Electrolytes 400ml/400L-D1\n1000H: Beta care (anti heat stress) 400ml/400L-D20\n1400H:  Liver plex 400ml/400L-D3",
+      "createdAt": "2026-04-29T07:19:28.572110",
+      "updatedAt": "2026-04-29T07:19:28.572110"
+    },
+    {
+      "id": "mojq5thg7mnrz",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-04-29",
+      "type": "medication",
+      "reporter": "Auto",
+      "medication": [],
+      "notes": "0600H: Amino acid 50ml/500L-D1\n0800H: Vit. C+ Electrolytes 500ml/500L-D1\n1000H: Beta care (anti heat stress) 500ml/500L-D20\n1400H:  Liver plex 500ml/500L-D3",
+      "createdAt": "2026-04-29T07:19:45.039136",
+      "updatedAt": "2026-04-29T07:19:45.039136"
+    },
+    {
+      "id": "mojq6044ma4if",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-04-29",
+      "type": "medication",
+      "reporter": "Auto",
+      "medication": [],
+      "notes": "0600H: Amino acid 40ml/400L-D1\n0800H: Vit. C+ Electrolytes 400ml/400L-D1\n1000H: Beta care (anti heat stress) 400ml/400L-D20\n1400H:  Liver plex 400ml/400L-D3",
+      "createdAt": "2026-04-29T07:19:53.628742",
+      "updatedAt": "2026-04-29T07:19:53.628742"
+    },
+    {
+      "id": "mojq6cd9zw8gr",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-04-29",
+      "type": "medication",
+      "reporter": "Auto",
+      "medication": [],
+      "notes": "0600H: Amino acid 60ml/600L-D1\n0800H: Vit. C+ Electrolytes 600ml/600L-D1\n1000H: Beta care (anti heat stress) 600ml/600L-D20\n1400H:  Liver plex 600ml/600L-D3",
+      "createdAt": "2026-04-29T07:20:09.510622",
+      "updatedAt": "2026-04-29T07:20:09.510622"
+    },
+    {
+      "id": "mojq6myrdig0u",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-04-29",
+      "type": "medication",
+      "reporter": "Auto",
+      "medication": [],
+      "notes": "0500H: Tiamulin 1L/600L-D7\n0800H: Octasal 1.5L/600L-D7\n0800H: Vitamin C+ Electrolytes 600ML/600L-D7\n1000H: Amino acid equilibrium 120ml/600L-D7\n1000H: Polymune 600ml/600L-D7\n1400H: Betacare (anti heat stress) 600ml/600L-D3",
+      "createdAt": "2026-04-29T07:20:23.243941",
+      "updatedAt": "2026-04-29T07:20:23.243941"
+    }
+  ]
+}
