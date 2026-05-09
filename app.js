@@ -1170,8 +1170,12 @@ const app = createApp({
             txt += `CAUSES:\n(none specified)\n\n`;
           }
 
-          if (mort?.notes) {
-            txt += `NOTES / DETAILS:\n${mort.notes}\n\n`;
+          const bNotes = [prod?.notes, mort?.notes, med?.notes]
+            .filter(Boolean)
+            .join("\n");
+
+          if (bNotes) {
+            txt += `NOTES / DETAILS:\n${bNotes}\n\n`;
           }
         });
 
@@ -1197,8 +1201,12 @@ const app = createApp({
         txt += `CAUSES:\n(none specified)\n\n`;
       }
 
-      if (mort?.notes) {
-        txt += `NOTES / DETAILS:\n${mort.notes}\n\n`;
+      const bNotes = [prod?.notes, mort?.notes, med?.notes]
+        .filter(Boolean)
+        .join("\n");
+
+      if (bNotes) {
+        txt += `NOTES / DETAILS:\n${bNotes}\n\n`;
       }
 
       return txt;
@@ -1212,11 +1220,16 @@ const app = createApp({
       currentBuildings.value.forEach((b) => {
         const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
         const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
+        const med = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "medication");
         const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
         totalAllMortalities += mCount;
 
-        if (mort?.notes) {
-          allNotes.push(`BLDG ${b.name}:\n${mort.notes}`);
+        const bNotes = [prod?.notes, mort?.notes, med?.notes]
+          .filter(Boolean)
+          .join("\n");
+
+        if (bNotes) {
+          allNotes.push(`BLDG ${b.name}:\n${bNotes}`);
         }
       });
 
