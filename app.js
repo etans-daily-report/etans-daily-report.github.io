@@ -1150,42 +1150,30 @@ const app = createApp({
 
       if (selectedBuildingId.value === "ALL") {
         txt += `BLDG: ALL BUILDINGS\n\n`;
-        let totalAllMortalities = 0;
-        let causesMap = {};
-        let allNotes = [];
-
+        
         currentBuildings.value.forEach((b) => {
           const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
           const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
           const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
-          totalAllMortalities += mCount;
+
+          txt += `----------------------------------------\n`;
+          txt += `BLDG: ${b.name}\n`;
+          txt += `TOTAL MORTALITIES: ${mCount}\n\n`;
 
           if (mort?.mortality?.length) {
+            txt += `CAUSES:\n`;
             mort.mortality.forEach((mr) => {
-              const cause = mr.cause || "Unknown";
-              causesMap[cause] = (causesMap[cause] || 0) + (mr.count ?? 0);
+              txt += `- ${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
             });
-          } else if (mort?.notes) {
-            allNotes.push(`BLDG ${b.name}:\n${mort.notes}`);
+            txt += `\n`;
+          } else {
+            txt += `CAUSES:\n(none specified)\n\n`;
+          }
+
+          if (mort?.notes) {
+            txt += `NOTES / DETAILS:\n${mort.notes}\n\n`;
           }
         });
-
-        txt += `TOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
-        txt += `CAUSES:\n`;
-        const causesArray = Object.entries(causesMap);
-        if (causesArray.length) {
-          causesArray.forEach(([cause, count]) => {
-            txt += `- ${cause}: ${count}\n`;
-          });
-        } else {
-          txt += `(none specified)\n`;
-        }
-        txt += `\n`;
-
-        if (allNotes.length) {
-          txt += `NOTES / DETAILS:\n`;
-          txt += allNotes.join("\n\n") + "\n\n";
-        }
 
         return txt;
       }
