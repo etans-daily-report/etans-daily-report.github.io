@@ -342,7 +342,7 @@
 
                                     <div class="clean-metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; padding: 10px 0;">
                                         <!-- Population -->
-                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid var(--primary-color); background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid var(--primary-color); background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
                                             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Population Status</div>
                                             <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.currentHeads || 0).toLocaleString() }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">HD</span></div>
                                             <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
@@ -352,7 +352,7 @@
                                         </div>
 
                                         <!-- Production -->
-                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #10b981; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #10b981; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
                                             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Efficiency & Yield</div>
                                             <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.currentHeads > 0 ? (((currentProd?.production?.totalPieces || 0) / currentProd.currentHeads) * 100).toFixed(2) : "0.00") }}<span style="font-size: 1rem; color: #10b981; font-weight: 600;">%</span></div>
                                             <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
@@ -361,7 +361,7 @@
                                         </div>
 
                                         <!-- Feed Analysis -->
-                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #f59e0b; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #f59e0b; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
                                             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Feed Intake</div>
                                             <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.feed?.gramsPerBirdDay || 0).toFixed(1) }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">g/bird</span></div>
                                             <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
@@ -371,7 +371,7 @@
                                         </div>
 
                                         <!-- Biological Identity -->
-                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #8b5cf6; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #8b5cf6; background: rgba(255,255,255,0.02); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
                                             <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Flock Profile</div>
                                             <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ formatAge(currentProd?.ageWeeks, currentProd?.ageDays) }}</div>
                                             <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
