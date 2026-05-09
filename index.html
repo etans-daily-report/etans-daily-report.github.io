@@ -319,6 +319,7 @@
                         <button class="tab-btn" :class="{ active: activeTab === 'dailyreport' }" @click="activeTab = 'dailyreport'"><i class="fas fa-file-alt"></i> Daily Report</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'production' }" @click="activeTab = 'production'"><i class="fas fa-chart-line"></i> Production</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'eggsummary' }" @click="activeTab = 'eggsummary'"><i class="fas fa-egg"></i> Egg Summary</button>
+                        <button class="tab-btn" :class="{ active: activeTab === 'necropsysummary' }" @click="activeTab = 'necropsysummary'"><i class="fas fa-clipboard-list"></i> Necropsy Summary</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'necropsy' }" @click="activeTab = 'necropsy'"><i class="fas fa-microscope"></i> Necropsy Report</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'analytics' }" @click="activeTab = 'analytics'"><i class="fas fa-chart-pie"></i> Analytics</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'reports' }" @click="activeTab = 'reports'"><i class="fas fa-history"></i> Reports History</button>
@@ -490,25 +491,27 @@
                                 </table>
                             </div>
                             
+                            <!-- Necropsy Summary -->
+                            <div v-if="activeTab === 'necropsysummary'" class="tab-content active">
+                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
+                                    <button class="view-all-btn" @click="copyToClipboard(necropsySummaryText)">
+                                        Copy Text
+                                    </button>
+                                </div>
+                                <div class="report-container">{{ necropsySummaryText }}</div>
+                            </div>
+
                             <!-- Necropsy Report -->
                             <div v-if="activeTab === 'necropsy'" class="tab-content active">
-                                <!-- Sub Tabs -->
-                                <div class="analytics-nav" style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                    <button class="tab-btn" :class="{ active: necropsySubTab === 'building' }" @click="necropsySubTab = 'building'">Building Report</button>
-                                    <button class="tab-btn" :class="{ active: necropsySubTab === 'summary' }" @click="necropsySubTab = 'summary'">Necropsy Summary</button>
-                                </div>
-
                                 <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
-                                    <button class="view-all-btn" @click="copyToClipboard(necropsySubTab === 'building' ? necropsyReportText : necropsySummaryText)">
+                                    <button class="view-all-btn" @click="copyToClipboard(necropsyReportText)">
                                         Copy Text
                                     </button>
                                     <button class="view-all-btn" @click="isFullScreenNecropsy = true">
                                         View Full Report
                                     </button>
                                 </div>
-
-                                <div v-if="necropsySubTab === 'building'" class="report-container">{{ necropsyReportText }}</div>
-                                <div v-if="necropsySubTab === 'summary'" class="report-container">{{ necropsySummaryText }}</div>
+                                <div class="report-container">{{ necropsyReportText }}</div>
                             </div>
 
                             <!-- Analytics for Single Building -->
@@ -774,7 +777,7 @@
             <div v-if="isFullScreenNecropsy" class="full-screen-modal">
                 <button class="close-btn-fixed" @click="isFullScreenNecropsy = false"><i class="fas fa-times"></i></button>
                 <div class="modal-content-area">
-                    <div class="report-container full-report-container">{{ necropsySubTab === 'building' ? necropsyReportText : necropsySummaryText }}</div>
+                    <div class="report-container full-report-container">{{ necropsyReportText }}</div>
                 </div>
             </div>
         </transition>
