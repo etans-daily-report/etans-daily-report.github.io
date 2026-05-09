@@ -15,6 +15,7 @@ const app = createApp({
     const isFullScreenNecropsy = ref(false);
     const analyticsRange = ref("7");
     const analyticsSubTab = ref("charts");
+    const necropsySubTab = ref("building");
     const loadingAnalytics = ref(false);
     const analyticsData = ref([]);
     const kpiData = ref([]);
@@ -1143,13 +1144,56 @@ const app = createApp({
 
     // Necropsy Report Formatting
     const necropsyReportText = computed(() => {
+      let txt = `NECROPSY & MORTALITY REPORT\n${selectedDate.value}\n\n`;
+
+      if (selectedBuildingId.value === "ALL") {
+        txt += `BLDG: ALL BUILDINGS\n\n`;
+        let totalAllMortalities = 0;
+        let causesMap = {};
+        let allNotes = [];
+
+        currentBuildings.value.forEach((b) => {
+          const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
+          const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
+          const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
+          totalAllMortalities += mCount;
+
+          if (mort?.mortality?.length) {
+            mort.mortality.forEach((mr) => {
+              const cause = mr.cause || "Unknown";
+              causesMap[cause] = (causesMap[cause] || 0) + (mr.count ?? 0);
+            });
+          } else if (mort?.notes) {
+            allNotes.push(`BLDG ${b.name}:\n${mort.notes}`);
+          }
+        });
+
+        txt += `TOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
+        txt += `CAUSES:\n`;
+        const causesArray = Object.entries(causesMap);
+        if (causesArray.length) {
+          causesArray.forEach(([cause, count]) => {
+            txt += `- ${cause}: ${count}\n`;
+          });
+        } else {
+          txt += `(none specified)\n`;
+        }
+        txt += `\n`;
+
+        if (allNotes.length) {
+          txt += `NOTES / DETAILS:\n`;
+          txt += allNotes.join("\n\n") + "\n\n";
+        }
+
+        return txt;
+      }
+
       if (!currentBuilding.value) return "";
 
       const b = currentBuilding.value;
       const mort = currentMort.value;
       const prod = currentProd.value;
 
-      let txt = `NECROPSY & MORTALITY REPORT\n${selectedDate.value}\n\n`;
       txt += `BLDG: ${b.name}\n\n`;
       txt += `TOTAL MORTALITIES: ${mort?.totalMortality ?? prod?.mortalityCount ?? 0}\n\n`;
 
@@ -1161,6 +1205,38 @@ const app = createApp({
         txt += `\n`;
       } else {
         txt += `CAUSES:\n(none specified)\n\n`;
+      }
+
+      if (mort?.notes) {
+        txt += `NOTES / DETAILS:\n${mort.notes}\n\n`;
+      }
+
+      return txt;
+    });
+
+    const necropsySummaryText = computed(() => {
+      let txt = `NECROPSY SUMMARY - ALL BUILDINGS\n${selectedDate.value}\n\n`;
+      let totalAllMortalities = 0;
+      let allNotes = [];
+
+      currentBuildings.value.forEach((b) => {
+        const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
+        const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
+        const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
+        totalAllMortalities += mCount;
+
+        if (mort?.notes) {
+          allNotes.push(`BLDG ${b.name}:\n${mort.notes}`);
+        }
+      });
+
+      txt += `TOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
+      
+      if (allNotes.length) {
+        txt += `MORTALITY NOTES / DETAILS:\n\n`;
+        txt += allNotes.join("\n\n") + "\n\n";
+      } else {
+        txt += `MORTALITY NOTES / DETAILS:\n(none specified)\n\n`;
       }
 
       return txt;
@@ -1232,6 +1308,7 @@ const app = createApp({
       eggDefects,
       eggSummaryText,
       necropsyReportText,
+      necropsySummaryText,
       sortedAllBuildings,
       isFullScreenTable,
       isFullScreenReport,
@@ -1239,6 +1316,7 @@ const app = createApp({
       copyToClipboard,
       analyticsRange,
       analyticsSubTab,
+      necropsySubTab,
       loadingAnalytics,
       analyticsData,
       kpiData,
