@@ -179,14 +179,39 @@
 
                             <div class="analytics-content-scroller">
                                 <!-- Trends Sub-tab -->
-                                <div v-if="analyticsSubTab === 'charts'" class="analytics-grid">
-                                    <div class="chart-card">
-                                        <h3>Production Trend (%)</h3>
-                                        <canvas id="productionChart"></canvas>
+                                <div v-if="analyticsSubTab === 'charts'" class="trends-layout-wrapper">
+                                    <div class="trends-main-column">
+                                        <div class="chart-card premium-chart-card">
+                                            <div class="chart-header-premium">
+                                                <div class="chart-title-group">
+                                                    <h3>Production Trend (%)</h3>
+                                                    <span class="chart-subtitle">Hen-Day Performance Over Time</span>
+                                                </div>
+                                                <div class="chart-actions">
+                                                    <div class="mini-stat-badge">
+                                                        <span class="label">AVG HD</span>
+                                                        <span class="value">{{ (selectedBuildingId === 'ALL' ? avgFarmHenDay : avgBuildingHenDay).toFixed(1) }}%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="chart-container-inner">
+                                                <canvas id="productionChart"></canvas>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="chart-card">
-                                        <h3>Mortality Trend</h3>
-                                        <canvas id="mortalityChart"></canvas>
+                                    <div class="trends-side-column">
+                                        <div class="chart-card side-chart-card">
+                                            <div class="chart-header-premium">
+                                                <h3>Mortality Trend</h3>
+                                            </div>
+                                            <div class="chart-container-inner">
+                                                <canvas id="mortalityChart"></canvas>
+                                            </div>
+                                        </div>
+                                        <div class="mini-insight-card" v-if="analyticsInsights">
+                                            <h4><i class="fas fa-lightbulb"></i> Quick Insight</h4>
+                                            <p v-html="stripHtml(analyticsInsights).substring(0, 150) + '...'"></p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -205,7 +230,7 @@
                                 </div>
 
                                 <!-- KPI Sub-tab -->
-                                <div v-if="analyticsSubTab === 'kpi'" class="kpi-table-container">
+                                <div v-if="analyticsSubTab === 'kpis'" class="kpi-table-container">
                                     <table class="egg-table">
                                         <thead>
                                             <tr>
@@ -229,6 +254,8 @@
                                                 <td>{{ kpi.totalMort }}</td>
                                             </tr>
                                         </tbody>
+                                    </table>
+                                </div>
                                     <!-- Pro Metrics Grid -->
                                     <div v-if="analyticsSubTab === 'pro'" class="pro-analytics-grid">
                                         <div class="pro-card" v-for="kpi in kpiData" :key="kpi.buildingId">
@@ -269,9 +296,11 @@
                 <template v-else>
                     <div class="tabs">
                         <button class="tab-btn" :class="{ active: activeTab === 'dailyreport' }" @click="activeTab = 'dailyreport'"><i class="fas fa-file-alt"></i> Daily Report</button>
+                        <button class="tab-btn" :class="{ active: activeTab === 'production' }" @click="activeTab = 'production'"><i class="fas fa-chart-line"></i> Production</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'eggsummary' }" @click="activeTab = 'eggsummary'"><i class="fas fa-egg"></i> Egg Summary</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'necropsy' }" @click="activeTab = 'necropsy'"><i class="fas fa-microscope"></i> Necropsy Report</button>
                         <button class="tab-btn" :class="{ active: activeTab === 'analytics' }" @click="activeTab = 'analytics'"><i class="fas fa-chart-pie"></i> Analytics</button>
+                        <button class="tab-btn" :class="{ active: activeTab === 'reports' }" @click="activeTab = 'reports'"><i class="fas fa-history"></i> Reports History</button>
                     </div>
                     
                     <div class="content-area">
@@ -294,17 +323,85 @@
                                 <div class="report-container">{{ dailyReportText }}</div>
                             </div>
                             
+                            <!-- Production Data Tab -->
+                            <div v-if="activeTab === 'production'" class="tab-content active">
+                                <div class="production-dashboard-premium">
+                                    <!-- SaaS Performance Banner -->
+                                    <div class="performance-banner" :class="getProdClass(currentProd?.currentHeads > 0 ? (((currentProd?.production?.totalPieces || 0) / currentProd.currentHeads) * 100) : 0)">
+                                        <div class="banner-icon">
+                                            <i class="fas" :class="currentProd?.currentHeads > 0 && (currentProd?.production?.totalPieces / currentProd.currentHeads * 100) >= 85 ? 'fa-award' : 'fa-chart-line'"></i>
+                                        </div>
+                                        <div class="banner-text">
+                                            <span>Building Health Index</span>
+                                            <h3>{{ getPerformanceLabel(currentProd?.currentHeads > 0 ? (((currentProd?.production?.totalPieces || 0) / currentProd.currentHeads) * 100) : 0) }}</h3>
+                                        </div>
+                                        <div class="banner-score">
+                                            <b>{{ (currentProd?.currentHeads > 0 ? (((currentProd?.production?.totalPieces || 0) / currentProd.currentHeads) * 100).toFixed(1) : "0.0") }}</b><small>%</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="clean-metrics-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; padding: 10px 0;">
+                                        <!-- Population -->
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid var(--primary-color); background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Population Status</div>
+                                            <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.currentHeads || 0).toLocaleString() }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">HD</span></div>
+                                            <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                                                <div><i class="fas fa-skull" style="color: #ef4444; margin-right: 4px;"></i> {{ currentMort?.totalMortality || 0 }} Mort</div>
+                                                <div><i class="fas fa-hand-holding-medical" style="color: #f59e0b; margin-right: 4px;"></i> {{ currentProd?.culls || 0 }} Cull</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Production -->
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #10b981; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Efficiency & Yield</div>
+                                            <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.currentHeads > 0 ? (((currentProd?.production?.totalPieces || 0) / currentProd.currentHeads) * 100).toFixed(2) : "0.00") }}<span style="font-size: 1rem; color: #10b981; font-weight: 600;">%</span></div>
+                                            <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                                                 <div><i class="fas fa-egg" style="color: #10b981; margin-right: 4px;"></i> {{ currentProd?.production?.totalPieces?.toLocaleString() || 0 }} Pcs</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Feed Analysis -->
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #f59e0b; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Feed Intake</div>
+                                            <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ (currentProd?.feed?.gramsPerBirdDay || 0).toFixed(1) }} <span style="font-size: 1rem; color: var(--text-muted); font-weight: 600;">g/bird</span></div>
+                                            <div style="display: flex; gap: 16px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                                                <div><i class="fas fa-shopping-bag" style="color: #f59e0b; margin-right: 4px;"></i> {{ currentProd?.feed?.bags || 0 }} Bags</div>
+                                                <div>{{ currentProd?.feed?.brand || 'Standard' }}</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Biological Identity -->
+                                        <div class="metric-group" style="padding: 16px; border-left: 3px solid #8b5cf6; background: var(--surface-bg); border-radius: 0 8px 8px 0; transition: background 0.3s ease; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-left-width: 3px;">
+                                            <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700;">Flock Profile</div>
+                                            <div style="font-size: 2rem; font-weight: 800; color: var(--text-main); line-height: 1.2;">{{ formatAge(currentProd?.ageWeeks, currentProd?.ageDays) }}</div>
+                                            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); font-weight: 500;">
+                                                <div><i class="fas fa-dna" style="color: #8b5cf6; margin-right: 4px; width: 14px;"></i> {{ currentBuilding?.breed || '---' }}</div>
+                                                <div><i class="fas fa-user" style="color: #8b5cf6; margin-right: 4px; width: 14px;"></i> {{ currentBuilding?.flockman || '---' }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             <!-- Egg Size Summary -->
                             <div v-if="activeTab === 'eggsummary'" class="tab-content active">
-                                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
-                                    <button class="view-all-btn" @click="copyToClipboard(eggSummaryText)">
-                                        Copy Table
-                                    </button>
-                                    <button class="view-all-btn" @click="isFullScreenTable = true">
-                                        View Full Table
-                                    </button>
+                                <div class="table-controls-row">
+                                    <div class="font-size-toggle">
+                                        <label><i class="fas fa-text-height"></i> Table Font Size:</label>
+                                        <input type="range" v-model="tableFontSize" min="8" max="20" step="1">
+                                        <span class="font-size-val">{{ tableFontSize }}px</span>
+                                    </div>
+                                    <div class="table-actions">
+                                        <button class="view-all-btn" @click="copyToClipboard(eggSummaryText)">
+                                            Copy Table
+                                        </button>
+                                        <button class="view-all-btn" @click="isFullScreenTable = true">
+                                            View Full Table
+                                        </button>
+                                    </div>
                                 </div>
-                                <table class="egg-table defects-table" style="margin-bottom: 20px;">
+                                <div class="table-responsive-wrapper" :style="{ fontSize: tableFontSize + 'px' }">
+                                    <table class="egg-table defects-table">
                                     <thead>
                                         <tr>
                                             <th>Defects</th>
@@ -337,8 +434,10 @@
                                             <td style="font-weight: 900;">{{ eggDefects.mishapen.total.toLocaleString() }}</td>
                                         </tr>
                                     </tbody>
-                                </table>
-                                <table class="egg-table">
+                                    </table>
+                                </div>
+                                <div class="table-responsive-wrapper" :style="{ fontSize: tableFontSize + 'px' }">
+                                    <table class="egg-table">
                                     <thead>
                                         <tr>
                                             <th>Egg Size</th>
@@ -389,8 +488,8 @@
                                     <div class="analytics-title-group">
                                         <h2 class="compact-title">{{ currentBuilding?.name }} Analytics</h2>
                                         <div class="analytics-summary-chips">
-                                            <div class="chip score-chip" :class="kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence.status.class">
-                                                <i class="fas fa-brain"></i> <span class="chip-label">Score:</span> <b>{{ kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence.total }}</b>
+                                            <div class="chip score-chip" :class="kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence?.status?.class">
+                                                <i class="fas fa-brain"></i> <span class="chip-label">Score:</span> <b>{{ kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence?.total || 0 }}</b>
                                                 <span class="status-dot"></span>
                                             </div>
                                             <div class="chip" title="Hen-Day Production"><i class="fas fa-calendar-day"></i> <span class="chip-label">HD:</span> <b :class="getProdClass(avgBuildingHenDay)">{{ avgBuildingHenDay.toFixed(1) }}%</b></div>
@@ -413,19 +512,45 @@
                                     <button class="tab-btn" :class="{active: analyticsSubTab === 'charts'}" @click="analyticsSubTab = 'charts'"><i class="fas fa-chart-line"></i> Trends</button>
                                     <button class="tab-btn" :class="{active: analyticsSubTab === 'eggs'}" @click="analyticsSubTab = 'eggs'"><i class="fas fa-egg"></i> Sizes</button>
                                     <button class="tab-btn" :class="{active: analyticsSubTab === 'insights'}" @click="analyticsSubTab = 'insights'"><i class="fas fa-lightbulb"></i> Insights</button>
+                                    <button class="tab-btn" :class="{active: analyticsSubTab === 'kpis'}" @click="analyticsSubTab = 'kpis'"><i class="fas fa-table"></i> KPI Table</button>
                                     <button class="tab-btn pro-tab-btn" :class="{active: analyticsSubTab === 'pro'}" @click="analyticsSubTab = 'pro'"><i class="fas fa-crown"></i> Pro Metrics</button>
                                 </div>
 
                                 <div class="analytics-content-scroller">
                                     <!-- Trends Sub-tab -->
-                                    <div v-if="analyticsSubTab === 'charts'" class="analytics-grid">
-                                        <div class="chart-card">
-                                            <h3>Production Trend (%)</h3>
-                                            <canvas id="productionChart"></canvas>
+                                    <div v-if="analyticsSubTab === 'charts'" class="trends-layout-wrapper">
+                                        <div class="trends-main-column">
+                                            <div class="chart-card premium-chart-card">
+                                                <div class="chart-header-premium">
+                                                    <div class="chart-title-group">
+                                                        <h3>Production Trend (%)</h3>
+                                                        <span class="chart-subtitle">{{ currentBuilding?.name }} performance curve</span>
+                                                    </div>
+                                                    <div class="chart-actions">
+                                                        <div class="mini-stat-badge">
+                                                            <span class="label">AVG HD</span>
+                                                            <span class="value">{{ avgBuildingHenDay.toFixed(1) }}%</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="chart-container-inner">
+                                                    <canvas id="productionChart"></canvas>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="chart-card">
-                                            <h3>Mortality Trend</h3>
-                                            <canvas id="mortalityChart"></canvas>
+                                        <div class="trends-side-column">
+                                            <div class="chart-card side-chart-card">
+                                                <div class="chart-header-premium">
+                                                    <h3>Mortality Trend</h3>
+                                                </div>
+                                                <div class="chart-container-inner">
+                                                    <canvas id="mortalityChart"></canvas>
+                                                </div>
+                                            </div>
+                                            <div class="mini-insight-card" v-if="analyticsInsights">
+                                                <h4><i class="fas fa-lightbulb"></i> Quick Insight</h4>
+                                                <p v-html="stripHtml(analyticsInsights).substring(0, 150) + '...'"></p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -441,6 +566,34 @@
                                     <div v-if="analyticsSubTab === 'insights'" class="analysis-box">
                                         <h3><i class="fas fa-magic insight-icon"></i> Building Insights</h3>
                                         <div class="insight-content" v-html="analyticsInsights"></div>
+                                    </div>
+
+                                    <!-- KPI Sub-tab for Single Building -->
+                                    <div v-if="analyticsSubTab === 'kpis'" class="kpi-table-container">
+                                        <table class="egg-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Building</th>
+                                                    <th>HD %</th>
+                                                    <th>HH %</th>
+                                                    <th>FCR</th>
+                                                    <th>Mass (g)</th>
+                                                    <th>Saleable %</th>
+                                                    <th>Mort</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-if="kpiData.find(k => k.buildingId === selectedBuildingId)">
+                                                    <td>{{ kpiData.find(k => k.buildingId === selectedBuildingId).name }}</td>
+                                                    <td :class="getProdClass(kpiData.find(k => k.buildingId === selectedBuildingId).avgHenDay)">{{ (kpiData.find(k => k.buildingId === selectedBuildingId).avgHenDay || 0).toFixed(1) }}%</td>
+                                                    <td>{{ (kpiData.find(k => k.buildingId === selectedBuildingId).avgHenHouse || 0).toFixed(1) }}%</td>
+                                                    <td :class="(kpiData.find(k => k.buildingId === selectedBuildingId).fcr || 0) > 2.2 ? 'text-danger' : 'text-success'">{{ (kpiData.find(k => k.buildingId === selectedBuildingId).fcr || 0).toFixed(2) }}</td>
+                                                    <td>{{ (kpiData.find(k => k.buildingId === selectedBuildingId).avgEggMass || 0).toFixed(1) }}g</td>
+                                                    <td :class="(kpiData.find(k => k.buildingId === selectedBuildingId).saleablePercent || 0) < 95 ? 'text-danger' : ''">{{ (kpiData.find(k => k.buildingId === selectedBuildingId).saleablePercent || 0).toFixed(1) }}%</td>
+                                                    <td>{{ kpiData.find(k => k.buildingId === selectedBuildingId).totalMort || 0 }}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
 
                                     <!-- Pro Metrics for Single Building -->
@@ -465,13 +618,33 @@
                                                 </div>
                                                 <div class="pro-metric">
                                                     <span class="l"><i class="fas fa-seedling"></i> Feed/Bird</span>
-                                                    <span class="v">{{ kpiData.find(k => k.buildingId === selectedBuildingId).avgGrams.toFixed(1) }}g</span>
+                                                    <span class="v">{{ (kpiData.find(k => k.buildingId === selectedBuildingId)?.avgGrams || 0).toFixed(1) }}g</span>
                                                 </div>
                                             </div>
-                                            <div class="pro-score-pill" :class="kpiData.find(k => k.buildingId === selectedBuildingId).intelligence.status.class">
-                                                {{ kpiData.find(k => k.buildingId === selectedBuildingId).intelligence.total }} / 100
+                                            <div class="pro-score-pill" :class="kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence?.status?.class">
+                                                {{ kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence?.total || 0 }} / 100
                                             </div>
-                                            <div class="pro-status-bar" :style="{background: kpiData.find(k => k.buildingId === selectedBuildingId).intelligence.status.color}"></div>
+                                            <div class="pro-status-bar" :style="{background: kpiData.find(k => k.buildingId === selectedBuildingId)?.intelligence?.status?.color || '#ccc'}"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reports History Sub-tab -->
+                            <div v-if="activeTab === 'reports'" class="tab-content active">
+                                <div class="reports-grid">
+                                    <div v-if="!currentReports.length" class="empty-state">
+                                        No reports found for this building.
+                                    </div>
+                                    <div v-else class="cards-grid">
+                                        <div class="report-card" v-for="report in currentReports" :key="report.id">
+                                            <div class="report-icon"><i class="fas fa-file-pdf"></i></div>
+                                            <div class="report-info">
+                                                <h4>{{ report.type.toUpperCase() }} REPORT</h4>
+                                                <p>{{ report.dateRange.start }} to {{ report.dateRange.end }}</p>
+                                                <span class="report-date">Generated: {{ formatDate(report.generatedAt) }}</span>
+                                            </div>
+                                            <button class="view-report-btn" @click="viewReport(report.id)">View</button>
                                         </div>
                                     </div>
                                 </div>
