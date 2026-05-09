@@ -1154,6 +1154,7 @@ const app = createApp({
         currentBuildings.value.forEach((b) => {
           const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
           const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
+          const med = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "medication");
           const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
 
           txt += `----------------------------------------\n`;
