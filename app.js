@@ -1217,10 +1217,16 @@ const app = createApp({
       let totalAllMortalities = 0;
       let allNotes = [];
 
+      txt += `DEBUG: currentBuildings count: ${currentBuildings.value.length}\n`;
+      txt += `DEBUG: currentEntries count: ${currentEntries.value.length}\n\n`;
+
       currentBuildings.value.forEach((b) => {
         const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
         const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
         const med = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "medication");
+        
+        txt += `DEBUG: BLDG ${b.name} (${b.id}): mort found=${!!mort}, prod found=${!!prod}, med found=${!!med}\n`;
+        
         const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
         totalAllMortalities += mCount;
 
@@ -1233,7 +1239,7 @@ const app = createApp({
         }
       });
 
-      txt += `TOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
+      txt += `\nTOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
       
       if (allNotes.length) {
         txt += `MORTALITY NOTES / DETAILS:\n\n`;
