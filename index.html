@@ -119,6 +119,7 @@
                 <template v-if="selectedBuildingId === 'ALL'">
                     <div class="tabs">
                         <button class="tab-btn" :class="{active: activeTab === 'dailyreport'}" @click="activeTab = 'dailyreport'"><i class="fas fa-list-alt"></i> Overview</button>
+                        <button class="tab-btn" :class="{active: activeTab === 'necropsy'}" @click="activeTab = 'necropsy'"><i class="fas fa-microscope"></i> Necropsy Report</button>
                         <button class="tab-btn" :class="{active: activeTab === 'analytics'}" @click="activeTab = 'analytics'"><i class="fas fa-chart-line"></i> Analytics</button>
                     </div>
                     <div class="content-area">
@@ -141,6 +142,26 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <!-- Necropsy Report for ALL Buildings -->
+                        <div v-if="activeTab === 'necropsy'">
+                            <div class="analytics-nav" style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                <button class="tab-btn" :class="{ active: necropsySubTab === 'building' }" @click="necropsySubTab = 'building'">Building Report</button>
+                                <button class="tab-btn" :class="{ active: necropsySubTab === 'summary' }" @click="necropsySubTab = 'summary'">Necropsy Summary</button>
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-bottom: 5px;">
+                                <button class="view-all-btn" @click="copyToClipboard(necropsySubTab === 'building' ? necropsyReportText : necropsySummaryText)">
+                                    Copy Text
+                                </button>
+                                <button class="view-all-btn" @click="isFullScreenNecropsy = true">
+                                    View Full Report
+                                </button>
+                            </div>
+
+                            <div v-if="necropsySubTab === 'building'" class="report-container">{{ necropsyReportText }}</div>
+                            <div v-if="necropsySubTab === 'summary'" class="report-container">{{ necropsySummaryText }}</div>
                         </div>
 
                         <!-- Analytics for ALL Buildings -->
