@@ -1123,12 +1123,14 @@ const app = createApp({
         mort.mortality.forEach((mr) => {
           txt += `${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
         });
+      } else if (mort?.notes) {
+        txt += `${mort.notes}\n`;
       } else {
         txt += `(none)\n`;
       }
       txt += `\n`;
 
-      const notes = [prod?.notes, mort?.notes, med?.notes]
+      const notes = [prod?.notes, med?.notes]
         .filter(Boolean)
         .join("\n");
       txt += `HAPPENINGS / NOTES:\n`;
