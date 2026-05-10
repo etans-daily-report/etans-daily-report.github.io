@@ -1,6 +1,6 @@
 {
   "date": "2026-05-10",
-  "syncedAt": "2026-05-10T10:17:17.191527+00:00",
+  "syncedAt": "2026-05-10T10:24:07.478717+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -176,12 +176,12 @@
       "mortalityCount": 13,
       "culls": 43,
       "currentHeads": 10483,
-      "notes": "-cleaning of water piped-D4\n-14 heads culls sold\n-15 heads thin unproduction- food consumption\n-Deloused- May affect production",
+      "notes": "-cleaning of water piped-D4\n-14 heads culls sold\n-29 heads thin unproduction- food consumption\n-Deloused- May affect production",
       "weatherAm": "Hot",
       "weatherPm": "Hot",
       "temperature": "37",
       "createdAt": "2026-05-10T08:01:01.152541",
-      "updatedAt": "2026-05-10T10:12:40.782933"
+      "updatedAt": "2026-05-10T10:23:43.149562"
     },
     {
       "id": "mozhi57tw5thy",
