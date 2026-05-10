@@ -3,6 +3,7 @@ const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
 const app = createApp({
   setup() {
     // State
+    const appConfig = ref(null);   // Loaded from manifest.json meta block
     const dates = ref([]);
     const selectedDate = ref(null);
     const selectedYear = ref(null);
@@ -10,6 +11,8 @@ const app = createApp({
     const buildingsData = ref({});
     const selectedBuildingId = ref("ALL");
     const activeTab = ref("dailyreport");
+    const activeSubTab = ref("weekly");
+    const activeOverviewSubTab = ref("cards");
     const isFullScreenTable = ref(false);
     const isFullScreenReport = ref(false);
 
@@ -21,7 +24,8 @@ const app = createApp({
     const showPassword = ref(false);
 
     const checkLogin = () => {
-      if (passwordInput.value === "ETANS@FARM") {
+      const correctPassword = appConfig.value?.password || "ETANS@FARM";
+      if (passwordInput.value === correctPassword) {
         isLoggedIn.value = true;
         loginError.value = false;
         localStorage.setItem("isLoggedIn", "true");
@@ -45,6 +49,15 @@ const app = createApp({
       try {
         const res = await fetch("data/manifest.json");
         const manifest = await res.json();
+
+        // Load meta/config from manifest — single source of truth
+        if (manifest.meta) {
+          appConfig.value = manifest.meta;
+          // Push config into KPIFramework so it uses JSON-driven constants
+          if (window.KPIFramework && manifest.meta.kpi) {
+            window.KPIFramework.config = manifest.meta.kpi;
+          }
+        }
 
         dates.value = manifest.dates || [];
 
@@ -324,22 +337,62 @@ const app = createApp({
         const prod = entries.find(
           (e) => e.buildingId === b.id && e.type === "production",
         );
-        const heads = prod?.currentHeads ?? b.startingHeads ?? 0;
-        const pieces = prod?.production?.totalPieces ?? 0;
-        const percent =
-          heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+        const mort = entries.find(
+          (e) => e.buildingId === b.id && e.type === "mortality",
+        );
+
+        // --- All fields sourced from production entry (same as Daily Report) ---
+        const heads       = prod?.currentHeads     ?? b.startingHeads ?? 0;
+        const pieces      = prod?.production?.totalPieces ?? 0;
+        const prodCases   = prod?.production?.cases ?? 0;
+        const percent     = heads > 0 ? ((pieces / heads) * 100).toFixed(2) : "0.00";
+
+        // Age: use the entry's reported age, not the building's static metadata
+        const ageWeeks    = prod?.ageWeeks  ?? b.ageWeeks  ?? 0;
+        const ageDays     = prod?.ageDays   ?? b.ageDays   ?? 0;
+
+        // Mortality: prefer dedicated mortality entry, fall back to production entry field
+        const mortalityCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
+        const culls          = prod?.culls ?? 0;
+
+        // Feed
+        const feedBags    = prod?.feed?.bags ?? 0;
+        const feedBrand   = prod?.feed?.brand ?? "";
+        const gPerBird    = prod?.feed?.gramsPerBirdDay ?? 0;
+
+        // Weather / notes
+        const weatherAm   = prod?.weatherAm   ?? "";
+        const weatherPm   = prod?.weatherPm   ?? "";
+        const temperature = prod?.temperature ?? "";
+        const notes       = prod?.notes ?? "";
 
         return {
-          ...b,
-          currentHeads: heads,
-          eggPercent: percent,
+          ...b,                           // id, name, breed, startDate, culledAt
           flockman: b.flockman || "None",
-          totalDays: b.ageWeeks * 7 + b.ageDays,
+          startingHeads: b.startingHeads ?? 0,
+          // --- entry-driven fields ---
+          currentHeads:  heads,
+          ageWeeks,
+          ageDays,
+          totalDays:     ageWeeks * 7 + ageDays,
+          eggPercent:    percent,
+          totalPieces:   pieces,
+          prodCases,
+          mortalityCount,
+          culls,
+          feedBags,
+          feedBrand,
+          gPerBird,
+          weatherAm,
+          weatherPm,
+          temperature,
+          notes,
         };
       });
 
       return mapped.sort((a, b) => a.name.localeCompare(b.name));
     });
+
 
     const currentProd = computed(() =>
       currentEntries.value.find(
@@ -366,6 +419,198 @@ const app = createApp({
           e.type === "water-medication",
       ),
     );
+
+    // ── WEEKLY SUMMARY TABLE ──────────────────────────────────────────────────
+
+    // Pre-fetch all available dates so history is ready
+    watch(dates, async (newDates) => {
+      if (!newDates) return;
+      for (const dateStr of newDates) {
+        await loadDateData(dateStr);
+      }
+    }, { immediate: true });
+
+    // Group available data by week for the selected building (or ALL)
+    const weeklyHistoryTable = computed(() => {
+      if (!selectedBuildingId.value) return [];
+      
+      const history = {}; // { key: { ... } }
+      
+      // Iterate over all loaded data
+      Object.keys(buildingsData.value).forEach(dateStr => {
+        const dayData = buildingsData.value[dateStr];
+        if (!dayData || !dayData.entries) return;
+        
+        // Find production entries matching the filter
+        const prods = dayData.entries.filter(
+          (e) => e.type === "production" && (selectedBuildingId.value === "ALL" || e.buildingId === selectedBuildingId.value)
+        );
+        
+        prods.forEach(prod => {
+          const wk = prod.ageWeeks || 0;
+          const key = `${wk}_${prod.buildingId}`;
+          
+          // Find corresponding mortality entry
+          const mort = dayData.entries.find(
+            (e) => e.type === "mortality" && e.buildingId === prod.buildingId
+          );
+          
+          if (!history[key]) {
+            const bldg = currentBuildings.value.find(b => b.id === prod.buildingId);
+            const bldgName = bldg ? bldg.name : prod.buildingId;
+            
+            history[key] = {
+              week: wk,
+              buildingId: prod.buildingId,
+              buildingName: bldgName,
+              days: 0,
+              bags: 0,
+              pieces: 0,
+              mortality: 0,
+              culls: 0,
+              gPerBirdSum: 0,
+              prodPercentSum: 0,
+              headsPerDate: {} // { date: totalHeads }
+            };
+          }
+          
+          const heads = prod.currentHeads || 0;
+          history[key].days += 1;
+          
+          if (!history[key].headsPerDate[dateStr]) {
+            history[key].headsPerDate[dateStr] = 0;
+          }
+          history[key].headsPerDate[dateStr] += heads;
+          
+          history[key].bags += prod.feed?.bags || 0;
+          history[key].pieces += prod.production?.totalPieces || 0;
+          history[key].mortality += mort?.totalMortality ?? prod.mortalityCount ?? 0;
+          history[key].culls += prod.culls || 0;
+          history[key].gPerBirdSum += prod.feed?.gramsPerBirdDay || 0;
+          
+          const dayPct = heads > 0 ? (prod.production?.totalPieces || 0) / heads * 100 : 0;
+          history[key].prodPercentSum += dayPct;
+        });
+      });
+      
+      // Convert to array and calculate averages
+      return Object.values(history).map(wk => {
+        const avgFeed = wk.days > 0 ? (wk.gPerBirdSum / wk.days).toFixed(1) : "0.0";
+        const avgProd = wk.days > 0 ? (wk.prodPercentSum / wk.days).toFixed(2) : "0.00";
+        
+        // Get heads from the latest date available for this week
+        const datesInWeek = Object.keys(wk.headsPerDate).sort();
+        const latestDate = datesInWeek[datesInWeek.length - 1];
+        const latestHeads = wk.headsPerDate[latestDate] || 0;
+        
+        return {
+          weekLabel: `Week ${wk.week}`,
+          ageWeeks: wk.week,
+          buildingName: wk.buildingName,
+          heads: latestHeads,
+          bags: wk.bags,
+          avgFeed,
+          totalEggs: wk.pieces,
+          avgProd,
+          mortality: wk.mortality,
+          culls: wk.culls
+        };
+      }).sort((a, b) => {
+        if (a.ageWeeks !== b.ageWeeks) return a.ageWeeks - b.ageWeeks;
+        return a.buildingName.localeCompare(b.buildingName);
+      });
+    });
+
+
+    // Group available data by month for the selected building (or ALL)
+    const monthlyHistoryTable = computed(() => {
+      if (!selectedBuildingId.value) return [];
+      
+      const history = {}; // { key: { ... } }
+      
+      Object.keys(buildingsData.value).forEach(dateStr => {
+        const dayData = buildingsData.value[dateStr];
+        if (!dayData || !dayData.entries) return;
+        
+        const yearMonth = dateStr.slice(0, 7); // "2026-05"
+        
+        const prods = dayData.entries.filter(
+          (e) => e.type === "production" && (selectedBuildingId.value === "ALL" || e.buildingId === selectedBuildingId.value)
+        );
+        
+        prods.forEach(prod => {
+          const key = `${yearMonth}_${prod.buildingId}`;
+          const mort = dayData.entries.find(
+            (e) => e.type === "mortality" && e.buildingId === prod.buildingId
+          );
+          
+          if (!history[key]) {
+            const bldg = currentBuildings.value.find(b => b.id === prod.buildingId);
+            const bldgName = bldg ? bldg.name : prod.buildingId;
+            
+            history[key] = {
+              month: yearMonth,
+              buildingId: prod.buildingId,
+              buildingName: bldgName,
+              days: 0,
+              bags: 0,
+              pieces: 0,
+              mortality: 0,
+              culls: 0,
+              gPerBirdSum: 0,
+              prodPercentSum: 0,
+              headsPerDate: {}
+            };
+          }
+          
+          const heads = prod.currentHeads || 0;
+          history[key].days += 1;
+          
+          if (!history[key].headsPerDate[dateStr]) {
+            history[key].headsPerDate[dateStr] = 0;
+          }
+          history[key].headsPerDate[dateStr] += heads;
+          
+          history[key].bags += prod.feed?.bags || 0;
+          history[key].pieces += prod.production?.totalPieces || 0;
+          history[key].mortality += mort?.totalMortality ?? prod.mortalityCount ?? 0;
+          history[key].culls += prod.culls || 0;
+          history[key].gPerBirdSum += prod.feed?.gramsPerBirdDay || 0;
+          
+          const dayPct = heads > 0 ? (prod.production?.totalPieces || 0) / heads * 100 : 0;
+          history[key].prodPercentSum += dayPct;
+        });
+      });
+      
+      return Object.values(history).map(mo => {
+        const avgFeed = mo.days > 0 ? (mo.gPerBirdSum / mo.days).toFixed(1) : "0.0";
+        const avgProd = mo.days > 0 ? (mo.prodPercentSum / mo.days).toFixed(2) : "0.00";
+        
+        const datesInMonth = Object.keys(mo.headsPerDate).sort();
+        const latestDate = datesInMonth[datesInMonth.length - 1];
+        const latestHeads = mo.headsPerDate[latestDate] || 0;
+        
+        const d = new Date(mo.month + "-01");
+        const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
+        
+        return {
+          month: mo.month,
+          monthLabel,
+          buildingName: mo.buildingName,
+          heads: latestHeads,
+          bags: mo.bags,
+          avgFeed,
+          totalEggs: mo.pieces,
+          avgProd,
+          mortality: mo.mortality,
+          culls: mo.culls
+        };
+      }).sort((a, b) => {
+        if (a.month !== b.month) return a.month.localeCompare(b.month);
+        return a.buildingName.localeCompare(b.buildingName);
+      });
+    });
+
 
     // Necropsy computed helpers
     const necropsyTotal = computed(() => {
@@ -396,26 +641,24 @@ const app = createApp({
         .filter(Boolean);
     });
 
-    // Egg Summary Formatting
-    const EGG_SIZES = [
-      ["nnv", "NNV"],
-      ["nv", "NV"],
-      ["no_weight", "NO WEIGHT"],
-      ["pullet", "PULLET"],
-      ["pewee", "PEEWEE"],
-      ["small", "SMALL"],
-      ["medium", "MEDIUM"],
-      ["larger", "LARGER"],
-      ["xlarge", "X-LARGE"],
-      ["jumbo", "JUMBO"],
-      ["s_jumbo", "S-JUMBO"],
-      ["broken", "BROKEN"],
-      ["bold", "BOLD"],
-      ["loss", "LOSS"],
-    ];
+    // Egg Summary Formatting — driven by manifest.json meta.eggSizes
+    const EGG_SIZES = computed(() => {
+      const sizes = appConfig.value?.eggSizes;
+      if (sizes && sizes.length) {
+        return sizes.map(({ key, label }) => [key, label]);
+      }
+      // Fallback if manifest hasn't loaded yet
+      return [
+        ["nnv", "NNV"], ["nv", "NV"], ["no_weight", "NO WEIGHT"],
+        ["pullet", "PULLET"], ["pewee", "PEEWEE"], ["small", "SMALL"],
+        ["medium", "MEDIUM"], ["large", "LARGE"], ["larger", "LARGER"],
+        ["xlarge", "X-LARGE"], ["jumbo", "JUMBO"], ["s_jumbo", "S-JUMBO"],
+        ["broken", "BROKEN"], ["bold", "BOLD"], ["loss", "LOSS"],
+      ];
+    });
 
     const eggSummaryRows = computed(() => {
-      const rows = EGG_SIZES.map(([key, label]) => {
+      const rows = EGG_SIZES.value.map(([key, label]) => {
         const dist = currentEgg.value?.distribution?.[key] || {};
         const c = parseInt(dist.cases) || 0;
         const t = parseInt(dist.trays) || 0;
@@ -549,15 +792,16 @@ const app = createApp({
       txt += `SIZE      \tPCS\t%\n`;
 
       eggSummaryRows.value.forEach((row) => {
-        const pcsStr = row.pieces !== "-" ? row.pieces : "";
+        const pcsStr = row.total;
         const pctStr = row.percentage !== "-" ? row.percentage : "";
         txt += `${row.label.padEnd(10)}\t${pcsStr}\t${pctStr}\n`;
       });
-      const totPcsStr = eggTotals.value.pieces || "";
+      const totPcsStr = eggTotals.value.total || "";
       const totPctStr = eggTotals.value.percentage
         ? eggTotals.value.percentage.toFixed(1)
         : "";
       txt += `TOTAL     \t${totPcsStr}\t${totPctStr}\n\n`;
+
 
       txt += `TOTAL MORTALITIES: ${mortalityCount}\n`;
       if (mort?.mortality?.length) {
@@ -628,6 +872,8 @@ const app = createApp({
     }
 
     const necropsyFontSize = Vue.ref(16);
+    const farmName = computed(() => appConfig.value?.farmName || "Farm Dashboard");
+    const dashboardTitle = computed(() => appConfig.value?.dashboardTitle || "Daily Report");
 
     return {
       isLoggedIn,
@@ -637,6 +883,8 @@ const app = createApp({
       showPassword,
       logout,
       necropsyFontSize,
+      farmName,
+      dashboardTitle,
       selectedYear,
       selectedMonth,
       selectedDate,
@@ -674,6 +922,10 @@ const app = createApp({
       necropsyTotal,
       necropsyNotes,
       necropsyDateFormatted,
+      weeklyHistoryTable,
+      activeSubTab,
+      monthlyHistoryTable,
+      activeOverviewSubTab,
     };
   },
 });

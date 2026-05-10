@@ -1,9 +1,16 @@
 /**
  * Core KPI Framework for Layer Poultry Production
  * Based on Standard Industry Benchmarks
+ * Constants are driven by manifest.json > meta.kpi
  */
 
 const KPIFramework = {
+    // Runtime config — injected from manifest.json by app.js on startup
+    config: {
+        avgEggWeightGrams: 61.5,  // default fallback
+        feedBagWeightKg: 50       // default fallback
+    },
+
     // 1. PRODUCTION PERFORMANCE
     calculateProductionKPIs(data, history = []) {
         const totalEggs = data.production?.totalPieces || 0;
@@ -16,8 +23,8 @@ const KPIFramework = {
         // Hen-House Production (%)
         const henHouse = startingHeads > 0 ? (totalEggs / startingHeads) * 100 : 0;
 
-        // Egg Mass (g/hen/day) - Estimating avg egg weight at 61g if not provided
-        const avgEggWeight = 61.5; 
+        // Egg Mass (g/hen/day) — driven by manifest.json meta.kpi.avgEggWeightGrams
+        const avgEggWeight = this.config?.avgEggWeightGrams ?? 61.5;
         const eggMass = liveHens > 0 ? (totalEggs * avgEggWeight) / liveHens : 0;
 
         return { henDay, henHouse, eggMass };
@@ -40,7 +47,9 @@ const KPIFramework = {
     // 3. FEED EFFICIENCY
     calculateFeedKPIs(data, eggMass) {
         const feedBags = data.feed?.bags || 0;
-        const feedGramsTotal = feedBags * 50000; // 50kg per bag
+        // Use JSON-driven config, fallback to 50kg
+        const bagWeightGrams = (this.config?.feedBagWeightKg ?? 50) * 1000;
+        const feedGramsTotal = feedBags * bagWeightGrams;
         const liveHens = data.currentHeads || 0;
         const totalEggs = data.production?.totalPieces || 0;
 

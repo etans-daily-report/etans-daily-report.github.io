@@ -1,4 +1,88 @@
 {
+  "meta": {
+    "farmName": "Etans Farm",
+    "dashboardTitle": "Etans Daily Report",
+    "password": "ETANS@FARM",
+    "kpi": {
+      "avgEggWeightGrams": 61.5,
+      "feedBagWeightKg": 50
+    },
+    "eggSizes": [
+      { "key": "nnv",       "label": "NNV" },
+      { "key": "nv",        "label": "NV" },
+      { "key": "no_weight", "label": "NO WEIGHT" },
+      { "key": "pullet",    "label": "PULLET" },
+      { "key": "pewee",     "label": "PEEWEE" },
+      { "key": "small",     "label": "SMALL" },
+      { "key": "medium",    "label": "MEDIUM" },
+      { "key": "large",     "label": "LARGE" },
+      { "key": "larger",    "label": "LARGER" },
+      { "key": "xlarge",    "label": "X-LARGE" },
+      { "key": "jumbo",     "label": "JUMBO" },
+      { "key": "s_jumbo",   "label": "S-JUMBO" },
+      { "key": "broken",    "label": "BROKEN" },
+      { "key": "bold",      "label": "BOLD" },
+      { "key": "loss",      "label": "LOSS" }
+    ],
+    "standards": [
+      {
+        "weekFrom": 17, "weekTo": 22,
+        "phase": "Pre-Peak",
+        "henDayPct": 55,
+        "feedGPerBird": 92,
+        "weeklyMortalityPct": 0.12,
+        "note": "Pullets ramping up to peak lay"
+      },
+      {
+        "weekFrom": 23, "weekTo": 30,
+        "phase": "Peak Build-up",
+        "henDayPct": 86,
+        "feedGPerBird": 108,
+        "weeklyMortalityPct": 0.09,
+        "note": "Rapid climb toward peak production"
+      },
+      {
+        "weekFrom": 31, "weekTo": 45,
+        "phase": "Peak Production",
+        "henDayPct": 92,
+        "feedGPerBird": 115,
+        "weeklyMortalityPct": 0.07,
+        "note": "Sustained peak — highest egg output period"
+      },
+      {
+        "weekFrom": 46, "weekTo": 60,
+        "phase": "Post-Peak",
+        "henDayPct": 87,
+        "feedGPerBird": 114,
+        "weeklyMortalityPct": 0.08,
+        "note": "Gradual decline from peak"
+      },
+      {
+        "weekFrom": 61, "weekTo": 75,
+        "phase": "Mid-Lay",
+        "henDayPct": 80,
+        "feedGPerBird": 112,
+        "weeklyMortalityPct": 0.10,
+        "note": "Sustained mid-cycle production"
+      },
+      {
+        "weekFrom": 76, "weekTo": 90,
+        "phase": "Late-Lay",
+        "henDayPct": 72,
+        "feedGPerBird": 110,
+        "weeklyMortalityPct": 0.12,
+        "note": "Declining production, monitor closely"
+      },
+      {
+        "weekFrom": 91, "weekTo": 120,
+        "phase": "End-of-Lay",
+        "henDayPct": 62,
+        "feedGPerBird": 108,
+        "weeklyMortalityPct": 0.15,
+        "note": "Approaching cull threshold"
+      }
+    ]
+  },
   "dates": [
     "2026-05-09",
     "2026-05-08",

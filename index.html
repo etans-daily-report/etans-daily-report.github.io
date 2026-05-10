@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom stylesheet -->
-    <link rel="stylesheet" href="style.css?v=1.0.1">
+    <link rel="stylesheet" href="style.css?v=1.0.4">
     <!-- UI Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Vue 3 CDN (Faster jsDelivr) -->
@@ -211,7 +211,7 @@
             <div class="login-card">
                 <div class="login-header">
                     <i class="fas fa-tractor login-icon"></i>
-                    <h2>Etans Farm</h2>
+                    <h2>{{ farmName }}</h2>
                     <p>Enter password to access dashboard</p>
                 </div>
                 <div class="login-body">
@@ -264,7 +264,7 @@
             <header class="app-header">
                 <div class="header-top">
                     <div class="header-title-area">
-                        <h1>Etans Daily Report</h1>
+                        <h1>{{ dashboardTitle }}</h1>
                         <div class="top-metrics" v-if="dashboardMetrics.activeBuildings > 0">
                             <span class="metric"><b>POPULATION</b> {{ dashboardMetrics.population.toLocaleString() }}</span>
                             <span class="metric"><b>PRODUCTION</b> {{ dashboardMetrics.productionPercent }}%</span>
@@ -302,30 +302,146 @@
                     </div>
                     <div class="content-area">
                         <div v-if="activeTab === 'dailyreport'">
-                            <div class="all-buildings-header">
-                                <h2>All Buildings Overview</h2>
-                            </div>
-                            <div v-if="!sortedAllBuildings.length" class="empty-state">
-                                No buildings for this date.
-                            </div>
-                            <div v-else class="cards-grid">
-                                <div class="building-card" v-for="b in sortedAllBuildings" :key="b.id" @click="selectBuilding(b.id)">
-                                    <h3>{{ b.name }}</h3>
-                                    <p class="card-breed">{{ b.breed }}</p>
-                                    <div class="card-stats">
-                                        <div class="stat-row"><span>Flockman:</span> <b>{{ b.flockman }}</b></div>
-                                        <div class="stat-row"><span>Age:</span> <b>{{ formatAge(b.ageWeeks, b.ageDays) }}</b></div>
-                                        <div class="stat-row"><span>Heads:</span> <b>{{ b.currentHeads.toLocaleString() }}</b></div>
-                                        <div class="stat-row"><span>Egg Prod:</span> <b class="highlight-percent">{{ b.eggPercent }}%</b></div>
-                                    </div>
-                                </div>
-                            </div>
+                             <div class="all-buildings-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                 <h2>All Buildings Overview</h2>
+                                 
+                                 <!-- Sub Tabs for Overview -->
+                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                     <button @click="activeOverviewSubTab = 'cards'" :class="['view-all-btn', { active: activeOverviewSubTab === 'cards' }]" style="border-radius: 20px; padding: 6px 12px; font-size: 0.8rem;">
+                                         Cards
+                                     </button>
+                                     <button @click="activeOverviewSubTab = 'daily'" :class="['view-all-btn', { active: activeOverviewSubTab === 'daily' }]" style="border-radius: 20px; padding: 6px 12px; font-size: 0.8rem;">
+                                         Daily
+                                     </button>
+                                     <button @click="activeOverviewSubTab = 'weekly'" :class="['view-all-btn', { active: activeOverviewSubTab === 'weekly' }]" style="border-radius: 20px; padding: 6px 12px; font-size: 0.8rem;">
+                                         Weekly
+                                     </button>
+                                     <button @click="activeOverviewSubTab = 'monthly'" :class="['view-all-btn', { active: activeOverviewSubTab === 'monthly' }]" style="border-radius: 20px; padding: 6px 12px; font-size: 0.8rem;">
+                                         Monthly
+                                     </button>
+                                 </div>
+                             </div>
+
+                             <div v-if="!sortedAllBuildings.length" class="empty-state">
+                                 No buildings for this date.
+                             </div>
+                             
+                             <div v-else>
+                                 <!-- Cards View -->
+                                 <div v-if="activeOverviewSubTab === 'cards'" class="cards-grid">
+                                     <div class="building-card" v-for="b in sortedAllBuildings" :key="b.id" @click="selectBuilding(b.id)">
+                                         <h3>{{ b.name }}</h3>
+                                         <p class="card-breed">{{ b.breed }}</p>
+                                         <div class="card-stats">
+                                             <div class="stat-row"><span>Flockman:</span> <b>{{ b.flockman }}</b></div>
+                                             <div class="stat-row"><span>Age:</span> <b>{{ formatAge(b.ageWeeks, b.ageDays) }}</b></div>
+                                             <div class="stat-row"><span>Heads:</span> <b>{{ b.currentHeads.toLocaleString() }}</b></div>
+                                             <div class="stat-row"><span>Egg Prod:</span> <b class="highlight-percent">{{ b.eggPercent }}%</b></div>
+                                             <div class="stat-row"><span>Mortality:</span> <b>{{ b.mortalityCount }}</b></div>
+                                             <div class="stat-row"><span>Culls:</span> <b>{{ b.culls }}</b></div>
+                                             <div class="stat-row"><span>Feed:</span> <b>{{ b.feedBags }} bags</b></div>
+                                             <div class="stat-row" v-if="b.feedBrand"><span>Brand:</span> <b>{{ b.feedBrand }}</b></div>
+                                         </div>
+                                     </div>
+                                 </div>
+
+                                 <!-- Daily Comparison View (Table) -->
+                                 <div v-if="activeOverviewSubTab === 'daily'" class="weekly-table-wrapper" style="margin-top: 0;">
+                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                         <thead>
+                                             <tr>
+                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Age</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Heads</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Eggs</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Prod %</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Feed</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Mortality</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Culls</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr v-for="b in sortedAllBuildings" :key="b.id">
+                                                 <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ b.name }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ formatAge(b.ageWeeks, b.ageDays) }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.currentHeads.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.totalPieces.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.eggPercent }}%</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.feedBags }} bags</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.mortalityCount }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.culls }}</td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                 </div>
+
+                                 <!-- Weekly Comparison View (Table) -->
+                                 <div v-if="activeOverviewSubTab === 'weekly' && weeklyHistoryTable.length" class="weekly-table-wrapper" style="margin-top: 0;">
+                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                         <thead>
+                                             <tr>
+                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Week</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Heads</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Week Age</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Bags</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg Feed</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Eggs</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg %</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Mortality</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Culls</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr v-for="wk in weeklyHistoryTable" :key="`${wk.ageWeeks}_${wk.buildingName}`">
+                                                 <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ wk.weekLabel }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px; font-weight: 600;">{{ wk.buildingName }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.heads.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.ageWeeks }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.bags }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.avgFeed }}g</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.totalEggs.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.avgProd }}%</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.mortality }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.culls }}</td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                 </div>
+
+                                 <!-- Monthly Comparison View (Table) -->
+                                 <div v-if="activeOverviewSubTab === 'monthly' && monthlyHistoryTable.length" class="weekly-table-wrapper" style="margin-top: 0;">
+                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                         <thead>
+                                             <tr>
+                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Month</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Heads</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Bags</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg Feed</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Eggs</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg %</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Mortality</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Culls</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr v-for="mo in monthlyHistoryTable" :key="`${mo.month}_${mo.buildingName}`">
+                                                 <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ mo.monthLabel }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px; font-weight: 600;">{{ mo.buildingName }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.heads.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.bags }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.avgFeed }}g</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.totalEggs.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.avgProd }}%</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.mortality }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.culls }}</td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                 </div>
+                             </div>
                         </div>
-
-
-
-
-                    </div>
                 </template>
                 
                 <template v-else>
@@ -413,9 +529,119 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            
+
+                                    <!-- ── Weekly Summary Table ── -->
+                                    <!-- ── History Summary Section ── -->
+                                    <div class="weekly-analytics-section" style="border-top: 1px solid var(--border-color); padding-top: 24px; margin-top: 24px;">
+                                        
+                                        <!-- Sub Tabs -->
+                                        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                                            <button @click="activeSubTab = 'weekly'" :class="['view-all-btn', { active: activeSubTab === 'weekly' }]" style="border-radius: 20px; padding: 6px 16px; font-size: 0.85rem;">
+                                                Weekly Comparison
+                                            </button>
+                                            <button @click="activeSubTab = 'monthly'" :class="['view-all-btn', { active: activeSubTab === 'monthly' }]" style="border-radius: 20px; padding: 6px 16px; font-size: 0.85rem;">
+                                                Monthly Comparison
+                                            </button>
+                                        </div>
+
+                                        <!-- Styles (Shared) -->
+                                        <style>
+                                            .weekly-table th, .weekly-table td {
+                                                border: 2px solid #10b981 !important;
+                                                padding: 16px 14px !important;
+                                            }
+                                            .weekly-table {
+                                                border-collapse: collapse !important;
+                                                width: 100%;
+                                            }
+                                            .view-all-btn.active {
+                                                background: var(--primary-color) !important;
+                                                color: #05100b !important;
+                                                font-weight: 700;
+                                            }
+                                        </style>
+
+                                        <!-- Weekly Table -->
+                                        <div v-if="activeSubTab === 'weekly' && weeklyHistoryTable.length">
+                                            <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-family: var(--font-heading);">
+                                                <i class="fas fa-calendar-week" style="color: var(--primary-color); margin-right: 8px;"></i>
+                                                Weekly Performance Summary
+                                            </div>
+                                            <div class="weekly-table-wrapper">
+                                                <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 16px 14px;">Week</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Heads</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Week Age</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Bags</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Avg Feed Intake</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Egg Pcs</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Avg % Prod</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Mortalities</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Culls</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="wk in weeklyHistoryTable" :key="wk.ageWeeks">
+                                                            <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 16px 14px;">{{ wk.weekLabel }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.heads.toLocaleString() }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.ageWeeks }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.bags }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.avgFeed }}g</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.totalEggs.toLocaleString() }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.avgProd }}%</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.mortality }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ wk.culls }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <!-- Monthly Table -->
+                                        <div v-if="activeSubTab === 'monthly' && monthlyHistoryTable.length">
+                                            <div style="font-size: 1rem; font-weight: 700; color: var(--text-main); margin-bottom: 12px; font-family: var(--font-heading);">
+                                                <i class="fas fa-calendar-alt" style="color: var(--primary-color); margin-right: 8px;"></i>
+                                                Monthly Performance Summary
+                                            </div>
+                                            <div class="weekly-table-wrapper">
+                                                <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 16px 14px;">Month</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Heads</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Bags</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Avg Feed Intake</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Egg Pcs</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Avg % Prod</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Mortalities</th>
+                                                            <th style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">Total Culls</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="mo in monthlyHistoryTable" :key="mo.month">
+                                                            <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 16px 14px;">{{ mo.monthLabel }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.heads.toLocaleString() }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.bags }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.avgFeed }}g</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.totalEggs.toLocaleString() }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.avgProd }}%</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.mortality }}</td>
+                                                            <td style="text-align: center; border: 2px solid #10b981; padding: 16px 14px;">{{ mo.culls }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- /weekly-analytics-section --><!-- /weekly-analytics-section -->
+
+
+
+                                </div><!-- /production-dashboard-premium -->
+                            </div><!-- /tab-content production -->
+
                             <!-- Egg Size Summary -->
                             <div v-if="activeTab === 'eggsummary'" class="tab-content active">
                                 <div class="table-controls-row">
