@@ -2241,3 +2241,283 @@ body {
     color: #000000 !important;
 }
 
+/* ============================================================
+   NECROPSY REPORT TAB
+   ============================================================ */
+
+/* Tab button accent */
+.necropsy-tab-btn {
+    border-color: rgba(239, 68, 68, 0.35) !important;
+}
+.necropsy-tab-btn:hover {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+.necropsy-tab-btn.active {
+    background: #ef4444 !important;
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.5) !important;
+}
+
+/* Main wrapper */
+.necropsy-report {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 4px 0;
+}
+
+/* Header row: title + badge */
+.necropsy-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 22px 18px;
+    background: rgba(239, 68, 68, 0.06);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-md);
+}
+
+.necropsy-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.necropsy-title-group > .fas {
+    font-size: 2rem;
+    color: #ef4444;
+    opacity: 0.85;
+}
+
+.necropsy-title-group h2 {
+    margin: 0 0 2px;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--text-main);
+    font-family: var(--font-heading);
+    letter-spacing: -0.3px;
+}
+
+.necropsy-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* Total mortalities badge */
+.necropsy-total-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    border: 2px solid;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.necropsy-total-badge.safe {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.4);
+    color: #10b981;
+}
+.necropsy-total-badge.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: #f59e0b;
+}
+.necropsy-total-badge.danger {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #ef4444;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+.necropsy-total-label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.necropsy-total-count {
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin: 4px 0 2px;
+    font-family: var(--font-heading);
+}
+
+.necropsy-total-sublabel {
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Empty state */
+.necropsy-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 60px 40px;
+    border: 2px dashed rgba(239, 68, 68, 0.25);
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.necropsy-empty .fas {
+    font-size: 2rem;
+    color: rgba(239, 68, 68, 0.4);
+}
+
+.necropsy-empty p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Notes section */
+.necropsy-notes-section {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.necropsy-notes-header {
+    padding: 12px 18px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    background: rgba(239, 68, 68, 0.07);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.necropsy-notes-header .fas {
+    color: #ef4444;
+    opacity: 0.75;
+}
+
+.necropsy-no-notes {
+    padding: 30px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Report card body */
+.necropsy-report-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.necropsy-date {
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin: 0 0 24px 0;
+}
+
+.necropsy-building-label {
+    font-size: 2.2em;
+    font-weight: 900;
+    color: var(--text-main);
+    margin: 0 0 32px 0;
+    text-transform: uppercase;
+}
+
+.necropsy-building-name {
+    font-weight: 900;
+}
+
+.necropsy-spacer {
+    display: none; /* No longer needed with heading margins */
+}
+
+.necropsy-total-line {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 16px 0;
+}
+
+.necropsy-total-key {
+    font-size: 1.5em;
+    font-weight: 900;
+    color: var(--text-main);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.necropsy-total-val {
+    font-size: 2em;
+    font-weight: 900;
+    font-family: var(--font-heading);
+    line-height: 1;
+}
+
+.mort-safe  { color: #10b981; }
+.mort-warning { color: #f59e0b; }
+.mort-danger  { color: #ef4444; text-shadow: 0 0 12px rgba(239,68,68,0.4); }
+
+.necropsy-divider {
+    height: 1px;
+    background: rgba(239, 68, 68, 0.2);
+    margin: 12px 0;
+}
+
+.necropsy-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.necropsy-line {
+    font-size: 1.2em;
+    font-weight: 500;
+    color: var(--text-main);
+    line-height: 1.6;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 2px 0;
+}
+
+.necropsy-line:first-child {
+    padding-top: 0;
+}
+
+/* Responsive tweak */
+@media (max-width: 600px) {
+    .necropsy-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .necropsy-total-badge {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px 16px;
+        justify-content: center;
+    }
+    .necropsy-total-count {
+        font-size: 1.8rem;
+    }
+}

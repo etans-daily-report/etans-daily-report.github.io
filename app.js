@@ -12,17 +12,30 @@ const app = createApp({
     const activeTab = ref("dailyreport");
     const isFullScreenTable = ref(false);
     const isFullScreenReport = ref(false);
-    const isFullScreenNecropsy = ref(false);
-    const analyticsRange = ref("7");
-    const analyticsSubTab = ref("charts");
-    const necropsySubTab = ref("building");
-    const loadingAnalytics = ref(false);
-    const analyticsData = ref([]);
-    const kpiData = ref([]);
+
     const tableFontSize = ref(14); // Default 14px
-    let productionChart = null;
-    let mortalityChart = null;
-    let eggSizeChart = null;
+
+    const isLoggedIn = ref(localStorage.getItem("isLoggedIn") === "true");
+    const passwordInput = ref("");
+    const loginError = ref(false);
+    const showPassword = ref(false);
+
+    const checkLogin = () => {
+      if (passwordInput.value === "ETANS@FARM") {
+        isLoggedIn.value = true;
+        loginError.value = false;
+        localStorage.setItem("isLoggedIn", "true");
+      } else {
+        loginError.value = true;
+      }
+    };
+
+    const logout = () => {
+      isLoggedIn.value = false;
+      localStorage.removeItem("isLoggedIn");
+      passwordInput.value = "";
+    };
+
 
     // DOM Refs for scrolling
     const activeDateBtn = ref(null);
@@ -51,11 +64,11 @@ const app = createApp({
         // GUARANTEE the loading screen disappears
         const loader = document.getElementById("loading-overlay");
         if (loader) {
-            loader.style.transition = "opacity 0.5s ease";
-            loader.style.opacity = "0";
-            setTimeout(() => {
-                loader.style.display = "none";
-            }, 500);
+          loader.style.transition = "opacity 0.5s ease";
+          loader.style.opacity = "0";
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 500);
         }
       }
     });
@@ -111,6 +124,7 @@ const app = createApp({
     watch(selectedMonth, () => {
       updateDateFromDropdowns();
     });
+
 
     function updateDateFromDropdowns() {
       if (!selectedYear.value || !selectedMonth.value) return;
@@ -213,181 +227,11 @@ const app = createApp({
 
     function selectBuilding(id) {
       selectedBuildingId.value = id;
-      if (activeTab.value === "analytics") {
-        nextTick(() => fetchAnalyticsData());
-      }
     }
 
-    watch(activeTab, (newTab) => {
-      if (newTab === "analytics") {
-        nextTick(() => fetchAnalyticsData());
-      }
-    });
 
-    watch(analyticsSubTab, () => {
-      nextTick(() => {
-        if (activeTab.value === "analytics") initCharts();
-      });
-    });
 
-    let fetchTimeout = null;
-    async function fetchAnalyticsData() {
-      // Debounce to prevent rapid-fire clicks
-      if (fetchTimeout) clearTimeout(fetchTimeout);
 
-      fetchTimeout = setTimeout(async () => {
-        if (loadingAnalytics.value) return;
-        loadingAnalytics.value = true;
-
-        try {
-          const range = analyticsRange.value;
-          let targetDates = [...dates.value].sort(
-            (a, b) => new Date(b) - new Date(a),
-          );
-
-          if (range !== "ALL") {
-            targetDates = targetDates.slice(0, parseInt(range));
-          }
-          targetDates.reverse();
-
-          const results = [];
-          for (const dateStr of targetDates) {
-            if (!buildingsData.value[dateStr]) {
-              await loadDateData(dateStr);
-            }
-            if (buildingsData.value[dateStr]) {
-              results.push(buildingsData.value[dateStr]);
-            }
-          }
-          // Force reactivity by replacing the entire array
-          analyticsData.value = [...results];
-
-          calculateKPIs();
-          // Double nextTick for extra safety with Chart.js canvases
-          nextTick(() => {
-            nextTick(() => initCharts());
-          });
-        } finally {
-          loadingAnalytics.value = false;
-        }
-      }, 50); // Small delay to catch rapid clicks
-    }
-
-    function calculateKPIs() {
-      const buildingsMap = {};
-
-      analyticsData.value.forEach((day) => {
-        const buildings = day.buildings || [];
-        const entries = day.entries || [];
-
-        buildings.forEach((b) => {
-          if (!buildingsMap[b.id]) {
-            buildingsMap[b.id] = {
-              name: b.name,
-              totalProd: 0,
-              totalEggs: 0,
-              totalHeads: 0,
-              totalRejects: 0,
-              count: 0,
-              totalMort: 0,
-              totalFeed: 0,
-              totalGrams: 0,
-              feedEntries: 0,
-            };
-          }
-
-          const prod = entries.find(
-            (e) => e.buildingId === b.id && e.type === "production",
-          );
-          const mort = entries.find(
-            (e) => e.buildingId === b.id && e.type === "mortality",
-          );
-          const eggSummary = entries.find(
-            (e) => e.buildingId === b.id && e.type === "egg-summary",
-          );
-
-          const heads = prod?.currentHeads ?? b.startingHeads ?? 0;
-          const pieces = prod?.production?.totalPieces ?? 0;
-          const prodPercent = heads > 0 ? (pieces / heads) * 100 : 0;
-          const mortCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
-
-          // Quality / Rejects
-          const goodCracks = eggSummary?.goodCracks?.total || 0;
-          const badCracks = eggSummary?.badCracks?.total || 0;
-          const misshapen = eggSummary?.mishapen?.total || 0;
-          const rejects = badCracks + misshapen;
-
-          buildingsMap[b.id].totalProd += prodPercent;
-          buildingsMap[b.id].totalEggs += pieces;
-          buildingsMap[b.id].totalHeads += heads;
-          buildingsMap[b.id].totalRejects += rejects;
-          buildingsMap[b.id].count += 1;
-          buildingsMap[b.id].totalMort += mortCount;
-
-          if (prod?.feed) {
-            buildingsMap[b.id].totalFeed += prod.feed.bags || 0;
-            buildingsMap[b.id].totalGrams += prod.feed.gramsPerBirdDay || 0;
-            buildingsMap[b.id].feedEntries += 1;
-          }
-        });
-      });
-
-      kpiData.value = Object.keys(buildingsMap)
-        .map((id) => {
-          const b = buildingsMap[id];
-          const lastDay = analyticsData.value[analyticsData.value.length - 1];
-          const lastDayBldg = lastDay?.buildings.find((bl) => bl.id === id);
-          const lastDayEgg = lastDay?.entries.find(
-            (e) => e.buildingId === id && e.type === "egg-summary",
-          );
-
-          const startHeads = lastDayBldg?.startingHeads || 0;
-
-          // Use the framework to calculate advanced metrics
-          const avgHD = b.totalProd / b.count;
-          const totalBirds = b.totalHeads;
-          const avgEggMass =
-            totalBirds > 0 ? (b.totalEggs * 61.5) / totalBirds : 0;
-          const totalFeedGrams = b.totalFeed * 50000;
-          const totalEggMassGrams = b.totalEggs * 61.5;
-
-          const metrics = {
-            henDay: avgHD,
-            mortalityRate: (b.totalMort / (startHeads * b.count || 1)) * 100, // Normalized
-            fcr: totalEggMassGrams > 0 ? totalFeedGrams / totalEggMassGrams : 0,
-            saleablePercent:
-              b.totalEggs > 0
-                ? ((b.totalEggs - b.totalRejects) / b.totalEggs) * 100
-                : 0,
-            livability: (totalBirds / (startHeads * b.count || 1)) * 100,
-          };
-
-          let scoreData = null;
-          try {
-            if (window.KPIFramework) {
-                scoreData = window.KPIFramework.calculateIntelligenceScore(metrics);
-            }
-          } catch (e) {
-            console.warn("KPI Scoring failed:", e);
-          }
-
-          return {
-            buildingId: id,
-            name: b.name,
-            avgHenDay: avgHD,
-            avgHenHouse:
-              startHeads > 0 ? (b.totalEggs / (startHeads * b.count)) * 100 : 0,
-            avgEggMass: avgEggMass,
-            fcr: metrics.fcr,
-            saleablePercent: metrics.saleablePercent,
-            totalMort: b.totalMort,
-            totalFeed: b.totalFeed,
-            avgGrams: b.feedEntries > 0 ? b.totalGrams / b.feedEntries : 0,
-            intelligence: scoreData,
-          };
-        })
-        .sort((a, b) => b.avgHenDay - a.avgHenDay);
-    }
 
     function getProdClass(pct) {
       if (pct >= 85) return "prod-excellent";
@@ -404,444 +248,16 @@ const app = createApp({
       return "WARNING";
     }
 
-    let chartRetryCount = 0;
-    function initCharts() {
-      if (activeTab.value !== "analytics") return;
 
-      const prodCtx = document.getElementById("productionChart");
-      const mortCtx = document.getElementById("mortalityChart");
-      const sizeCtx = document.getElementById("eggSizeChart");
 
-      // If elements are missing but we're in the analytics tab, retry once
-      if (
-        (analyticsSubTab.value === "charts" && (!prodCtx || !mortCtx)) ||
-        (analyticsSubTab.value === "eggs" && !sizeCtx)
-      ) {
-        if (chartRetryCount < 3) {
-          chartRetryCount++;
-          setTimeout(initCharts, 100);
-          return;
-        }
-      }
-      chartRetryCount = 0;
 
-      // Production and Mortality (Trends sub-tab)
-      if (analyticsSubTab.value === "charts" && prodCtx && mortCtx) {
-        if (productionChart) productionChart.destroy();
-        if (mortalityChart) mortalityChart.destroy();
-
-        // ... (rest of chart code remains same but inside this safety check)
-
-        const labels = analyticsData.value.map((d) =>
-          d.date.split("-").slice(1).join("/"),
-        );
-
-        productionChart = new Chart(prodCtx, {
-          type: "line",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "HD Production %",
-                data: analyticsData.value.map((d) => {
-                  const entries =
-                    selectedBuildingId.value === "ALL"
-                      ? d.entries
-                      : d.entries.filter(
-                          (e) => e.buildingId === selectedBuildingId.value,
-                        );
-                  const prodEntries = entries.filter(
-                    (e) => e.type === "production",
-                  );
-                  if (!prodEntries.length) return 0;
-                  let totalEggs = 0,
-                    totalBirds = 0;
-                  prodEntries.forEach((e) => {
-                    totalEggs += e.production?.totalPieces || 0;
-                    totalBirds += e.currentHeads || 0;
-                  });
-                  return totalBirds > 0 ? (totalEggs / totalBirds) * 100 : 0;
-                }),
-                borderColor: "#3b82f6",
-                backgroundColor: "rgba(59, 130, 246, 0.1)",
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: "#3b82f6",
-                pointRadius: 4,
-                pointHoverRadius: 6,
-                borderWidth: 3,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: "rgba(255, 255, 255, 0.95)",
-                titleColor: "#0f172a",
-                borderColor: "rgba(226, 232, 240, 1)",
-                bodyColor: "#334155",
-                borderWidth: 1,
-              },
-            },
-            scales: {
-              y: {
-                min: 0,
-                max: 100,
-                grid: { color: "rgba(0,0,0,0.05)" },
-                ticks: { color: "#64748b", font: { size: 10 } },
-              },
-              x: {
-                grid: { display: false },
-                ticks: { color: "#64748b", font: { size: 10 } },
-              },
-            },
-          },
-        });
-
-        mortalityChart = new Chart(mortCtx, {
-          type: "bar",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                label: "Mortality",
-                data: analyticsData.value.map((d) => {
-                  const entries =
-                    selectedBuildingId.value === "ALL"
-                      ? d.entries
-                      : d.entries.filter(
-                          (e) => e.buildingId === selectedBuildingId.value,
-                        );
-                  return entries
-                    .filter(
-                      (e) => e.type === "production" || e.type === "mortality",
-                    )
-                    .reduce(
-                      (sum, e) =>
-                        sum + (e.totalMortality ?? e.mortalityCount ?? 0),
-                      0,
-                    );
-                }),
-                backgroundColor: "rgba(239, 68, 68, 0.6)",
-                borderColor: "#ef4444",
-                borderWidth: 1,
-                borderRadius: 4,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: "rgba(255, 255, 255, 0.95)",
-                titleColor: "#ef4444",
-                borderColor: "rgba(226, 232, 240, 1)",
-                bodyColor: "#334155",
-                borderWidth: 1,
-              },
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                grid: { color: "rgba(0,0,0,0.05)" },
-                ticks: { color: "#64748b", font: { size: 10 } },
-              },
-              x: {
-                grid: { display: false },
-                ticks: { color: "#64748b", font: { size: 10 } },
-              },
-            },
-          },
-        });
-      }
-
-      // Egg Size Distribution (Eggs sub-tab)
-      if (analyticsSubTab.value === "eggs") {
-        if (!sizeCtx) return;
-
-        if (eggSizeChart) eggSizeChart.destroy();
-        const totals = calculateEggSizeTotals();
-        const labels = Object.values(totals).map((t) => t.label);
-        const values = Object.values(totals).map((t) => t.val);
-
-        eggSizeChart = new Chart(sizeCtx, {
-          type: "doughnut",
-          data: {
-            labels: labels,
-            datasets: [
-              {
-                data: values,
-                backgroundColor: [
-                  "#f59e0b",
-                  "#fbbf24",
-                  "#10b981",
-                  "#3b82f6",
-                  "#6366f1",
-                  "#8b5cf6",
-                  "#d946ef",
-                  "#ec4899",
-                  "#f43f5e",
-                  "#ef4444",
-                  "#78350f",
-                  "#4b5563",
-                ],
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                position: "right",
-                labels: { color: "#334155", font: { size: 10 } },
-              },
-            },
-          },
-        });
-      }
-    }
-
-    function calculateEggSizeTotals() {
-      const sizeTotals = {};
-      EGG_SIZES.forEach(
-        ([key, label]) => (sizeTotals[key] = { label, val: 0 }),
-      );
-
-      analyticsData.value.forEach((day) => {
-        const entries =
-          selectedBuildingId.value === "ALL"
-            ? day.entries.filter((e) => e.type === "egg-summary")
-            : day.entries.filter(
-                (e) =>
-                  e.type === "egg-summary" &&
-                  e.buildingId === selectedBuildingId.value,
-              );
-
-        entries.forEach((e) => {
-          EGG_SIZES.forEach(([key]) => {
-            const dist = e.distribution?.[key] || {};
-            sizeTotals[key].val +=
-              dist.total ?? dist.totalPieces ?? dist.total_pieces ?? 0;
-          });
-        });
-      });
-
-      return sizeTotals;
-    }
-
-    const analyticsInsights = computed(() => {
-      if (!analyticsData.value.length) return null;
-
-      const lastDay = analyticsData.value[analyticsData.value.length - 1];
-      if (!lastDay) return null;
-
-      let html = "";
-
-      /**
-       * Hisex White Management Guide Standards (Hendrix Genetics)
-       * Peak: 95.0% - 96.5%
-       * Feed Intake: 106g - 117g / bird / day
-       * Persistency: >85% at 70 weeks
-       * 50% Prod: 145 Days (Week 21)
-       */
-      const HI_SEX_STANDARDS = {
-        peak: 95.0,
-        elite: 92.0,
-        good: 85.0,
-        feedMin: 106,
-        feedMax: 117,
-        onsetWeek: 21,
-      };
-
-      if (selectedBuildingId.value === "ALL") {
-        const avgProd =
-          kpiData.value.reduce((acc, k) => acc + k.avgHenDay, 0) /
-          (kpiData.value.length || 1);
-        const totalMort = kpiData.value.reduce(
-          (acc, k) => acc + k.totalMort,
-          0,
-        );
-
-        html += `<p><b>Farm-Wide Performance Analysis:</b> Your farm is currently averaging <span class="${getProdClass(avgProd)}">${avgProd.toFixed(1)}%</span> production.</p>`;
-
-        if (avgProd >= HI_SEX_STANDARDS.peak) {
-          html += `<p class="standard-text">🌟 <b>Genetic Potential:</b> You are achieving the <b>Absolute Peak (95%+)</b> for Hisex White. This level of persistency is world-class.</p>`;
-        } else if (avgProd >= HI_SEX_STANDARDS.elite) {
-          html += `<p class="standard-text">✅ <b>Elite Range:</b> Production is above 92%. This is the target "Elite" zone for modern high-yield hybrids.</p>`;
-        } else if (avgProd >= HI_SEX_STANDARDS.good) {
-          html += `<p class="standard-text">⚠️ <b>Sub-Peak:</b> While ${avgProd.toFixed(1)}% is stable, Hisex White should ideally stay above 90% for the first 30 weeks of lay.</p>`;
-        } else {
-          html += `<p class="standard-text">🔴 <b>Efficiency Gap:</b> Average is below 85%. Standard Hisex persistence should not drop below 85% until after 70 weeks of age.</p>`;
-        }
-      } else {
-        const bId = selectedBuildingId.value;
-        const kpi = kpiData.value.find((k) => k.buildingId === bId);
-        const b = lastDay.buildings.find((b) => b.id === bId);
-
-        if (!kpi || !b) return null;
-
-        const breed = b.breed || "Hisex White";
-        html += `<p><b>${b.name} (${breed}) Insight:</b> At ${formatAge(b.ageWeeks, b.ageDays)}, current performance is <span class="${getProdClass(kpi.avgHenDay)}">${kpi.avgHenDay.toFixed(1)}%</span>.</p>`;
-
-        // Detailed Age-Based Reasoning
-        if (b.ageWeeks < HI_SEX_STANDARDS.onsetWeek) {
-          html += `<p>🐣 <b>Maturity Phase:</b> Breed standard reaches 50% production at Day 145 (W21). You are currently ${HI_SEX_STANDARDS.onsetWeek - b.ageWeeks} weeks away from the start of the curve.</p>`;
-        } else if (b.ageWeeks >= 21 && b.ageWeeks <= 45) {
-          const diff = HI_SEX_STANDARDS.peak - kpi.avgHenDay;
-          if (diff <= 0) {
-            html += `<p>🏆 <b>Peak Standard:</b> Surpassing the breed peak of 95%. Excellent management of the "onset of lay" period.</p>`;
-          } else if (diff < 3) {
-            html += `<p>🥚 <b>Optimal Performance:</b> You are within 3% of the genetic ceiling. Maintain peak lighting hours (16h).</p>`;
-          } else {
-            html += `<p>🔍 <b>Peak Gap Detected:</b> High-yield layers like ${breed} should be at 95%+ now. Current gap: ${diff.toFixed(1)}%. Check for peak feed nutrient density.</p>`;
-          }
-        } else {
-          html += `<p>📉 <b>Persistence Analysis:</b> For ${breed}, the natural decline should only be ~0.5% per week. If your decline is steeper, check for liver health or calcium levels.</p>`;
-        }
-
-        // Feed Intake vs Standard
-        if (kpi.avgGrams > 0) {
-          if (kpi.avgGrams < HI_SEX_STANDARDS.feedMin) {
-            html += `<p>🌾 <b>Feed Intake Alert:</b> Low intake (${kpi.avgGrams.toFixed(0)}g) vs Standard (106g). This will directly impact egg size and shell thickness.</p>`;
-          } else if (kpi.avgGrams > HI_SEX_STANDARDS.feedMax) {
-            html += `<p>🌾 <b>Over-consumption:</b> Intake (${kpi.avgGrams.toFixed(0)}g) exceeds the 117g elite target. This reduces feed conversion efficiency (FCR).</p>`;
-          } else {
-            html += `<p>🌾 <b>Optimal Nutrition:</b> Intake is perfectly aligned with the 106-117g Hisex standard.</p>`;
-          }
-        }
-      }
-
-      return html;
-    });
-
-    const avgFarmHenDay = computed(() => {
-      if (!kpiData.value.length) return 0;
-      return (
-        kpiData.value.reduce((acc, k) => acc + k.avgHenDay, 0) /
-        kpiData.value.length
-      );
-    });
-
-    const avgFarmHenHouse = computed(() => {
-      if (!kpiData.value.length) return 0;
-      return (
-        kpiData.value.reduce((acc, k) => acc + k.avgHenHouse, 0) /
-        kpiData.value.length
-      );
-    });
-
-    const farmIntelligence = computed(() => {
-      if (!kpiData.value.length) return { total: 0, status: { label: "N/A" } };
-      const avgScore =
-        kpiData.value.reduce((acc, k) => acc + k.intelligence.total, 0) /
-        kpiData.value.length;
-      return window.KPIFramework.getScoreStatus(avgScore);
-    });
-
-    const farmScore = computed(() => {
-      if (!kpiData.value.length) return 0;
-      return Math.round(
-        kpiData.value.reduce((acc, k) => acc + k.intelligence.total, 0) /
-          kpiData.value.length,
-      );
-    });
-
-    const totalFarmEggs = computed(() => {
-      let total = 0;
-      analyticsData.value.forEach((day) => {
-        day.entries
-          .filter((e) => e.type === "production")
-          .forEach((e) => {
-            total += e.production?.totalPieces || 0;
-          });
-      });
-      return total;
-    });
-
-    const totalFarmMort = computed(() => {
-      let total = 0;
-      analyticsData.value.forEach((day) => {
-        day.entries
-          .filter((e) => e.type === "production" || e.type === "mortality")
-          .forEach((e) => {
-            total += e.totalMortality ?? e.mortalityCount ?? 0;
-          });
-      });
-      return total;
-    });
-
-    const avgBuildingHenDay = computed(() => {
-      if (selectedBuildingId.value === "ALL") return 0;
-      const kpi = kpiData.value.find(
-        (k) => k.buildingId === selectedBuildingId.value,
-      );
-      return kpi ? kpi.avgHenDay : 0;
-    });
-
-    const avgBuildingHenHouse = computed(() => {
-      if (selectedBuildingId.value === "ALL") return 0;
-      const kpi = kpiData.value.find(
-        (k) => k.buildingId === selectedBuildingId.value,
-      );
-      return kpi ? kpi.avgHenHouse : 0;
-    });
-
-    const totalBuildingEggs = computed(() => {
-      if (selectedBuildingId.value === "ALL") return 0;
-      let total = 0;
-      analyticsData.value.forEach((day) => {
-        day.entries
-          .filter(
-            (e) =>
-              e.buildingId === selectedBuildingId.value &&
-              e.type === "production",
-          )
-          .forEach((e) => {
-            total += e.production?.totalPieces || 0;
-          });
-      });
-      return total;
-    });
-
-    const totalBuildingMort = computed(() => {
-      if (selectedBuildingId.value === "ALL") return 0;
-      let total = 0;
-      analyticsData.value.forEach((day) => {
-        day.entries
-          .filter(
-            (e) =>
-              e.buildingId === selectedBuildingId.value &&
-              (e.type === "production" || e.type === "mortality"),
-          )
-          .forEach((e) => {
-            total += e.totalMortality ?? e.mortalityCount ?? 0;
-          });
-      });
-      return total;
-    });
 
     function formatAge(weeks, days) {
       if (weeks === undefined && days === undefined) return "Unknown age";
       return `${weeks || 0}w ${days || 0}d`;
     }
 
-    function formatDate(dateStr) {
-      if (!dateStr) return "";
-      const d = new Date(dateStr);
-      return d.toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-    }
+
 
     // Computed data for UI
     const dashboardMetrics = computed(() => {
@@ -897,13 +313,7 @@ const app = createApp({
       return buildingsData.value[selectedDate.value].entries || [];
     });
 
-    const currentReports = computed(() => {
-      if (!selectedDate.value || !buildingsData.value[selectedDate.value])
-        return [];
-      const reports = buildingsData.value[selectedDate.value].reports || [];
-      if (selectedBuildingId.value === "ALL") return reports;
-      return reports.filter((r) => r.buildingId === selectedBuildingId.value);
-    });
+
 
     // View All Buildings Data
     const sortedAllBuildings = computed(() => {
@@ -956,6 +366,35 @@ const app = createApp({
           e.type === "water-medication",
       ),
     );
+
+    // Necropsy computed helpers
+    const necropsyTotal = computed(() => {
+      return (
+        currentMort.value?.totalMortality ??
+        currentProd.value?.mortalityCount ??
+        0
+      );
+    });
+
+    const necropsyDateFormatted = computed(() => {
+      if (!selectedDate.value) return "";
+      const d = new Date(selectedDate.value + "T00:00:00");
+      return d.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    });
+
+    const necropsyNotes = computed(() => {
+      const raw = currentMort.value?.notes || "";
+      if (!raw.trim()) return [];
+      return raw
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean);
+    });
 
     // Egg Summary Formatting
     const EGG_SIZES = [
@@ -1019,6 +458,8 @@ const app = createApp({
         percentage: stats.total > 0 ? 100 : 0,
       };
     });
+
+
 
     function formatDefect(defectData) {
       if (typeof defectData === "number") {
@@ -1130,9 +571,7 @@ const app = createApp({
       }
       txt += `\n`;
 
-      const notes = [prod?.notes, med?.notes]
-        .filter(Boolean)
-        .join("\n");
+      const notes = [prod?.notes, med?.notes].filter(Boolean).join("\n");
       txt += `HAPPENINGS / NOTES:\n`;
       txt += `${notes || "(none)"}\n\n`;
 
@@ -1144,126 +583,18 @@ const app = createApp({
       return txt;
     });
 
-    // Necropsy Report Formatting
-    const necropsyReportText = computed(() => {
-      let txt = `NECROPSY & MORTALITY REPORT\n${selectedDate.value}\n\n`;
-
-      if (selectedBuildingId.value === "ALL") {
-        txt += `BLDG: ALL BUILDINGS\n\n`;
-        
-        currentBuildings.value.forEach((b) => {
-          const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
-          const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
-          const med = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "medication");
-          const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
-
-          txt += `----------------------------------------\n`;
-          txt += `BLDG: ${b.name}\n`;
-          txt += `TOTAL MORTALITIES: ${mCount}\n\n`;
-
-          if (mort?.mortality?.length) {
-            txt += `CAUSES:\n`;
-            mort.mortality.forEach((mr) => {
-              txt += `- ${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
-            });
-            txt += `\n`;
-          } else {
-            txt += `CAUSES:\n(none specified)\n\n`;
-          }
-
-          const bNotes = [prod?.notes, mort?.notes, med?.notes]
-            .filter(Boolean)
-            .join("\n");
-
-          if (bNotes) {
-            txt += `NOTES / DETAILS:\n${bNotes}\n\n`;
-          }
-        });
-
-        return txt;
-      }
-
-      if (!currentBuilding.value) return "";
-
-      const b = currentBuilding.value;
-      const mort = currentMort.value;
-      const prod = currentProd.value;
-
-      txt += `BLDG: ${b.name}\n\n`;
-      txt += `TOTAL MORTALITIES: ${mort?.totalMortality ?? prod?.mortalityCount ?? 0}\n\n`;
-
-      if (mort?.mortality?.length) {
-        txt += `CAUSES:\n`;
-        mort.mortality.forEach((mr) => {
-          txt += `- ${mr.cause || "Unknown"}: ${mr.count ?? 0}${mr.notes ? " (" + mr.notes + ")" : ""}\n`;
-        });
-        txt += `\n`;
-      } else {
-        txt += `CAUSES:\n(none specified)\n\n`;
-      }
-
-      const bNotes = [prod?.notes, mort?.notes, med?.notes]
-        .filter(Boolean)
-        .join("\n");
-
-      if (bNotes) {
-        txt += `NOTES / DETAILS:\n${bNotes}\n\n`;
-      }
-
-      return txt;
-    });
-
-    const necropsySummaryText = computed(() => {
-      let txt = `NECROPSY SUMMARY - ALL BUILDINGS\n${selectedDate.value}\n\n`;
-      let totalAllMortalities = 0;
-      let allNotes = [];
-
-      txt += `DEBUG: currentBuildings count: ${currentBuildings.value.length}\n`;
-      txt += `DEBUG: currentEntries count: ${currentEntries.value.length}\n\n`;
-
-      currentBuildings.value.forEach((b) => {
-        const mort = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "mortality");
-        const prod = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "production");
-        const med = currentEntries.value.find((e) => e.buildingId === b.id && e.type === "medication");
-        
-        txt += `DEBUG: BLDG ${b.name} (${b.id}): mort found=${!!mort}, prod found=${!!prod}, med found=${!!med}\n`;
-        
-        const mCount = mort?.totalMortality ?? prod?.mortalityCount ?? 0;
-        totalAllMortalities += mCount;
-
-        const bNotes = [prod?.notes, mort?.notes, med?.notes]
-          .filter(Boolean)
-          .join("\n");
-
-        if (bNotes) {
-          allNotes.push(`BLDG ${b.name}:\n${bNotes}`);
-        }
-      });
-
-      txt += `\nTOTAL MORTALITIES: ${totalAllMortalities}\n\n`;
-      
-      if (allNotes.length) {
-        txt += `MORTALITY NOTES / DETAILS:\n\n`;
-        txt += allNotes.join("\n\n") + "\n\n";
-      } else {
-        txt += `MORTALITY NOTES / DETAILS:\n(none specified)\n\n`;
-      }
-
-      return txt;
-    });
-
     const copyToClipboard = async (text) => {
       try {
         await navigator.clipboard.writeText(text);
         window.alert("Successfully copied to clipboard!");
       } catch (err) {
-        window.alert("Failed to copy. Your browser might not support this feature.");
+        window.alert(
+          "Failed to copy. Your browser might not support this feature.",
+        );
       }
     };
 
-    const viewReport = (id) => {
-        window.alert("Opening Detailed Report: " + id);
-    };
+
 
     const eggSummaryText = computed(() => {
       if (!currentBuilding.value) return "";
@@ -1296,7 +627,16 @@ const app = createApp({
       return tmp.textContent || tmp.innerText || "";
     }
 
+    const necropsyFontSize = Vue.ref(16);
+
     return {
+      isLoggedIn,
+      passwordInput,
+      loginError,
+      checkLogin,
+      showPassword,
+      logout,
+      necropsyFontSize,
       selectedYear,
       selectedMonth,
       selectedDate,
@@ -1317,35 +657,13 @@ const app = createApp({
       eggTotals,
       eggDefects,
       eggSummaryText,
-      necropsyReportText,
-      necropsySummaryText,
       sortedAllBuildings,
       isFullScreenTable,
       isFullScreenReport,
-      isFullScreenNecropsy,
       copyToClipboard,
-      analyticsRange,
-      analyticsSubTab,
-      necropsySubTab,
-      loadingAnalytics,
-      analyticsData,
-      kpiData,
-      analyticsInsights,
-      avgFarmHenDay,
-      avgFarmHenHouse,
-      farmIntelligence,
-      farmScore,
-      totalFarmEggs,
-      totalFarmMort,
-      avgBuildingHenDay,
-      avgBuildingHenHouse,
-      totalBuildingEggs,
-      totalBuildingMort,
-      fetchAnalyticsData,
       getProdClass,
+
       stripHtml,
-      currentReports,
-      formatDate,
       tableFontSize,
       getPerformanceLabel,
       currentProd,
@@ -1353,7 +671,9 @@ const app = createApp({
       currentEgg,
       currentMed,
       currentEntries,
-      viewReport
+      necropsyTotal,
+      necropsyNotes,
+      necropsyDateFormatted,
     };
   },
 });
