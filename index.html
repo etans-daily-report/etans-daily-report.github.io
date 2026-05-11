@@ -346,44 +346,27 @@
                                  </div>
 
                                  <!-- Daily Comparison View (Table) -->
-                                 <div v-if="activeOverviewSubTab === 'daily'" class="weekly-table-wrapper" style="margin-top: 0;">
-                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                 <div v-if="activeOverviewSubTab === 'daily'">
+                                     <!-- Filter and Search Controls -->
+                                     <div class="filter-controls">
+                                         <div style="display: flex; align-items: center; gap: 8px;">
+                                             <label style="font-weight: 600; color: var(--text-main);">Filter Month:</label>
+                                             <select v-model="dailyMonthFilter" style="background: var(--bg-main); color: var(--text-main); border: 1px solid #10b981; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
+                                                 <option value="">All Months</option>
+                                                 <option v-for="m in availableMonthsInDaily" :key="m" :value="m">{{ m }}</option>
+                                             </select>
+                                         </div>
+                                         <div style="display: flex; align-items: center; gap: 8px;">
+                                             <label style="font-weight: 600; color: var(--text-main);">Search Date:</label>
+                                             <input type="text" v-model="dailySearchQuery" placeholder="YYYY-MM-DD or text..." style="background: var(--bg-main); color: var(--text-main); border: 1px solid #10b981; padding: 6px 12px; border-radius: 6px;">
+                                         </div>
+                                     </div>
+                                     <div class="weekly-table-wrapper" style="margin-top: 0;">
+                                         <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
                                          <thead>
                                              <tr>
-                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Age</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Heads</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Eggs</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Prod %</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Feed</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Mortality</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Culls</th>
-                                             </tr>
-                                         </thead>
-                                         <tbody>
-                                             <tr v-for="b in sortedAllBuildings" :key="b.id">
-                                                 <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ b.name }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ formatAge(b.ageWeeks, b.ageDays) }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.currentHeads.toLocaleString() }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.totalPieces.toLocaleString() }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.eggPercent }}%</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.feedBags }} bags</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.mortalityCount }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ b.culls }}</td>
-                                             </tr>
-                                         </tbody>
-                                     </table>
-                                 </div>
-
-                                 <!-- Weekly Comparison View (Table) -->
-                                 <div v-if="activeOverviewSubTab === 'weekly' && weeklyHistoryTable.length" class="weekly-table-wrapper" style="margin-top: 0;">
-                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
-                                         <thead>
-                                             <tr>
-                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Week</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Heads</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Week Age</th>
+                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Date</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Population</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Bags</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg Feed</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Eggs</th>
@@ -393,11 +376,46 @@
                                              </tr>
                                          </thead>
                                          <tbody>
-                                             <tr v-for="wk in weeklyHistoryTable" :key="`${wk.ageWeeks}_${wk.buildingName}`">
+                                             <tr v-for="d in paginatedDailyHistory" :key="d.date">
+                                                 <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ d.dateLabel }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.heads.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.bags }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.avgFeed }}g</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.totalEggs.toLocaleString() }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.avgProd }}%</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.mortality }}</td>
+                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ d.culls }}</td>
+                                             </tr>
+                                         </tbody>
+                                     </table>
+                                     <!-- Pagination Controls -->
+                                     <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; margin-top: 10px; gap: 10px;">
+                                         <button class="tab-btn" :disabled="dailyCurrentPage === 1" @click="dailyCurrentPage--"><i class="fas fa-chevron-left"></i> Prev</button>
+                                         <span style="color: var(--text-main); font-weight: 600;">Page {{ dailyCurrentPage }} of {{ dailyTotalPages }}</span>
+                                         <button class="tab-btn" :disabled="dailyCurrentPage === dailyTotalPages" @click="dailyCurrentPage++">Next <i class="fas fa-chevron-right"></i></button>
+                                     </div>
+                                     </div>
+                                 </div>
+
+                                 <!-- Weekly Comparison View (Table) -->
+                                 <div v-if="activeOverviewSubTab === 'weekly' && weeklyHistoryTable.length" class="weekly-table-wrapper" style="margin-top: 0;">
+                                     <table class="weekly-table" style="border-collapse: collapse; width: 100%;">
+                                         <thead>
+                                             <tr>
+                                                 <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Week</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Population</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Bags</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg Feed</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Eggs</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg %</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Mortality</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Culls</th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <tr v-for="wk in paginatedWeeklyHistory" :key="wk.weekKey">
                                                  <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ wk.weekLabel }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px; font-weight: 600;">{{ wk.buildingName }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.heads.toLocaleString() }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.ageWeeks }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.bags }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.avgFeed }}g</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ wk.totalEggs.toLocaleString() }}</td>
@@ -407,6 +425,12 @@
                                              </tr>
                                          </tbody>
                                      </table>
+                                     <!-- Pagination Controls -->
+                                     <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; margin-top: 10px; gap: 10px;">
+                                         <button class="tab-btn" :disabled="weeklyCurrentPage === 1" @click="weeklyCurrentPage--"><i class="fas fa-chevron-left"></i> Prev</button>
+                                         <span style="color: var(--text-main); font-weight: 600;">Page {{ weeklyCurrentPage }} of {{ weeklyTotalPages }}</span>
+                                         <button class="tab-btn" :disabled="weeklyCurrentPage === weeklyTotalPages" @click="weeklyCurrentPage++">Next <i class="fas fa-chevron-right"></i></button>
+                                     </div>
                                  </div>
 
                                  <!-- Monthly Comparison View (Table) -->
@@ -415,8 +439,7 @@
                                          <thead>
                                              <tr>
                                                  <th style="text-align: left; padding-left: 12px; border: 2px solid #10b981; padding: 12px 8px;">Month</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Building</th>
-                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Heads</th>
+                                                 <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Population</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Bags</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Avg Feed</th>
                                                  <th style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">Total Eggs</th>
@@ -426,9 +449,8 @@
                                              </tr>
                                          </thead>
                                          <tbody>
-                                             <tr v-for="mo in monthlyHistoryTable" :key="`${mo.month}_${mo.buildingName}`">
+                                             <tr v-for="mo in paginatedMonthlyHistory" :key="mo.month">
                                                  <td style="text-align: left; padding-left: 12px; font-weight: 700; color: var(--text-main); border: 2px solid #10b981; padding: 12px 8px;">{{ mo.monthLabel }}</td>
-                                                 <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px; font-weight: 600;">{{ mo.buildingName }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.heads.toLocaleString() }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.bags }}</td>
                                                  <td style="text-align: center; border: 2px solid #10b981; padding: 12px 8px;">{{ mo.avgFeed }}g</td>
@@ -439,6 +461,12 @@
                                              </tr>
                                          </tbody>
                                      </table>
+                                     <!-- Pagination Controls -->
+                                     <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; margin-top: 10px; gap: 10px;">
+                                         <button class="tab-btn" :disabled="monthlyCurrentPage === 1" @click="monthlyCurrentPage--"><i class="fas fa-chevron-left"></i> Prev</button>
+                                         <span style="color: var(--text-main); font-weight: 600;">Page {{ monthlyCurrentPage }} of {{ monthlyTotalPages }}</span>
+                                         <button class="tab-btn" :disabled="monthlyCurrentPage === monthlyTotalPages" @click="monthlyCurrentPage++">Next <i class="fas fa-chevron-right"></i></button>
+                                     </div>
                                  </div>
                              </div>
                         </div>

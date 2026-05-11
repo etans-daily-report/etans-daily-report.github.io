@@ -2559,6 +2559,16 @@ body {
     background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2);
     padding: 5px 14px; border-radius: 20px; letter-spacing: 0.3px;
 }
+.filter-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+
 .weekly-table-wrapper {
     width: 100%; overflow-x: auto;
     border-radius: var(--radius-md); border: 1px solid var(--border-color);
@@ -2658,7 +2668,10 @@ body {
 .text-warning { color: #f59e0b; }
 .text-danger  { color: #ef4444; }
 @media (max-width: 640px) {
-    .weekly-table { font-size: 0.75rem; min-width: 520px; }
+    .weekly-table { font-size: 0.7rem; min-width: auto; width: 100%; }
+    body .weekly-table th, body .weekly-table td { padding: 8px 4px !important; }
+    .filter-controls { flex-direction: column; align-items: stretch; gap: 10px; }
+    .filter-controls > div { justify-content: space-between; display: flex; align-items: center; }
     .analytics-cards { grid-template-columns: 1fr 1fr; }
     .analytics-phase-card { grid-column: 1 / -1; }
     .weekly-section-header { flex-direction: column; align-items: flex-start; }
