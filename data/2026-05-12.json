@@ -1,6 +1,6 @@
 {
   "date": "2026-05-12",
-  "syncedAt": "2026-05-12T11:08:03.717801+00:00",
+  "syncedAt": "2026-05-12T11:29:08.442304+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -150,7 +150,7 @@
       "weatherPm": "Partly Cloudy",
       "temperature": "36",
       "createdAt": "2026-05-12T07:06:36.420035",
-      "updatedAt": "2026-05-12T10:28:06.600991"
+      "updatedAt": "2026-05-12T11:19:55.579738"
     },
     {
       "id": "mp2af60c3o77r",
@@ -212,7 +212,7 @@
       "weatherPm": "Partly Cloudy",
       "temperature": "36",
       "createdAt": "2026-05-12T07:06:51.198189",
-      "updatedAt": "2026-05-12T10:29:09.188918"
+      "updatedAt": "2026-05-12T11:10:51.080176"
     },
     {
       "id": "mp2hs450wmt00",
@@ -249,6 +249,18 @@
       "notes": "3-days dead\n1-eaten by cat\n1-thin\n1-thin/splenic atrophy\n1-hard spleen/mild hemorrhagic liver\n1-nabasagan/thin\n1-heat stroke",
       "createdAt": "2026-05-12T10:37:51.249765",
       "updatedAt": "2026-05-12T10:37:51.249765"
+    },
+    {
+      "id": "mp2jolyzl0edn",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-05-12",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 12,
+      "notes": "1-misshapen egg yolk/dilated intestine\n1-mild hemorrhagic liver/dilated intestine/air in ceca/bloated intestine/necrotic duodenum\n1-thin\n1-air in ceca/mild hemorrhagic liver\n4-prolapsed\n3-days dead\n1-eaten by cat",
+      "createdAt": "2026-05-12T11:26:01.803099",
+      "updatedAt": "2026-05-12T11:27:03.358398"
     },
     {
       "id": "mp2i186tllr1j",
