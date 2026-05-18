@@ -1,6 +1,6 @@
 {
   "date": "2026-05-18",
-  "syncedAt": "2026-05-18T10:16:40.025687+00:00",
+  "syncedAt": "2026-05-18T10:23:31.901524+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -221,10 +221,10 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 0,
+      "totalMortality": 3,
       "notes": "2-nabasagan/misshapen egg yolk/heat stroke\n1-water bag",
       "createdAt": "2026-05-18T08:26:13.581381",
-      "updatedAt": "2026-05-18T08:26:13.581381"
+      "updatedAt": "2026-05-18T10:19:25.495587"
     },
     {
       "id": "mpaxx91105exm",
@@ -233,10 +233,10 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 0,
+      "totalMortality": 5,
       "notes": "1-days dead\n1-thin/broken wings\n1-eaten by cat\n1-days dead/thin/prolapsed\n1-dilated intestine/pale spleen",
       "createdAt": "2026-05-18T08:26:48.981241",
-      "updatedAt": "2026-05-18T08:26:48.981241"
+      "updatedAt": "2026-05-18T10:20:04.532582"
     },
     {
       "id": "mpaxy7a2vb1ja",
@@ -245,10 +245,10 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 0,
+      "totalMortality": 8,
       "notes": "1-days dead\n3-prolapsed/egg stuck\n1-eaten by cat\n1-egg stuck\n1-pale spleen/blood in egg yolk/pale comb\n1-thin/misshapen egg yolk/sternal deviation",
       "createdAt": "2026-05-18T08:27:33.386674",
-      "updatedAt": "2026-05-18T08:27:33.386674"
+      "updatedAt": "2026-05-18T10:20:06.271955"
     },
     {
       "id": "mpaxyvvrlnilp",
@@ -257,10 +257,22 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 0,
+      "totalMortality": 5,
       "notes": "1-daays dead\n2-prolapsed\n1-thin/NE/unproductive\n1-egg binding",
       "createdAt": "2026-05-18T08:28:05.234208",
-      "updatedAt": "2026-05-18T08:28:05.234208"
+      "updatedAt": "2026-05-18T10:20:08.694613"
+    },
+    {
+      "id": "mpb1z1au9xorp",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-05-18",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 0,
+      "notes": "",
+      "createdAt": "2026-05-18T10:20:10.736313",
+      "updatedAt": "2026-05-18T10:20:10.736313"
     },
     {
       "id": "mpb1ig3vza0vz",
