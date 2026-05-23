@@ -1,6 +1,6 @@
 {
   "date": "2026-05-21",
-  "syncedAt": "2026-05-21T09:42:09.882265+00:00",
+  "syncedAt": "2026-05-23T07:44:10.943646+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -88,7 +88,7 @@
       "weatherPm": "Sunny",
       "temperature": "36",
       "createdAt": "2026-05-21T06:51:35.863814",
-      "updatedAt": "2026-05-21T09:09:57.920189"
+      "updatedAt": "2026-05-21T09:49:48.778095"
     },
     {
       "id": "mpf4uhqu7qb2w",
@@ -378,32 +378,32 @@
           "pieces": 20
         },
         "no_weight": {
-          "cases": 0,
+          "cases": 1,
           "trays": 0,
           "pieces": 0
         },
         "pullet": {
-          "cases": 1,
+          "cases": 3,
           "trays": 4,
           "pieces": 15
         },
         "pewee": {
-          "cases": 3,
+          "cases": 6,
           "trays": 10,
           "pieces": 22
         },
         "small": {
-          "cases": 6,
+          "cases": 8,
           "trays": 2,
           "pieces": 0
         },
         "medium": {
-          "cases": 8,
+          "cases": 3,
           "trays": 2,
           "pieces": 15
         },
         "large": {
-          "cases": 3,
+          "cases": 0,
           "trays": 2,
           "pieces": 6
         },
@@ -466,7 +466,7 @@
       "totalTrays": 27,
       "totalPieces": 8460,
       "createdAt": "2026-05-21T09:34:21.788446",
-      "updatedAt": "2026-05-21T09:34:21.788446"
+      "updatedAt": "2026-05-23T07:41:38.593019"
     },
     {
       "id": "mpfauqd52arjb",
