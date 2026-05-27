@@ -1,6 +1,6 @@
 {
   "date": "2026-05-27",
-  "syncedAt": "2026-05-27T09:58:06.998514+00:00",
+  "syncedAt": "2026-05-27T09:58:54.017352+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -42,7 +42,7 @@
       "ageWeeks": 88,
       "ageDays": 1,
       "startingHeads": 10912,
-      "flockman": "Jerry and Wanie",
+      "flockman": "reymund and Wanie",
       "startDate": "2026-04-10",
       "culledAt": null
     },
@@ -181,7 +181,7 @@
       "weatherPm": "Hot",
       "temperature": "38",
       "createdAt": "2026-05-27T06:14:32.358655",
-      "updatedAt": "2026-05-27T08:41:22.747133"
+      "updatedAt": "2026-05-27T09:58:50.293589"
     },
     {
       "id": "mpno5wwrhrpjy",
