@@ -1,6 +1,6 @@
 {
   "date": "2026-05-29",
-  "syncedAt": "2026-05-29T09:40:56.248072+00:00",
+  "syncedAt": "2026-05-29T09:44:16.745237+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -258,9 +258,9 @@
       "reporter": "",
       "mortality": [],
       "totalMortality": 12,
-      "notes": "3-days dead\n1-eaten by cat\n1-necrotic duodenum/bigti/fat\n1-misshapen egg yolk/thin\n1-fat/broken wings\n1-hemorrhagic liver/NE/nabasagan\n1-hemorrhagic liver/egg stuck/thin/necrotic duodenum\n1-mild NE",
+      "notes": "3-days dead\n1-eaten by cat\n2-prolapsed\n1-necrotic duodenum/bigti/fat\n1-misshapen egg yolk/thin\n1-fat/broken wings\n1-hemorrhagic liver/NE/nabasagan\n1-hemorrhagic liver/egg stuck/thin/necrotic duodenum\n1-mild NE",
       "createdAt": "2026-05-29T09:40:08.997412",
-      "updatedAt": "2026-05-29T09:40:08.997412"
+      "updatedAt": "2026-05-29T09:43:08.113114"
     },
     {
       "id": "mpqqe4jp3kg57",
