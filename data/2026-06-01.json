@@ -1,6 +1,6 @@
 {
   "date": "2026-06-01",
-  "syncedAt": "2026-06-01T10:41:46.555483+00:00",
+  "syncedAt": "2026-06-01T10:52:05.637056+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -222,9 +222,9 @@
       "reporter": "",
       "mortality": [],
       "totalMortality": 2,
-      "notes": "1-eaten by cat\n2-prolapsed",
+      "notes": "1-eaten by cat\n1-prolapsed",
       "createdAt": "2026-06-01T09:59:28.927858",
-      "updatedAt": "2026-06-01T09:59:28.927858"
+      "updatedAt": "2026-06-01T10:51:54.041196"
     },
     {
       "id": "mpv1f45p2ncza",
@@ -261,6 +261,18 @@
       "notes": "2-prolapsed",
       "createdAt": "2026-06-01T10:07:37.338418",
       "updatedAt": "2026-06-01T10:07:37.338418"
+    },
+    {
+      "id": "mpv39xe97ul6w",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-01",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 2,
+      "notes": "1-eaten by cat\n1-days dead",
+      "createdAt": "2026-06-01T10:52:02.013718",
+      "updatedAt": "2026-06-01T10:52:02.013718"
     },
     {
       "id": "mpv1tcmrkiu8z",
