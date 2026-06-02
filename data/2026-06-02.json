@@ -1,6 +1,6 @@
 {
   "date": "2026-06-02",
-  "syncedAt": "2026-06-02T10:18:40.432368+00:00",
+  "syncedAt": "2026-06-02T10:19:58.024701+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -212,7 +212,7 @@
       "weatherPm": "Cloudy",
       "temperature": "33",
       "createdAt": "2026-06-02T08:50:14.926277",
-      "updatedAt": "2026-06-02T09:16:31.141219"
+      "updatedAt": "2026-06-02T10:19:37.599534"
     },
     {
       "id": "mpwe9ierd2uio",
@@ -269,10 +269,10 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 0,
+      "totalMortality": 2,
       "notes": "1-prolapsed\n1-day dead/thin/bigti",
       "createdAt": "2026-06-02T08:49:24.778295",
-      "updatedAt": "2026-06-02T09:16:16.864727"
+      "updatedAt": "2026-06-02T10:19:51.406421"
     },
     {
       "id": "mpwgp7jgy3wfk",
