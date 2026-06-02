@@ -1,6 +1,6 @@
 {
   "date": "2026-06-02",
-  "syncedAt": "2026-06-02T10:12:15.509972+00:00",
+  "syncedAt": "2026-06-02T10:14:16.722509+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -818,6 +818,61 @@
       "totalPieces": 2820,
       "createdAt": "2026-06-02T10:11:15.702336",
       "updatedAt": "2026-06-02T10:11:15.702336"
+    },
+    {
+      "id": "mpwhci1a836j7",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-02",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: vitamine ADE 600ml/600L-D2\n0800H: amcilyte 750g/600L-D9\n1000H: betaine 1.2L/600L-D16\n1400H: calcium phosphorus 600ml/600L-D2",
+      "createdAt": "2026-06-02T10:13:42.872901",
+      "updatedAt": "2026-06-02T10:13:42.872901"
+    },
+    {
+      "id": "mpwhco0ehdhg9",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-02",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: vitamine ADE 600ml/600L-D2\n0800H: amcilyte 750g/600L-D10\n1000H: betaine 1.2L/600L-D15\n1400H: calcium phosphorus 600ml/600L-D2",
+      "createdAt": "2026-06-02T10:13:50.612711",
+      "updatedAt": "2026-06-02T10:13:50.612711"
+    },
+    {
+      "id": "mpwhctz2bldxb",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-02",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: vitamine ADE 400ml/400L-D2\n0800H: amcilyte 500g/400L-D10\n1000H: betaine 800ml/400L-D15\n1400H: calcium phosphorus 400ml/400L-D2",
+      "createdAt": "2026-06-02T10:13:58.340448",
+      "updatedAt": "2026-06-02T10:13:58.340448"
+    },
+    {
+      "id": "mpwhd0g607z4o",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-02",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: vitamine ADE 500ml/500L-D2\n0800H: amcilyte 625g/400L-D10\n1000H: betaine 1L/00L-D15\n1400H: calcium phosphorus 500ml/500L-D2",
+      "createdAt": "2026-06-02T10:14:06.732060",
+      "updatedAt": "2026-06-02T10:14:06.732060"
+    },
+    {
+      "id": "mpwhd6t9lrsfg",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-02",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: vitamine ADE 400ml/400L-D2\n0800H: amcilyte 500g/400L-D10\n1000H: betaine 800ml/400L-D15\n1400H: calcium phosphorues 400ml/400L-D2",
+      "createdAt": "2026-06-02T10:14:14.982940",
+      "updatedAt": "2026-06-02T10:14:14.982940"
     }
   ]
 }
