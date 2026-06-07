@@ -1,0 +1,333 @@
+{
+  "date": "2026-06-07",
+  "syncedAt": "2026-06-07T09:36:58.216294+00:00",
+  "buildings": [
+    {
+      "id": "mnsypaebx7m0l",
+      "name": "A",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 66,
+      "ageDays": 3,
+      "startingHeads": 8070,
+      "flockman": "Vicente",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsyu72zhaebc",
+      "name": "C",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 37,
+      "ageDays": 4,
+      "startingHeads": 10051,
+      "flockman": "Jerry and Jemel (new)",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz17wahp9dg",
+      "name": "D",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 36,
+      "ageDays": 6,
+      "startingHeads": 9555,
+      "flockman": "Dindo",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz6qu0egoue",
+      "name": "G",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 88,
+      "ageDays": 1,
+      "startingHeads": 10912,
+      "flockman": "Wanie and reymund",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mob5dv7lht2po",
+      "name": "H",
+      "breed": "BOBCOCK WHITE",
+      "ageWeeks": 15,
+      "ageDays": 6,
+      "startingHeads": 8240,
+      "flockman": "NOEL",
+      "startDate": "2026-04-23",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mq3emx8bq2kyx",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-07",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 74,
+      "ageDays": 5,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 18,
+        "trays": 0,
+        "totalPieces": 6480
+      },
+      "feed": {
+        "bags": 18.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 115.71
+      },
+      "mortalityCount": 7,
+      "culls": 0,
+      "currentHeads": 7778,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "36",
+      "createdAt": "2026-06-07T06:32:13.520790",
+      "updatedAt": "2026-06-07T08:06:48.476189"
+    },
+    {
+      "id": "mq3enekjx1mks",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-07",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 45,
+      "ageDays": 6,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 24,
+        "trays": 4,
+        "totalPieces": 8760
+      },
+      "feed": {
+        "bags": 22.0,
+        "brand": "Layer 1 Nutrilay",
+        "gramsPerBirdDay": 111.71
+      },
+      "mortalityCount": 4,
+      "culls": 0,
+      "currentHeads": 9847,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "36",
+      "createdAt": "2026-06-07T06:32:35.980148",
+      "updatedAt": "2026-06-07T08:07:11.377757"
+    },
+    {
+      "id": "mq3enl0p37p4r",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-07",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 45,
+      "ageDays": 1,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 22,
+        "trays": 3,
+        "totalPieces": 8010
+      },
+      "feed": {
+        "bags": 20.0,
+        "brand": "Layer 1- Nutrilay",
+        "gramsPerBirdDay": 110.69
+      },
+      "mortalityCount": 11,
+      "culls": 0,
+      "currentHeads": 9034,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "36",
+      "createdAt": "2026-06-07T06:32:44.337529",
+      "updatedAt": "2026-06-07T08:07:28.960999"
+    },
+    {
+      "id": "mq3enrkau6njt",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-07",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 96,
+      "ageDays": 3,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 21,
+        "trays": 10,
+        "totalPieces": 7860
+      },
+      "feed": {
+        "bags": 23.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 113.39
+      },
+      "mortalityCount": 9,
+      "culls": 16,
+      "currentHeads": 10142,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "36",
+      "createdAt": "2026-06-07T06:32:52.818095",
+      "updatedAt": "2026-06-07T08:07:50.662494"
+    },
+    {
+      "id": "mq3enwgx1dqn9",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-07",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 22,
+      "ageDays": 2,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 13,
+        "trays": 11,
+        "totalPieces": 5010
+      },
+      "feed": {
+        "bags": 22.0,
+        "brand": "Layer 1 (Agri Specialist)",
+        "gramsPerBirdDay": 89.37
+      },
+      "mortalityCount": 3,
+      "culls": 0,
+      "currentHeads": 12309,
+      "notes": "-Afternoon Lights on: 5:30 pm- 6:30pm\n-Weekly weigh in;\nHallway 1- 1.5050 kg\nHallway 2- 1.5333 kg\nHallway 3- 1.5400 kg\nHallway 4- 1.5102 kg",
+      "weatherAm": "Sunny",
+      "weatherPm": "Partly Cloudy",
+      "temperature": "36",
+      "createdAt": "2026-06-07T06:32:59.176369",
+      "updatedAt": "2026-06-07T08:08:03.766820"
+    },
+    {
+      "id": "mq3i3xbdmlk0j",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-07",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 7,
+      "notes": "2-days dead\n1-nabasagan\n1-eaten by cat\n2-thin/unproductive\n1-severe hemorrhagic liver/thin/pale comb",
+      "createdAt": "2026-06-07T08:09:25.631434",
+      "updatedAt": "2026-06-07T08:09:25.631434"
+    },
+    {
+      "id": "mq3i4gzby2sg0",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-07",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 4,
+      "notes": "2-days dead\n1-eaten by cat\n1-prolapsed",
+      "createdAt": "2026-06-07T08:09:51.105308",
+      "updatedAt": "2026-06-07T08:09:51.105308"
+    },
+    {
+      "id": "mq3i6kevmxldk",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-07",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 11,
+      "notes": "2-days dead\n2-eaten by cat\n4-severe prolapsed/egg stuck\n1-hemorrhagic liver\n1-dilated intestine/blood in egg yolk\n1-nabasagan/hemorrhagic liver",
+      "createdAt": "2026-06-07T08:11:28.864311",
+      "updatedAt": "2026-06-07T08:11:28.864311"
+    },
+    {
+      "id": "mq3i7yw6s6aoc",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-07",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 9,
+      "notes": "1-nabasagan/dilated intestine\n1-blood clot on liver/nabasagan/thin\n2-hemorrhagic liver/nabasagan\n4-prolapsed\n1-days dead",
+      "createdAt": "2026-06-07T08:12:34.286143",
+      "updatedAt": "2026-06-07T08:12:34.286143"
+    },
+    {
+      "id": "mq3i82d22miin",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-07",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 3,
+      "notes": "3-prolapsed",
+      "createdAt": "2026-06-07T08:12:38.779876",
+      "updatedAt": "2026-06-07T08:12:38.779876"
+    },
+    {
+      "id": "mq3eu81mn4dn0",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-07",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: Enrofloxacin 20% (prevention) 400ml/400L-D4\n1000H: Polymune 400ml/400L-D2\n1400H: amcilyte 500g/400L-D2",
+      "createdAt": "2026-06-07T06:37:54.118939",
+      "updatedAt": "2026-06-07T08:29:56.484403"
+    },
+    {
+      "id": "mq3euccgwrnv7",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-07",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: Enrofloxacin 20% (prevention) 500ml/500L-D4\n1000H: Polymune 600ml/600L-D2\n1400H: amcilyte 750g/600L-D2",
+      "createdAt": "2026-06-07T06:37:59.691393",
+      "updatedAt": "2026-06-07T08:29:53.470249"
+    },
+    {
+      "id": "mq3evtfcznxvp",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-07",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: Enrofloxacin 20% (prevention) 400ml/400L-D4\n1000H: Polymune 400ml/400L-D2\n1400H: amcilyte 500g/400L-D2",
+      "createdAt": "2026-06-07T06:39:08.480748",
+      "updatedAt": "2026-06-07T08:30:00.084450"
+    },
+    {
+      "id": "mq3evzp4j38no",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-07",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: polymune 600ml/600L-D2\n1000H: amcilyte 1 kg/600L-D14",
+      "createdAt": "2026-06-07T06:39:16.607656",
+      "updatedAt": "2026-06-07T06:39:16.607656"
+    },
+    {
+      "id": "mq3ew3pcjnomm",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-07",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: Tiamulin (prevention) 600ml/600L-D5\n1000H: Polymune 600ml/600L-D2\n1000H: amcilyte 1 kg/600L-D13",
+      "createdAt": "2026-06-07T06:39:21.800658",
+      "updatedAt": "2026-06-07T06:39:21.800658"
+    }
+  ]
+}
