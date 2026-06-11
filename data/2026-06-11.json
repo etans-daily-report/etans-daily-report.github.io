@@ -1,6 +1,6 @@
 {
   "date": "2026-06-11",
-  "syncedAt": "2026-06-11T09:29:39.361823+00:00",
+  "syncedAt": "2026-06-11T09:31:27.405973+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -261,6 +261,18 @@
       "notes": "4-prolapsed\n2-days dead/thin",
       "createdAt": "2026-06-11T08:30:31.228087",
       "updatedAt": "2026-06-11T08:30:31.228087"
+    },
+    {
+      "id": "mq9asnb5vdahs",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-11",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 3,
+      "notes": "1-days dead\n1-day dead/broken wings/prolapsed\n1-nabasagan",
+      "createdAt": "2026-06-11T09:31:19.179223",
+      "updatedAt": "2026-06-11T09:31:19.179223"
     },
     {
       "id": "mq9ac891skwyp",
