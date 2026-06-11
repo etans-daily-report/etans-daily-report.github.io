@@ -1,6 +1,6 @@
 {
   "date": "2026-06-11",
-  "syncedAt": "2026-06-11T09:28:44.458251+00:00",
+  "syncedAt": "2026-06-11T09:29:39.361823+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -72,8 +72,8 @@
       "ageManuallySet": false,
       "production": {
         "cases": 18,
-        "trays": 9,
-        "totalPieces": 6750
+        "trays": 10,
+        "totalPieces": 6780
       },
       "feed": {
         "bags": 18.0,
@@ -88,7 +88,7 @@
       "weatherPm": "Partly Cloudy",
       "temperature": "35",
       "createdAt": "2026-06-11T06:36:53.079249",
-      "updatedAt": "2026-06-11T08:26:02.790906"
+      "updatedAt": "2026-06-11T09:29:35.547342"
     },
     {
       "id": "mq94km061l676",
