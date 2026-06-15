@@ -1,6 +1,6 @@
 {
   "date": "2026-06-15",
-  "syncedAt": "2026-06-15T10:01:01.143881+00:00",
+  "syncedAt": "2026-06-15T10:02:23.211537+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -20,7 +20,7 @@
       "ageWeeks": 37,
       "ageDays": 4,
       "startingHeads": 10051,
-      "flockman": "Jerry and Jemel (new)",
+      "flockman": "Reygie and Jemel (new)",
       "startDate": "2026-04-10",
       "culledAt": null
     },
@@ -119,7 +119,7 @@
       "weatherPm": "Partly Cloudy",
       "temperature": "35",
       "createdAt": "2026-06-15T06:09:03.898943",
-      "updatedAt": "2026-06-15T08:10:01.083822"
+      "updatedAt": "2026-06-15T10:02:14.602600"
     },
     {
       "id": "mqetc2stzcgir",
