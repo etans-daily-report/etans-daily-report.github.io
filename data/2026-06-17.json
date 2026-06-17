@@ -1,6 +1,6 @@
 {
   "date": "2026-06-17",
-  "syncedAt": "2026-06-17T10:09:13.374528+00:00",
+  "syncedAt": "2026-06-17T10:12:09.484440+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -818,6 +818,61 @@
       "totalPieces": 9450,
       "createdAt": "2026-06-17T09:49:47.691626",
       "updatedAt": "2026-06-17T09:49:47.691626"
+    },
+    {
+      "id": "mqhwtozoi9gfn",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-17",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 120ml/600L-D1\n1000H: amcilyte Electrolytes 1kg/600L-D1\n1400H: calcium phosphorus 1200ml/600L-D1",
+      "createdAt": "2026-06-17T10:10:08.973264",
+      "updatedAt": "2026-06-17T10:11:57.419411"
+    },
+    {
+      "id": "mqhwubgzy6hh7",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-17",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 60ml/600L-D2\n1000H: amcilyte Electrolytes 600g/600L-D1\n1400H: calcium phosphorus 600ml/600L-D2",
+      "createdAt": "2026-06-17T10:10:38.106833",
+      "updatedAt": "2026-06-17T10:11:55.585875"
+    },
+    {
+      "id": "mqhwufec3ui34",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-17",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 40ml/400L-D2\n1000H: amcilyte Electrolytes 400g/400L-D1\n1400H: calcium phosphorus 400ml/400L-D2",
+      "createdAt": "2026-06-17T10:10:43.195059",
+      "updatedAt": "2026-06-17T10:11:50.514107"
+    },
+    {
+      "id": "mqhwvwark5n3r",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-17",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 100ml/500L-D2\n1000H: amcilyte Electrolytes 500g/500L-D1\n1400H: calcium phosphorus 500ml/500L-D2",
+      "createdAt": "2026-06-17T10:11:51.752480",
+      "updatedAt": "2026-06-17T10:11:51.752480"
+    },
+    {
+      "id": "mqhwvxv7o10cg",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-17",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 80ml/400L-D2\n1000H: amcilyte Electrolytes 400g/400L-D1\n1400H: Calcium phosphorus 800ml/400L-D2",
+      "createdAt": "2026-06-17T10:11:53.786437",
+      "updatedAt": "2026-06-17T10:11:53.786437"
     }
   ]
 }
