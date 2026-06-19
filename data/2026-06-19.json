@@ -1,0 +1,878 @@
+{
+  "date": "2026-06-19",
+  "syncedAt": "2026-06-19T09:58:16.021401+00:00",
+  "buildings": [
+    {
+      "id": "mnsypaebx7m0l",
+      "name": "A",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 66,
+      "ageDays": 3,
+      "startingHeads": 8070,
+      "flockman": "vicente",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsyu72zhaebc",
+      "name": "C",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 37,
+      "ageDays": 4,
+      "startingHeads": 10051,
+      "flockman": "Reygie and Jemel (new)",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz17wahp9dg",
+      "name": "D",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 36,
+      "ageDays": 6,
+      "startingHeads": 9555,
+      "flockman": "DINDO",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mnsz6qu0egoue",
+      "name": "G",
+      "breed": "HISEX WHITE",
+      "ageWeeks": 88,
+      "ageDays": 1,
+      "startingHeads": 10912,
+      "flockman": "Wanie and Reymund",
+      "startDate": "2026-04-10",
+      "culledAt": null
+    },
+    {
+      "id": "mob5dv7lht2po",
+      "name": "H",
+      "breed": "BOBCOCK WHITE",
+      "ageWeeks": 15,
+      "ageDays": 6,
+      "startingHeads": 8240,
+      "flockman": "JERRY (Noel day off)",
+      "startDate": "2026-04-23",
+      "culledAt": null
+    }
+  ],
+  "entries": [
+    {
+      "id": "mqkjiw9djm31f",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-19",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 76,
+      "ageDays": 3,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 18,
+        "trays": 5,
+        "totalPieces": 6630
+      },
+      "feed": {
+        "bags": 18.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 116.75
+      },
+      "mortalityCount": 5,
+      "culls": 0,
+      "currentHeads": 7709,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "36",
+      "createdAt": "2026-06-19T06:21:08.703245",
+      "updatedAt": "2026-06-19T09:45:43.640418"
+    },
+    {
+      "id": "mqkjj07g91ppd",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-19",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 47,
+      "ageDays": 4,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 24,
+        "trays": 0,
+        "totalPieces": 8640
+      },
+      "feed": {
+        "bags": 22.5,
+        "brand": "Layer 1 Nutrilay",
+        "gramsPerBirdDay": 114.56
+      },
+      "mortalityCount": 4,
+      "culls": 0,
+      "currentHeads": 9820,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "36",
+      "createdAt": "2026-06-19T06:21:13.811213",
+      "updatedAt": "2026-06-19T09:46:09.837104"
+    },
+    {
+      "id": "mqkjj4lcfaii1",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-19",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 46,
+      "ageDays": 6,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 21,
+        "trays": 7,
+        "totalPieces": 7770
+      },
+      "feed": {
+        "bags": 20.0,
+        "brand": "Layer 1- Nutrilay",
+        "gramsPerBirdDay": 111.87
+      },
+      "mortalityCount": 5,
+      "culls": 0,
+      "currentHeads": 8939,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "36",
+      "createdAt": "2026-06-19T06:21:19.495002",
+      "updatedAt": "2026-06-19T09:46:22.152349"
+    },
+    {
+      "id": "mqkjj8san9v1m",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-19",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 98,
+      "ageDays": 1,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 21,
+        "trays": 6,
+        "totalPieces": 7740
+      },
+      "feed": {
+        "bags": 23.0,
+        "brand": "Layer 1- Agri Specialist",
+        "gramsPerBirdDay": 115.69
+      },
+      "mortalityCount": 12,
+      "culls": 12,
+      "currentHeads": 9940,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "36",
+      "createdAt": "2026-06-19T06:21:24.928765",
+      "updatedAt": "2026-06-19T09:46:38.783594"
+    },
+    {
+      "id": "mqkjjd3e8i8kt",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-19",
+      "type": "production",
+      "reporter": "Kenneth",
+      "eggSorter": "",
+      "headsManuallySet": false,
+      "ageWeeks": 24,
+      "ageDays": 0,
+      "ageManuallySet": false,
+      "production": {
+        "cases": 27,
+        "trays": 8,
+        "totalPieces": 9960
+      },
+      "feed": {
+        "bags": 24.0,
+        "brand": "Layer 1 (Agri Specialist)",
+        "gramsPerBirdDay": 97.94
+      },
+      "mortalityCount": 6,
+      "culls": 0,
+      "currentHeads": 12253,
+      "notes": "",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "36",
+      "createdAt": "2026-06-19T06:21:30.517916",
+      "updatedAt": "2026-06-19T09:46:52.344364"
+    },
+    {
+      "id": "mqkqwvzqfh4fj",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-19",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 5,
+      "notes": "1-Egg bound/nabasagan\n1-nabasagan/thin/broken wings/blood in egg yolk/misshapen egg yolk\n1-dilated intestine/nabasagan\n2-prolapsed",
+      "createdAt": "2026-06-19T09:47:58.848474",
+      "updatedAt": "2026-06-19T09:47:58.848474"
+    },
+    {
+      "id": "mqkqxmtqhrbb6",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-19",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 4,
+      "notes": "2-days dead\n2-eaten by cat",
+      "createdAt": "2026-06-19T09:48:33.624450",
+      "updatedAt": "2026-06-19T09:48:33.624450"
+    },
+    {
+      "id": "mqkqy9rgkejte",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-19",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 5,
+      "notes": "2-days dead\n2-eaten by cat\n1-prolapsed",
+      "createdAt": "2026-06-19T09:49:03.352627",
+      "updatedAt": "2026-06-19T09:49:03.352627"
+    },
+    {
+      "id": "mqkqzfj6laj9k",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-19",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 12,
+      "notes": "3-prolapsed\n3-days dead\n2-thin/broken wing\n1-hemorrhagic liver\n1-nabasagan\n1-dilated intestine/friable liver\n1-eaten by cat",
+      "createdAt": "2026-06-19T09:49:57.485989",
+      "updatedAt": "2026-06-19T09:49:57.485989"
+    },
+    {
+      "id": "mqkqznl0uxosa",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-19",
+      "type": "mortality",
+      "reporter": "",
+      "mortality": [],
+      "totalMortality": 6,
+      "notes": "4-prolapsed\n1-eaten by cat\n1-NE",
+      "createdAt": "2026-06-19T09:50:07.915713",
+      "updatedAt": "2026-06-19T09:50:07.915713"
+    },
+    {
+      "id": "mqkr22dhr8yqm",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-19",
+      "type": "egg-summary",
+      "reporter": "Kenneth",
+      "eggSorter": "amielyn",
+      "distribution": {
+        "nnv": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "nv": {
+          "cases": 0,
+          "trays": 4,
+          "pieces": 0
+        },
+        "no_weight": {
+          "cases": 0,
+          "trays": 8,
+          "pieces": 15
+        },
+        "pullet": {
+          "cases": 2,
+          "trays": 3,
+          "pieces": 0
+        },
+        "pewee": {
+          "cases": 5,
+          "trays": 2,
+          "pieces": 10
+        },
+        "small": {
+          "cases": 5,
+          "trays": 8,
+          "pieces": 10
+        },
+        "medium": {
+          "cases": 2,
+          "trays": 9,
+          "pieces": 10
+        },
+        "large": {
+          "cases": 0,
+          "trays": 10,
+          "pieces": 0
+        },
+        "larger": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "xlarge": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 2
+        },
+        "jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 6
+        },
+        "s_jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "broken": {
+          "cases": 0,
+          "trays": 5,
+          "pieces": 10
+        },
+        "bold": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 26
+        },
+        "loss": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 1
+        },
+        "reject": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "good_cracks": {
+          "cases": 0,
+          "trays": 4,
+          "pieces": 4
+        },
+        "bad_cracks": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 6
+        },
+        "misshapen": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 13
+        }
+      },
+      "totalTrays": 50,
+      "totalPieces": 6630,
+      "createdAt": "2026-06-19T09:52:00.400869",
+      "updatedAt": "2026-06-19T09:52:00.400869"
+    },
+    {
+      "id": "mqkr34ulp7yyc",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-19",
+      "type": "egg-summary",
+      "reporter": "Kenneth",
+      "eggSorter": "hasna",
+      "distribution": {
+        "nnv": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "nv": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 0
+        },
+        "no_weight": {
+          "cases": 1,
+          "trays": 4,
+          "pieces": 0
+        },
+        "pullet": {
+          "cases": 5,
+          "trays": 0,
+          "pieces": 0
+        },
+        "pewee": {
+          "cases": 7,
+          "trays": 10,
+          "pieces": 0
+        },
+        "small": {
+          "cases": 6,
+          "trays": 9,
+          "pieces": 0
+        },
+        "medium": {
+          "cases": 2,
+          "trays": 1,
+          "pieces": 22
+        },
+        "large": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 0
+        },
+        "larger": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "xlarge": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 0
+        },
+        "jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 15
+        },
+        "s_jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 4
+        },
+        "broken": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 3
+        },
+        "bold": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 15
+        },
+        "loss": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 1
+        },
+        "reject": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "good_cracks": {
+          "cases": 0,
+          "trays": 2,
+          "pieces": 13
+        },
+        "bad_cracks": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 2
+        },
+        "misshapen": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        }
+      },
+      "totalTrays": 34,
+      "totalPieces": 8640,
+      "createdAt": "2026-06-19T09:52:50.261574",
+      "updatedAt": "2026-06-19T09:52:50.261574"
+    },
+    {
+      "id": "mqkr5g441aqi0",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-19",
+      "type": "egg-summary",
+      "reporter": "Kenneth",
+      "eggSorter": "elmer",
+      "distribution": {
+        "nnv": {
+          "cases": 0,
+          "trays": 9,
+          "pieces": 21
+        },
+        "nv": {
+          "cases": 1,
+          "trays": 6,
+          "pieces": 0
+        },
+        "no_weight": {
+          "cases": 3,
+          "trays": 1,
+          "pieces": 0
+        },
+        "pullet": {
+          "cases": 4,
+          "trays": 0,
+          "pieces": 27
+        },
+        "pewee": {
+          "cases": 5,
+          "trays": 6,
+          "pieces": 0
+        },
+        "small": {
+          "cases": 3,
+          "trays": 11,
+          "pieces": 11
+        },
+        "medium": {
+          "cases": 1,
+          "trays": 6,
+          "pieces": 16
+        },
+        "large": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 16
+        },
+        "larger": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "xlarge": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 5
+        },
+        "jumbo": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 8
+        },
+        "s_jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "broken": {
+          "cases": 0,
+          "trays": 8,
+          "pieces": 15
+        },
+        "bold": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "loss": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 1
+        },
+        "reject": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "good_cracks": {
+          "cases": 0,
+          "trays": 7,
+          "pieces": 11
+        },
+        "bad_cracks": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 28
+        },
+        "misshapen": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        }
+      },
+      "totalTrays": 51,
+      "totalPieces": 7770,
+      "createdAt": "2026-06-19T09:54:38.171992",
+      "updatedAt": "2026-06-19T09:55:14.590527"
+    },
+    {
+      "id": "mqkr7c3o32wj8",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-19",
+      "type": "egg-summary",
+      "reporter": "Kenneth",
+      "eggSorter": "jen",
+      "distribution": {
+        "nnv": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "nv": {
+          "cases": 0,
+          "trays": 7,
+          "pieces": 20
+        },
+        "no_weight": {
+          "cases": 1,
+          "trays": 6,
+          "pieces": 22
+        },
+        "pullet": {
+          "cases": 2,
+          "trays": 10,
+          "pieces": 0
+        },
+        "pewee": {
+          "cases": 5,
+          "trays": 2,
+          "pieces": 0
+        },
+        "small": {
+          "cases": 6,
+          "trays": 1,
+          "pieces": 20
+        },
+        "medium": {
+          "cases": 3,
+          "trays": 0,
+          "pieces": 0
+        },
+        "large": {
+          "cases": 1,
+          "trays": 0,
+          "pieces": 0
+        },
+        "larger": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "xlarge": {
+          "cases": 0,
+          "trays": 2,
+          "pieces": 0
+        },
+        "jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 22
+        },
+        "s_jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 3
+        },
+        "broken": {
+          "cases": 0,
+          "trays": 10,
+          "pieces": 24
+        },
+        "bold": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 8
+        },
+        "loss": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 1
+        },
+        "reject": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "good_cracks": {
+          "cases": 0,
+          "trays": 7,
+          "pieces": 6
+        },
+        "bad_cracks": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 18
+        },
+        "misshapen": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        }
+      },
+      "totalTrays": 38,
+      "totalPieces": 7740,
+      "createdAt": "2026-06-19T09:56:06.283621",
+      "updatedAt": "2026-06-19T09:56:06.283621"
+    },
+    {
+      "id": "mqkr8emktmt55",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-19",
+      "type": "egg-summary",
+      "reporter": "Kenneth",
+      "eggSorter": "jesa",
+      "distribution": {
+        "nnv": {
+          "cases": 1,
+          "trays": 7,
+          "pieces": 24
+        },
+        "nv": {
+          "cases": 5,
+          "trays": 1,
+          "pieces": 11
+        },
+        "no_weight": {
+          "cases": 8,
+          "trays": 1,
+          "pieces": 15
+        },
+        "pullet": {
+          "cases": 9,
+          "trays": 0,
+          "pieces": 0
+        },
+        "pewee": {
+          "cases": 2,
+          "trays": 11,
+          "pieces": 0
+        },
+        "small": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 25
+        },
+        "medium": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 13
+        },
+        "large": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 13
+        },
+        "larger": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "xlarge": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 28
+        },
+        "jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 24
+        },
+        "s_jumbo": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "broken": {
+          "cases": 0,
+          "trays": 3,
+          "pieces": 27
+        },
+        "bold": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "loss": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "reject": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        },
+        "good_cracks": {
+          "cases": 0,
+          "trays": 2,
+          "pieces": 5
+        },
+        "bad_cracks": {
+          "cases": 0,
+          "trays": 1,
+          "pieces": 22
+        },
+        "misshapen": {
+          "cases": 0,
+          "trays": 0,
+          "pieces": 0
+        }
+      },
+      "totalTrays": 26,
+      "totalPieces": 9960,
+      "createdAt": "2026-06-19T09:56:56.230585",
+      "updatedAt": "2026-06-19T09:56:56.230585"
+    },
+    {
+      "id": "mqkjt8wwebzc7",
+      "buildingId": "mnsz17wahp9dg",
+      "date": "2026-06-19",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 80ml/400L-D5\n0800H: Polymune 400ml/400L-D2\n1000H:1000H: vit c+ Electrolytes 400ml/400L-D2\n1400H: Calcium phosphorus 800ml/400L-D5",
+      "createdAt": "2026-06-19T06:29:11.658390",
+      "updatedAt": "2026-06-19T06:29:11.658390"
+    },
+    {
+      "id": "mqkjtdymlpm6n",
+      "buildingId": "mnsyu72zhaebc",
+      "date": "2026-06-19",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 100ml/500L-D5\n1000H: vit c+ Electrolyte 500ml/500L-D2\n1400H: calcium phosphorus 500ml/500L-D5",
+      "createdAt": "2026-06-19T06:29:18.197051",
+      "updatedAt": "2026-06-19T06:29:18.197051"
+    },
+    {
+      "id": "mqkjtj1rtw4y9",
+      "buildingId": "mnsz6qu0egoue",
+      "date": "2026-06-19",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 60ml/600L-D5\n1000H: 1000H: vit c+ Electrolytes 600ml/600L-D2\n1400H: calcium phosphorus 600ml/600L-D5",
+      "createdAt": "2026-06-19T06:29:24.789989",
+      "updatedAt": "2026-06-19T06:29:24.789989"
+    },
+    {
+      "id": "mqkjtox3yl2s3",
+      "buildingId": "mob5dv7lht2po",
+      "date": "2026-06-19",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 120ml/600L-D5\n0800H: Polymune 600ml/600L-D2\n1000H: 1000H: vit c+ Electrolytes 600/600L-D2\n1400H: calcium phosphorus 1200ml/600L-D5",
+      "createdAt": "2026-06-19T06:29:32.398602",
+      "updatedAt": "2026-06-19T06:29:32.398602"
+    },
+    {
+      "id": "mqkk113igtx55",
+      "buildingId": "mnsypaebx7m0l",
+      "date": "2026-06-19",
+      "type": "medication",
+      "reporter": "Kenneth",
+      "medication": [],
+      "notes": "0600H: amicens plus multi vitamin 40ml/400L-D5\n1000H: vit c+ Electrolytes 400g/400L-D2\n1400H: calcium phosphorus 400ml/400L-D5",
+      "createdAt": "2026-06-19T06:35:14.777283",
+      "updatedAt": "2026-06-19T06:35:14.777283"
+    }
+  ]
+}
