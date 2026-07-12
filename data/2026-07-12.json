@@ -1,6 +1,6 @@
 {
   "date": "2026-07-12",
-  "syncedAt": "2026-07-12T11:04:32.481022+00:00",
+  "syncedAt": "2026-07-12T11:06:18.636002+00:00",
   "buildings": [
     {
       "id": "mnsypaebx7m0l",
@@ -83,12 +83,12 @@
       "mortalityCount": 4,
       "culls": 4,
       "currentHeads": 7550,
-      "notes": "",
-      "weatherAm": "",
-      "weatherPm": "",
-      "temperature": "",
+      "notes": "medicated with anti-malaria-may affect egg production",
+      "weatherAm": "Sunny",
+      "weatherPm": "Sunny",
+      "temperature": "35",
       "createdAt": "2026-07-12T10:38:39.421193",
-      "updatedAt": "2026-07-12T10:38:39.421193"
+      "updatedAt": "2026-07-12T11:05:25.964192"
     },
     {
       "id": "mrhnuxes6882v",
@@ -102,9 +102,9 @@
       "ageDays": 6,
       "ageManuallySet": false,
       "production": {
-        "cases": 22,
+        "cases": 21,
         "trays": 8,
-        "totalPieces": 8160
+        "totalPieces": 7800
       },
       "feed": {
         "bags": 22.5,
@@ -114,12 +114,12 @@
       "mortalityCount": 7,
       "culls": 0,
       "currentHeads": 9732,
-      "notes": "medicate with anti-malaria-may affect egg production",
+      "notes": "medicated with anti-malaria-may affect egg production",
       "weatherAm": "Sunny",
       "weatherPm": "Sunny",
       "temperature": "35",
       "createdAt": "2026-07-12T10:38:52.333831",
-      "updatedAt": "2026-07-12T11:04:08.004631"
+      "updatedAt": "2026-07-12T11:05:28.592992"
     },
     {
       "id": "mrhnvzo7veckt",
@@ -145,12 +145,12 @@
       "mortalityCount": 14,
       "culls": 2,
       "currentHeads": 8709,
-      "notes": "medicate with anti-malaria-may affect egg production",
+      "notes": "medicated with anti-malaria-may affect egg production",
       "weatherAm": "Sunny",
       "weatherPm": "Sunny",
       "temperature": "35",
       "createdAt": "2026-07-12T10:39:41.941149",
-      "updatedAt": "2026-07-12T10:46:09.280355"
+      "updatedAt": "2026-07-12T11:05:31.487082"
     },
     {
       "id": "mrhnx987z0rmb",
@@ -176,12 +176,12 @@
       "mortalityCount": 16,
       "culls": 0,
       "currentHeads": 9675,
-      "notes": "medicate with anti-malaria-may affect egg production",
+      "notes": "medicated with anti-malaria-may affect egg production",
       "weatherAm": "Sunny",
       "weatherPm": "Sunny",
       "temperature": "35",
       "createdAt": "2026-07-12T10:40:40.999150",
-      "updatedAt": "2026-07-12T11:04:17.486382"
+      "updatedAt": "2026-07-12T11:05:34.623258"
     },
     {
       "id": "mrhnxr7qmfjnk",
@@ -245,10 +245,10 @@
       "type": "mortality",
       "reporter": "",
       "mortality": [],
-      "totalMortality": 13,
-      "notes": "4-days dead\n4-prolapsed\n1-broken leg/splenic atrophy/thin/misshapen egg yolk\n1-super thin/severe egg binding\n1-hemorrhagic liver/internal hemorrhage/pale comb\n1-hemorrhagic liver/necrotic duodenum/pale spleen\n1-eaten by cat\n1-severe hemorrhagic liver/necrotic duodenum",
+      "totalMortality": 14,
+      "notes": "4-days dead\n4-prolapsed\n1-broken leg/splenic atrophy/thin/misshapen egg yolk\n1-super thin/severe egg binding\n1-hemorrhagic liver/internal hemorrhage/pale comb\n1-hemorrhagic liver/necrotic duodenum/pale spleen\n1-eaten by cat\n1-severe hemorrhagic liver/necrotic duodenum\n\n2-culled-thin/lame",
       "createdAt": "2026-07-12T10:46:04.032535",
-      "updatedAt": "2026-07-12T10:46:04.032535"
+      "updatedAt": "2026-07-12T11:06:15.436046"
     },
     {
       "id": "mrho64vrkgspd",
